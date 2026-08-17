@@ -61,6 +61,7 @@ export default function DashboardPage() {
   }, [])
 
   const s = stats || {}
+  const vs = s.voterDbStats || {}
 
   if (loading) {
     return (
