@@ -140,48 +140,44 @@ export async function getStats() {
 
   // Real dynamic counts from DB1 (voter_db), DB2 (ward_db), and DB3 (election_app)
   const voterDbStats = {
-    assemblyCount: 234,
-    corporationsCount: 25,
-    municipalitiesCount: 162,
-    townPanchayatsCount: 458,
+    assemblyCount: 0,
+    corporationsCount: 0,
+    municipalitiesCount: 0,
+    townPanchayatsCount: 0,
     districtPanchayatsCount: 36,
-    panchayatUnionsCount: 388,
-    villagePanchayatsCount: 12525,
-    totalVoters: 56496752,
-    maleVoters: 27954120,
-    femaleVoters: 28532150,
-    thirdGenderVoters: 10482,
+    panchayatUnionsCount: 0,
+    villagePanchayatsCount: 0,
     maleCandidates: maleCount,
     femaleCandidates: femaleCount,
     thirdGenderCandidates: thirdGenderCount,
   }
 
-  try {
-    if (isVoterDbOnline()) {
+  if (isVoterDbOnline()) {
+    try {
       const voterDb = getVoterDb()
       const cols = await voterDb.listCollections().toArray()
       const assCols = cols.filter((c) => c.name.startsWith('ass_'))
-      if (assCols.length > 0) voterDbStats.assemblyCount = assCols.length
-    }
-  } catch (_) {}
+      voterDbStats.assemblyCount = assCols.length
+    } catch (_) {}
+  }
 
-  try {
-    if (isWardDbOnline()) {
+  if (isWardDbOnline()) {
+    try {
       const wardDb = getWardDb()
       const [corps, munis, tps, unions, grams] = await Promise.all([
-        wardDb.collection('corporations').countDocuments({}).catch(() => 25),
-        wardDb.collection('municipalities').countDocuments({}).catch(() => 162),
-        wardDb.collection('town_panchayats').countDocuments({}).catch(() => 458),
-        wardDb.collection('panchayats_unions').countDocuments({}).catch(() => 388),
-        wardDb.collection('grama_panchayats').countDocuments({}).catch(() => 12525),
+        wardDb.collection('corporations').countDocuments({}).catch(() => 0),
+        wardDb.collection('municipalities').countDocuments({}).catch(() => 0),
+        wardDb.collection('town_panchayats').countDocuments({}).catch(() => 0),
+        wardDb.collection('panchayats_unions').countDocuments({}).catch(() => 0),
+        wardDb.collection('grama_panchayats').countDocuments({}).catch(() => 0),
       ])
       voterDbStats.corporationsCount = corps
       voterDbStats.municipalitiesCount = munis
       voterDbStats.townPanchayatsCount = tps
       voterDbStats.panchayatUnionsCount = unions
       voterDbStats.villagePanchayatsCount = grams
-    }
-  } catch (_) {}
+    } catch (_) {}
+  }
 
   return { total, rural, urban, today, voterDbStats }
 }

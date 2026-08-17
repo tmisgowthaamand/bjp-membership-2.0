@@ -220,7 +220,7 @@ export default function DashboardPage() {
           <StatCard
             icon="gender-male"
             label="Male Candidates"
-            value={vs.maleCandidates ?? '—'}
+            value={vs.maleCandidates ?? 0}
             color="#2563eb"
             bg="rgba(37, 99, 235, 0.12)"
             subtitle={`${s.total ? Math.round(((vs.maleCandidates || 0) / s.total) * 100) : 0}% of Applicants`}
@@ -228,7 +228,7 @@ export default function DashboardPage() {
           <StatCard
             icon="gender-female"
             label="Female Candidates"
-            value={vs.femaleCandidates ?? '—'}
+            value={vs.femaleCandidates ?? 0}
             color="#ec4899"
             bg="rgba(236, 72, 153, 0.12)"
             subtitle={`${s.total ? Math.round(((vs.femaleCandidates || 0) / s.total) * 100) : 0}% of Applicants`}
@@ -244,51 +244,10 @@ export default function DashboardPage() {
           <StatCard
             icon="building-check"
             label="Assembly Constituencies"
-            value={`${vs.assemblyCount || 234} ACs`}
+            value={`${vs.assemblyCount || 0} ACs`}
             color="#0ea5e9"
             bg="rgba(14, 165, 233, 0.12)"
-            subtitle="DB1 Voter Roll Coverage"
-          />
-        </div>
-      </div>
-
-      {/* Voter DB (DB1) State Voter Roll Analytics Cards */}
-      <div style={{ marginTop: 24, marginBottom: 8 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: '#f76201', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <i className="bi bi-database-fill-check" /> Tamil Nadu Voter Roll Database (DB1) — State Demographics (5.65 Crore Voters)
-        </div>
-        <div className="stat-cards-grid">
-          <StatCard
-            icon="people-fill"
-            label="Total Voters (DB1)"
-            value="5.65 Crore"
-            color="#0ea5e9"
-            bg="rgba(14, 165, 233, 0.12)"
-            subtitle={(vs.totalVoters || 56496752).toLocaleString('en-IN') + ' Total'}
-          />
-          <StatCard
-            icon="gender-male"
-            label="Male Voters (DB1)"
-            value="2.80 Crore"
-            color="#2563eb"
-            bg="rgba(37, 99, 235, 0.12)"
-            subtitle={(vs.maleVoters || 27954120).toLocaleString('en-IN') + ' (49.5%)'}
-          />
-          <StatCard
-            icon="gender-female"
-            label="Female Voters (DB1)"
-            value="2.85 Crore"
-            color="#ec4899"
-            bg="rgba(236, 72, 153, 0.12)"
-            subtitle={(vs.femaleVoters || 28532150).toLocaleString('en-IN') + ' (50.5%)'}
-          />
-          <StatCard
-            icon="person-arms-up"
-            label="Third Gender Voters"
-            value={(vs.thirdGenderVoters || 10482).toLocaleString('en-IN')}
-            color="#a855f7"
-            bg="rgba(168, 85, 247, 0.12)"
-            subtitle="10,482 State-wide"
+            subtitle="DB1 Live Collections"
           />
         </div>
       </div>
@@ -302,7 +261,7 @@ export default function DashboardPage() {
           <StatCard
             icon="building-fill"
             label="1. Municipal Corporations"
-            value={`${vs.corporationsCount || 25} Corps`}
+            value={`${vs.corporationsCount || 0} Corps`}
             color="#f59e0b"
             bg="rgba(245, 158, 11, 0.12)"
             subtitle="Live Collection (DB2)"
@@ -310,7 +269,7 @@ export default function DashboardPage() {
           <StatCard
             icon="buildings-fill"
             label="2. Municipalities"
-            value={`${vs.municipalitiesCount || 162} Munis`}
+            value={`${vs.municipalitiesCount || 0} Munis`}
             color="#2563eb"
             bg="rgba(37, 99, 235, 0.12)"
             subtitle="Live Collection (DB2)"
@@ -318,7 +277,7 @@ export default function DashboardPage() {
           <StatCard
             icon="houses-fill"
             label="3. Town Panchayats"
-            value={`${vs.townPanchayatsCount || 458} TPs`}
+            value={`${vs.townPanchayatsCount || 0} TPs`}
             color="#6366f1"
             bg="rgba(99, 102, 241, 0.12)"
             subtitle="Live Collection (DB2)"
@@ -326,7 +285,7 @@ export default function DashboardPage() {
           <StatCard
             icon="award-fill"
             label="4. District Panchayat Wards"
-            value={`${vs.districtPanchayatsCount || 36} Districts`}
+            value={`${vs.districtPanchayatsCount || 0} Districts`}
             color="#8b5cf6"
             bg="rgba(139, 92, 246, 0.12)"
             subtitle="36 Rural Districts"
@@ -334,7 +293,7 @@ export default function DashboardPage() {
           <StatCard
             icon="diagram-2-fill"
             label="5. Panchayat Unions"
-            value={`${vs.panchayatUnionsCount || 388} Unions`}
+            value={`${vs.panchayatUnionsCount || 0} Unions`}
             color="#06b6d4"
             bg="rgba(6, 182, 212, 0.12)"
             subtitle="Live Collection (DB2)"
@@ -342,7 +301,7 @@ export default function DashboardPage() {
           <StatCard
             icon="tree-fill"
             label="6. Grama Panchayats"
-            value={`${(vs.villagePanchayatsCount || 12525).toLocaleString()} VPs`}
+            value={`${(vs.villagePanchayatsCount || 0).toLocaleString()} VPs`}
             color="#02a14d"
             bg="rgba(2, 161, 77, 0.12)"
             subtitle="Live Collection (DB2)"
