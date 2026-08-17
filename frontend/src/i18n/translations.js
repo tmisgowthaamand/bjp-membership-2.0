@@ -261,8 +261,9 @@ export const translations = {
     // ── 9:16 Poster Card & Language Switcher ──────────────
     'BHARATIYA JANATA PARTY': 'பாரதிய ஜனதா கட்சி',
     'TAMIL NADU LOCAL BODY ELECTIONS 2026-27': 'தமிழ்நாடு உள்ளாட்சித் தேர்தல் 2026-27',
-    'EPIC / Voter ID': 'வாக்காளர் அடையாள எண் (Voter ID)',
-    'Contest Preference': 'போட்டியிடும் விருப்பம்',
+    'Application ID': 'விண்ணப்ப எண்',
+    'EPIC / Voter ID': 'வாக்காளர் எண் (EPIC)',
+    'Contest Preference': 'போட்டியிடும் பதவி',
     'Local Body Ward': 'உள்ளாட்சி வார்டு',
     'Submitted Timestamp': 'சமர்ப்பிக்கப்பட்ட நேரம்',
     'Official Party Verification 2026-27': 'அதிகாரப்பூர்வ கட்சி சரிபார்ப்பு 2026-27',

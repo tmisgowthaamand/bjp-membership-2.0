@@ -1775,26 +1775,26 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
           {/* Candidate Details Box (Pure White Panel inside Saffron Card) */}
           <div className="poster-details-box" style={{
             background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.6)',
-            borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 4.5,
+            borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 5,
             fontSize: 11, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Application ID')}:</span>
-              <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12 }}>{result.application_id}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+              <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
+              <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
             </div>
             {epicNo && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-                <span style={{ color: '#64748B', fontWeight: 500 }}>{t('EPIC / Voter ID')}:</span>
-                <span style={{ fontWeight: 700, color: '#0F172A' }}>{epicNo}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('EPIC / Voter ID')}:</span>
+                <span style={{ fontWeight: 700, color: '#0F172A', textAlign: 'right', flex: '1 1 58%' }}>{epicNo}</span>
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Contest Preference')}:</span>
-              <span style={{ fontWeight: 700, color: '#E65C00' }}>{t(firstPos)}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+              <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
+              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3 }}>{t(firstPos)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Local Body Ward')}:</span>
-              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 9, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>{lbSummary}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body Ward')}:</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3, wordBreak: 'break-word' }}>{lbSummary}</span>
             </div>
           </div>
 
@@ -2071,26 +2071,26 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
               {/* Candidate Details Box (Pure White Panel inside Saffron Card) */}
               <div className="poster-details-box" style={{
                 background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.6)',
-                borderRadius: 14, padding: 12, display: 'flex', flexDirection: 'column', gap: 7,
-                fontSize: 12, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
+                borderRadius: 14, padding: '11px 12px', display: 'flex', flexDirection: 'column', gap: 6,
+                fontSize: 11.5, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Application ID')}:</span>
-                  <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 13 }}>{result.application_id}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                  <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
+                  <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12.5, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
                 </div>
                 {epicNo && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                    <span style={{ color: '#64748B', fontWeight: 500 }}>{t('EPIC / Voter ID')}:</span>
-                    <span style={{ fontWeight: 700, color: '#0F172A' }}>{epicNo}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                    <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('EPIC / Voter ID')}:</span>
+                    <span style={{ fontWeight: 700, color: '#0F172A', textAlign: 'right', flex: '1 1 58%' }}>{epicNo}</span>
                   </div>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Contest Preference')}:</span>
-                  <span style={{ fontWeight: 700, color: '#E65C00' }}>{t(firstPos)}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                  <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
+                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3 }}>{t(firstPos)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Local Body Ward')}:</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 9, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>{lbSummary}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body Ward')}:</span>
+                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3, wordBreak: 'break-word' }}>{lbSummary}</span>
                 </div>
               </div>
 
