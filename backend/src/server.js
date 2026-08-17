@@ -52,7 +52,8 @@ app.use('/admin/api', adminRoutes)
 
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found.' }))
 
-const PORT = process.env.PORT || 5000
+const rawPort = parseInt(process.env.PORT || '5000', 10)
+const PORT = (!isNaN(rawPort) && rawPort >= 1 && rawPort <= 65535) ? rawPort : 5000
 
 function validateEnv() {
   const missingRequired = ['MONGO_VOTER_URL', 'MONGO_APP_URL'].filter((k) => !process.env[k])
