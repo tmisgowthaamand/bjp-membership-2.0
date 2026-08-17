@@ -455,23 +455,37 @@ function PhotoUploadMsg({ active, initial, onSubmit, disabled }) {
 }
 
 // ── Contesting District Step (Step 8) ──────────────────────────────
-function DistrictMsg({ active, initial, defaultDistrict, onSubmit, disabled }) {
+function DistrictMsg({ active, initial, voterDistrict, onSubmit, disabled }) {
   const { t } = useLang()
-  const [district, setDistrict] = useState(initial || defaultDistrict || 'Chennai')
+  const [district, setDistrict] = useState(initial || voterDistrict || 'Chennai')
+
+  useEffect(() => {
+    if (initial) setDistrict(initial)
+  }, [initial])
+
+  const handleSelectChange = (e) => {
+    const newDist = e.target.value
+    setDistrict(newDist)
+    if (newDist && onSubmit) {
+      onSubmit({ district: newDist })
+    }
+  }
 
   return (
     <div style={cardBox}>
       <div style={cardTitle}>
-        <i className="bi bi-geo-fill" style={{ color: 'var(--color-saffron)' }} /> {t('Contesting District')}
+        <i className="bi bi-pin-map-fill" style={{ color: 'var(--color-saffron)' }} /> {t('Contest District')}
       </div>
       <p style={{ fontSize: 13, color: 'var(--color-ash)', marginBottom: 12 }}>
-        {t('We pre-filled this from your Voter ID. You can confirm or change the district where you are contesting.')}
+        {voterDistrict ? t('Your voter district is {district}. You can confirm it or select ANY district you wish to contest from.', { district: voterDistrict })
+          : t('Select the district from which you plan to contest the local body election.')}
       </p>
 
       <div>
-        <span style={fieldLabel}>{t('Select Contesting District')}</span>
-        <select style={controlStyle} value={district} disabled={!active}
-          onChange={(e) => setDistrict(e.target.value)}>
+        <span style={fieldLabel}>{t('District to Contest From')}<span style={{ color: '#e74c3c' }}> *</span></span>
+        <select style={controlStyle} value={district} disabled={disabled}
+          onChange={handleSelectChange}>
+          <option value="">{t('Select district')}</option>
           {ALL_DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
         </select>
       </div>
@@ -489,14 +503,7 @@ function DistrictMsg({ active, initial, defaultDistrict, onSubmit, disabled }) {
 // ── Local Body step (7 Position Flows with Cascading Dropdowns) ─────
 function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) {
   const { t } = useLang()
-  const [selectedDistrict, setSelectedDistrict] = useState(contestDistrict || initial?.contestDistrict || 'Chennai')
   const [bodyType, setBodyType] = useState(initial?.bodyType || 'urban')
-
-  useEffect(() => {
-    if (contestDistrict) {
-      setSelectedDistrict(contestDistrict)
-    }
-  }, [contestDistrict])
 
   // Urban local body selections
   const [urbanBodyType, setUrbanBodyType] = useState(initial?.localBody?.urbanType || '')
@@ -510,19 +517,19 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
   const [ruralPanchayat, setRuralPanchayat] = useState(initial?.localBody?.ruralPanchayat || '')
   const [ruralWard, setRuralWard] = useState(initial?.localBody?.ruralWard || '')
 
-  const dist = selectedDistrict || contestDistrict || 'Chennai'
+  const dist = contestDistrict || 'Chennai'
 
-  const handleDistrictChange = (newDist) => {
-    setSelectedDistrict(newDist)
+  // Reset dependent selections if contestDistrict changes
+  useEffect(() => {
     setUrbanBodyName('')
     setUrbanWard('')
     setRuralUnion('')
     setRuralBlock('')
     setRuralPanchayat('')
     setRuralWard('')
-  }
+  }, [contestDistrict])
 
-  // Options dynamically populated for selectedDistrict
+  // Options dynamically populated for contestDistrict
   const corps = corporationsForDistrict(dist)
   const munis = municipalitiesForDistrict(dist)
   const tps = townPanchayatsForDistrict(dist)
@@ -552,7 +559,6 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
         : urbanBodyType === 'Municipality' ? 'Municipality Ward Member'
         : 'Town Panchayat Ward Member'
       onSubmit({
-        contestDistrict: selectedDistrict,
         bodyType: 'urban',
         localBody: { urbanType: urbanBodyType, urbanBody: urbanBodyName, urbanWard },
         positionPrefs: [autoPos, '', '']
@@ -562,7 +568,6 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
         ? ruralBlock
         : ruralUnion
       onSubmit({
-        contestDistrict: selectedDistrict,
         bodyType: 'rural',
         localBody: {
           ruralUnion: unionVal,
@@ -596,24 +601,18 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
 
   return (
     <div style={cardBox}>
-      <div style={cardTitle}><i className="bi bi-geo-alt-fill" /> {t('Local Body & Position Details')}</div>
-
-      <div>
-        <span style={fieldLabel}>{t('Contesting District')}</span>
-        <select
-          style={controlStyle}
-          value={selectedDistrict}
-          disabled={!active}
-          onChange={(e) => handleDistrictChange(e.target.value)}
-        >
-          {ALL_DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
-        </select>
+      <div style={cardTitle}>
+        <i className="bi bi-geo-alt-fill" /> {t('Local Body & Position Details')}
+        {dist && (
+          <span style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6, background: 'rgba(255,102,0,0.15)', color: '#FF6600', marginLeft: 8 }}>
+            📍 {dist}
+          </span>
+        )}
       </div>
 
       <div>
         <span style={fieldLabel}>{t('Local body type')}</span>
         <div style={{ display: 'flex', gap: 10 }}>
-          {typeBtn('urban', t('Urban Local Body'), t('Corporations, Municipalities, Town Panchayats'))}
           {typeBtn('urban', t('Urban Local Body'), t('Corporations, Municipalities, Town Panchayats'))}
           {typeBtn('rural', t('Rural Local Body'), t('District Panchayat, Unions, Village Panchayats'))}
         </div>
@@ -2317,49 +2316,14 @@ export default function ChatbotPage() {
     if (initializedRef.current) return
     initializedRef.current = true
 
-    const sess = loadSession()
-    const isActiveSession = sess && sess.chatState && ![S.WELCOME, S.SUBMITTED].includes(sess.chatState)
-
-    if (isActiveSession) {
-      setChatState(sess.chatState)
-      if (sess.appData) setAppData({ ...emptyAppData(), ...sess.appData })
-      if (sess.mobile) mobileRef.current = sess.mobile
-
-      // Reconstruct messages for active step so chatbot application stays active and synchronized
-      const restoredMsgs = [{ id: 'wb-1', from: 'bot', type: 'welcome_banner', ts: new Date() }]
-      const stepTypeMap = {
-        [S.AWAIT_MEMBERSHIP]: 'membership_card',
-        [S.DISTRICT]: 'district',
-        [S.PHOTO_UPLOAD]: 'photo_upload',
-        [S.LOCAL_BODY]: 'local_body',
-        [S.POSITION]: 'position',
-        [S.SOCIAL]: 'social',
-        [S.VIDEO_UPLOAD]: 'video_upload',
-        [S.WORK]: 'work',
-        [S.LOCAL_AREA]: 'local_area',
-        [S.SHORT_TEXTS]: 'short_texts',
-        [S.DOC_UPLOAD]: 'doc_upload',
-        [S.REVIEW]: 'review',
-      }
-      if (stepTypeMap[sess.chatState]) {
-        restoredMsgs.push({ id: 'st-1', from: 'bot', type: stepTypeMap[sess.chatState], ts: new Date() })
-      } else if (sess.chatState === S.AWAIT_MOBILE) {
-        restoredMsgs.push({ id: 'm-1', from: 'bot', type: 'text', text: t('Welcome! Let us begin. Please enter your 10-digit mobile number.'), ts: new Date() })
-      } else if (sess.chatState === S.AWAIT_OTP) {
-        const mob = sess.mobile ? maskMobile(sess.mobile) : ''
-        restoredMsgs.push({ id: 'm-1', from: 'bot', type: 'text', text: t('An OTP has been sent to {mobile}. Please enter it below.', { mobile: mob }), ts: new Date() })
-      }
-      setMessages(restoredMsgs)
-    } else {
-      clearSession()
-      stopOtpCountdown()
-      setAppData(emptyAppData())
-      mobileRef.current = ''
-      setMessages([])
-      addMsg('bot', 'welcome_banner', {})
-      setChatState(S.WELCOME)
-    }
-  }, [addMsg, t])
+    clearSession()
+    stopOtpCountdown()
+    setAppData(emptyAppData())
+    mobileRef.current = ''
+    setMessages([])
+    addMsg('bot', 'welcome_banner', {})
+    setChatState(S.WELCOME)
+  }, [addMsg])
 
   // Persist session active state for active chatbot users (refreshed sliding 30-min window)
   useEffect(() => {
@@ -2460,6 +2424,9 @@ export default function ChatbotPage() {
 
   // ── Flow handlers ────────────────────────────────────────
   const handleStart = async () => {
+    clearSession()
+    mobileRef.current = ''
+    setAppData(emptyAppData())
     addMsg('user', 'text', { text: t('Start Application') })
     setChatState(S.AWAIT_MOBILE)
     await botSay(t('Welcome! Let us begin. Please enter your 10-digit mobile number.'), 400)
@@ -2580,14 +2547,6 @@ export default function ChatbotPage() {
     if (!appData.contestDistrict) {
       patchData({ contestDistrict: defDist })
     }
-    await botSay(t('Please confirm or select the District you are contesting in.'), 350)
-    addMsg('bot', 'district', {})
-    setChatState(S.DISTRICT)
-  }
-
-  const handleDistrictSubmit = async ({ district }) => {
-    patchData({ contestDistrict: district })
-    addMsg('user', 'text', { text: t('Contesting District: {district}', { district }) })
     await botSay(t('Please upload your Candidate Passport Size Photo (Max 15 MB).'), 350)
     addMsg('bot', 'photo_upload', {})
     setChatState(S.PHOTO_UPLOAD)
@@ -2597,8 +2556,20 @@ export default function ChatbotPage() {
     patchData({ photoFile, photoUrl })
     startBackgroundUpload('photo', photoFile) // upload now, in the background
     addMsg('user', 'text', { text: photoUrl ? t('Passport photo ready ✓') : t('Skipped') })
-    const distName = appData.contestDistrict || appData.voter?.district || 'your district'
-    await botSay(t('Great! Now, choose your Local Body & Position details in {district}.', { district: distName }), 350)
+    await botSay(t('Please confirm or select the District you are contesting in.'), 350)
+    addMsg('bot', 'district', {})
+    setChatState(S.DISTRICT)
+  }
+
+  const handleDistrictSubmit = async ({ district }) => {
+    patchData({ contestDistrict: district })
+    const alreadyHasLocalBody = messages.some((m) => m.type === 'local_body')
+    if (chatState === S.LOCAL_BODY || alreadyHasLocalBody) {
+      // Already on Local Body step or card already present — update district in-place without adding any extra cards
+      return
+    }
+    addMsg('user', 'text', { text: t('Contesting District: {district}', { district }) })
+    await botSay(t('Great! Now, choose your Local Body & Position details in {district}.', { district }), 350)
     addMsg('bot', 'local_body', {})
     setChatState(S.LOCAL_BODY)
   }
