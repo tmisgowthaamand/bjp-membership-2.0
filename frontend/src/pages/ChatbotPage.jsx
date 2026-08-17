@@ -489,6 +489,7 @@ function DistrictMsg({ active, initial, defaultDistrict, onSubmit, disabled }) {
 // ── Local Body step (7 Position Flows with Cascading Dropdowns) ─────
 function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) {
   const { t } = useLang()
+  const [selectedDistrict, setSelectedDistrict] = useState(contestDistrict || initial?.contestDistrict || 'Chennai')
   const [bodyType, setBodyType] = useState(initial?.bodyType || 'urban')
 
   // Urban local body selections
@@ -503,9 +504,19 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
   const [ruralPanchayat, setRuralPanchayat] = useState(initial?.localBody?.ruralPanchayat || '')
   const [ruralWard, setRuralWard] = useState(initial?.localBody?.ruralWard || '')
 
-  const dist = contestDistrict || 'Chennai'
+  const dist = selectedDistrict || contestDistrict || 'Chennai'
 
-  // Options dynamically populated for contestDistrict
+  const handleDistrictChange = (newDist) => {
+    setSelectedDistrict(newDist)
+    setUrbanBodyName('')
+    setUrbanWard('')
+    setRuralUnion('')
+    setRuralBlock('')
+    setRuralPanchayat('')
+    setRuralWard('')
+  }
+
+  // Options dynamically populated for selectedDistrict
   const corps = corporationsForDistrict(dist)
   const munis = municipalitiesForDistrict(dist)
   const tps = townPanchayatsForDistrict(dist)
@@ -535,6 +546,7 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
         : urbanBodyType === 'Municipality' ? 'Municipality Ward Member'
         : 'Town Panchayat Ward Member'
       onSubmit({
+        contestDistrict: selectedDistrict,
         bodyType: 'urban',
         localBody: { urbanType: urbanBodyType, urbanBody: urbanBodyName, urbanWard },
         positionPrefs: [autoPos, '', '']
@@ -544,6 +556,7 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
         ? ruralBlock
         : ruralUnion
       onSubmit({
+        contestDistrict: selectedDistrict,
         bodyType: 'rural',
         localBody: {
           ruralUnion: unionVal,
@@ -577,11 +590,24 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
 
   return (
     <div style={cardBox}>
-      <div style={cardTitle}><i className="bi bi-geo-alt-fill" /> {t('Local Body & Position Details')} ({dist})</div>
+      <div style={cardTitle}><i className="bi bi-geo-alt-fill" /> {t('Local Body & Position Details')}</div>
+
+      <div>
+        <span style={fieldLabel}>{t('Contesting District')}</span>
+        <select
+          style={controlStyle}
+          value={selectedDistrict}
+          disabled={!active}
+          onChange={(e) => handleDistrictChange(e.target.value)}
+        >
+          {ALL_DISTRICTS.map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+      </div>
 
       <div>
         <span style={fieldLabel}>{t('Local body type')}</span>
         <div style={{ display: 'flex', gap: 10 }}>
+          {typeBtn('urban', t('Urban Local Body'), t('Corporations, Municipalities, Town Panchayats'))}
           {typeBtn('urban', t('Urban Local Body'), t('Corporations, Municipalities, Town Panchayats'))}
           {typeBtn('rural', t('Rural Local Body'), t('District Panchayat, Unions, Village Panchayats'))}
         </div>
@@ -2579,11 +2605,14 @@ export default function ChatbotPage() {
     setChatState(S.AWAIT_EPIC)
   }
 
-  const handleLocalBodySubmit = async ({ bodyType, localBody, positionPrefs }) => {
-    patchData({ bodyType, localBody, positionPrefs })
+  const handleLocalBodySubmit = async ({ contestDistrict, bodyType, localBody, positionPrefs }) => {
+    const patch = { bodyType, localBody, positionPrefs }
+    if (contestDistrict) patch.contestDistrict = contestDistrict
+    patchData(patch)
     const summary = localBodySummary(bodyType, localBody)
     const pos = positionPrefs?.[0] || ''
-    addMsg('user', 'text', { text: `${bodyType === 'rural' ? t('Rural') : t('Urban')} · ${pos}${summary ? ' · ' + summary : ''}` })
+    const distName = contestDistrict || appData.contestDistrict || ''
+    addMsg('user', 'text', { text: `${distName ? distName + ' · ' : ''}${bodyType === 'rural' ? t('Rural') : t('Urban')} · ${pos}${summary ? ' · ' + summary : ''}` })
     await botSay(t('Please add your social media profiles (Optional).'), 350)
     addMsg('bot', 'social', {})
     setChatState(S.SOCIAL)

@@ -1,7 +1,7 @@
 # BJP Local Body App — 7 Positions Live Testing Guide (Real DB1 EPICs)
 
-**File Path:** `FLOWS_TESTING_GUIDE.md`  
-**Application URL:** `http://localhost:5173` (Local Dev) or `https://bjp-mebership.vercel.app` (Live)  
+**File Path:** `FLOWS_TESTING_GUIDE.md`
+**Application URL:** `http://localhost:5173` (Local Dev) or `https://bjp-mebership.vercel.app` (Live)
 **Dev OTP:** `123456`
 
 This guide contains **100% verified, real EPIC numbers from DB1 (`voter_db` on DigitalOcean)** matching the exact target districts for each flow!
@@ -10,16 +10,16 @@ This guide contains **100% verified, real EPIC numbers from DB1 (`voter_db` on D
 
 ## Real Voter DB (DB1) EPIC Numbers Matrix
 
-| Flow # | Position Name | Contesting District | Real DB1 EPIC No | Voter Name in DB1 | Assembly Constituency in DB1 | Voter District in DB1 |
-| :---: | :--- | :--- | :---: | :--- | :--- | :---: |
-| **Flow 1** | **Corporation Ward Member** | Chennai | **`AAQ0312140`** | Bhuvaneswari | Dr.Radhakrishnan Nagar (`ass_11`) | **CHENNAI** |
-| **Flow 2** | **Municipality Ward Member** | Dindigul | **`AEB1604248`** | Vairamani | Palani (`ass_127`) | **DINDIGUL** |
-| **Flow 3** | **Town Panchayat Ward Member** | Coimbatore | **`AAQ0645036`** | Megala | Palladam (`ass_115`) | **COIMBATORE** |
-| **Flow 4** | **District Panchayat Ward Member** | Thiruvallur | **`AAQ0178764`** | Jaishankar | Gummidipoondi (`ass_1`) | **THIRUVALLUR** |
-| **Flow 5** | **Panchayat Union Ward Member** | Kancheepuram | **`TRQ2226256`** | Abishek | Uthiramerur (`ass_36`) | **KANCHEEPURAM** |
-| **Flow 6** | **Village Panchayat President** | Kancheepuram | **`TRQ2226256`** | Abishek | Uthiramerur (`ass_36`) | **KANCHEEPURAM** |
-| **Flow 7** | **Village Panchayat Ward Member** | Kancheepuram | **`TRQ2226256`** | Abishek | Uthiramerur (`ass_36`) | **KANCHEEPURAM** |
-| **Bonus** | **Chengalpattu Flow** | Chengalpattu | **`AAH5009568`** | Akansha Jaiswal | Thiruporur (`ass_33`) | **CHENGALPATTU** |
+|      Flow #      | Position Name                            | Contesting District |     Real DB1 EPIC No     | Voter Name in DB1 | Assembly Constituency in DB1        | Voter District in DB1 |
+| :--------------: | :--------------------------------------- | :------------------ | :----------------------: | :---------------- | :---------------------------------- | :--------------------: |
+| **Flow 1** | **Corporation Ward Member**        | Chennai             | **`AAQ0312140`** | Bhuvaneswari      | Dr.Radhakrishnan Nagar (`ass_11`) |   **CHENNAI**   |
+| **Flow 2** | **Municipality Ward Member**       | Dindigul            | **`AEB1604248`** | Vairamani         | Palani (`ass_127`)                |   **DINDIGUL**   |
+| **Flow 3** | **Town Panchayat Ward Member**     | Coimbatore          | **`AAQ0645036`** | Megala            | Palladam (`ass_115`)              |  **COIMBATORE**  |
+| **Flow 4** | **District Panchayat Ward Member** | Thiruvallur         | **`AAQ0178764`** | Jaishankar        | Gummidipoondi (`ass_1`)           | **THIRUVALLUR** |
+| **Flow 5** | **Panchayat Union Ward Member**    | Kancheepuram        | **`TRQ2226256`** | Abishek           | Uthiramerur (`ass_36`)            | **KANCHEEPURAM** |
+| **Flow 6** | **Village Panchayat President**    | Kancheepuram        | **`TRQ2226256`** | Abishek           | Uthiramerur (`ass_36`)            | **KANCHEEPURAM** |
+| **Flow 7** | **Village Panchayat Ward Member**  | Kancheepuram        | **`TRQ2226256`** | Abishek           | Uthiramerur (`ass_36`)            | **KANCHEEPURAM** |
+| **Bonus** | **Chengalpattu Flow**              | Chengalpattu        | **`AAH5009568`** | Akansha Jaiswal   | Thiruporur (`ass_33`)             | **CHENGALPATTU** |
 
 ---
 
