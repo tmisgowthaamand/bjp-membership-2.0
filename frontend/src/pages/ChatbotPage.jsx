@@ -1552,6 +1552,18 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
     return { name: name || 'Tamil Nadu Local Body', ward: w }
   }
 
+  const formatLbName = (name) => {
+    if (!name) return ''
+    if (lang !== 'ta') return name
+    return name
+      .replace(/Town Panchayat/gi, 'பேரூராட்சி')
+      .replace(/Municipality/gi, 'நகராட்சி')
+      .replace(/Corporation/gi, 'மாநகராட்சி')
+      .replace(/Panchayat Union/gi, 'ஊராட்சி ஒன்றியம்')
+      .replace(/Village Panchayat/gi, 'கிராம ஊராட்சி')
+      .replace(/District Panchayat/gi, 'மாவட்ட ஊராட்சி')
+  }
+
   const lbDetails = getLbDetails()
   const wardText = lbDetails.ward
     ? (lang === 'ta' ? `வார்டு ${lbDetails.ward}` : `Ward ${lbDetails.ward}`)
@@ -1797,11 +1809,11 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{firstPos}</span>
+              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{t(firstPos)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3 : 0 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
-              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{formatLbName(lbDetails.name)}</span>
             </div>
             {wardText && (
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2099,11 +2111,11 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{firstPos}</span>
+                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{t(firstPos)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3.5 : 0 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
+                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{formatLbName(lbDetails.name)}</span>
                 </div>
                 {wardText && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

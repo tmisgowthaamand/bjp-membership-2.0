@@ -112,12 +112,12 @@ export const translations = {
     'Select a position': 'பதவியைத் தேர்ந்தெடுக்கவும்',
     '1st preference position is required.': '1-ஆம் முன்னுரிமை பதவி கட்டாயமானது.',
     'Village Panchayat Ward Member': 'கிராம ஊராட்சி வார்டு உறுப்பினர்',
-    'Village Panchayat President': 'கிராம ஊராட்சி மன்றத் தலைவர் (பிரசிடென்ட்)',
-    'Panchayat Union Ward Member': 'ஊராட்சி ஒன்றியக் குழு வார்டு உறுப்பினர் (கவுன்சிலர்)',
-    'District Panchayat Ward Member': 'மாவட்ட ஊராட்சி வார்டு உறுப்பினர் (கவுன்சிலர்)',
-    'Corporation Ward Member': 'மாநகராட்சி மாமன்ற உறுப்பினர் (கவுன்சிலர்)',
-    'Municipality Ward Member': 'நகராட்சி மன்ற உறுப்பினர் (கவுன்சிலர்)',
-    'Town Panchayat Ward Member': 'பேரூராட்சி மன்ற உறுப்பினர் (கவுன்சிலர்)',
+    'Village Panchayat President': 'கிராம ஊராட்சி மன்றத் தலைவர்',
+    'Panchayat Union Ward Member': 'ஊராட்சி ஒன்றிய வார்டு உறுப்பினர்',
+    'District Panchayat Ward Member': 'மாவட்ட ஊராட்சி வார்டு உறுப்பினர்',
+    'Corporation Ward Member': 'மாநகராட்சி வார்டு உறுப்பினர்',
+    'Municipality Ward Member': 'நகராட்சி வார்டு உறுப்பினர்',
+    'Town Panchayat Ward Member': 'பேரூராட்சி வார்டு உறுப்பினர்',
 
     // ── Social media ──────────────────────────────────────
     'Please add your social media profiles.': 'உங்கள் சமூக ஊடகப் பக்கங்களைச் சேர்க்கவும்.',
