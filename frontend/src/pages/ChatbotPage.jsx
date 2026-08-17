@@ -1534,21 +1534,28 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
   const bodyType = activeApp.body_type || result?.body_type || appData?.bodyType || ''
   const lb = activeApp.local_body || result?.local_body || appData?.localBody || {}
   
-  const getLbSummary = () => {
-    if (typeof lb === 'string') return lb
+  const getLbDetails = () => {
+    if (typeof lb === 'string') return { name: lb, ward: '' }
+    let w = String(lb.ward || lb.urbanWard || lb.ruralWard || '').trim()
+    w = w.replace(/^(ward\s*)+/i, '').trim()
+
+    let name = ''
     if (bodyType === 'urban' || lb.type === 'urban' || lb.local_body_type) {
       const type = lb.local_body_type || lb.urbanType || 'Town Panchayat'
       const body = lb.local_body || lb.urbanBody || ''
-      const ward = lb.ward || lb.urbanWard || ''
-      return [type, body, ward ? `Ward ${ward}` : ''].filter(Boolean).join(' - ')
+      name = [type, body].filter(Boolean).join(' - ')
+    } else {
+      const union = lb.panchayat_union || lb.ruralUnion || ''
+      const panchayat = lb.village_panchayat || lb.ruralPanchayat || ''
+      name = [union, panchayat].filter(Boolean).join(' - ')
     }
-    const union = lb.panchayat_union || lb.ruralUnion || ''
-    const panchayat = lb.village_panchayat || lb.ruralPanchayat || ''
-    const ward = lb.ward || lb.ruralWard || ''
-    return [union, panchayat, ward ? `Ward ${ward}` : ''].filter(Boolean).join(' - ')
+    return { name: name || 'Tamil Nadu Local Body', ward: w }
   }
 
-  const lbSummary = getLbSummary() || 'Tamil Nadu Local Body'
+  const lbDetails = getLbDetails()
+  const wardText = lbDetails.ward
+    ? (lang === 'ta' ? `வார்டு ${lbDetails.ward}` : `Ward ${lbDetails.ward}`)
+    : ''
   const posPrefs = activeApp.position_preferences || result?.position_preferences || appData?.positionPrefs || []
   const firstPos = posPrefs[0] || 'Local Body Candidate'
 
@@ -1775,27 +1782,33 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
           {/* Candidate Details Box (Pure White Panel inside Saffron Card) */}
           <div className="poster-details-box" style={{
             background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.6)',
-            borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 5,
+            borderRadius: 14, padding: '9px 12px', display: 'flex', flexDirection: 'column', gap: 4.5,
             fontSize: 11, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
               <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
             </div>
             {epicNo && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
                 <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('EPIC / Voter ID')}:</span>
                 <span style={{ fontWeight: 700, color: '#0F172A', textAlign: 'right', flex: '1 1 58%' }}>{epicNo}</span>
               </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3 }}>{t(firstPos)}</span>
+              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{t(firstPos)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body Ward')}:</span>
-              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3, wordBreak: 'break-word' }}>{lbSummary}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3 : 0 }}>
+              <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
             </div>
+            {wardText && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Ward No / Area')}:</span>
+                <span style={{ fontWeight: 800, color: '#FF6600', fontSize: 11, textAlign: 'right', flex: '1 1 58%' }}>{wardText}</span>
+              </div>
+            )}
           </div>
 
           {/* Candidate Declaration Banner (Large Font, Premium Typography & Compact Spacing) */}
@@ -2071,27 +2084,33 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
               {/* Candidate Details Box (Pure White Panel inside Saffron Card) */}
               <div className="poster-details-box" style={{
                 background: '#FFFFFF', border: '1px solid rgba(255,255,255,0.6)',
-                borderRadius: 14, padding: '11px 12px', display: 'flex', flexDirection: 'column', gap: 6,
+                borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 5,
                 fontSize: 11.5, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
                   <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12.5, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
                 </div>
                 {epicNo && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                     <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('EPIC / Voter ID')}:</span>
                     <span style={{ fontWeight: 700, color: '#0F172A', textAlign: 'right', flex: '1 1 58%' }}>{epicNo}</span>
                   </div>
                 )}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3 }}>{t(firstPos)}</span>
+                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{t(firstPos)}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body Ward')}:</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.3, wordBreak: 'break-word' }}>{lbSummary}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3.5 : 0 }}>
+                  <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
+                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
                 </div>
+                {wardText && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Ward No / Area')}:</span>
+                    <span style={{ fontWeight: 800, color: '#FF6600', fontSize: 11.5, textAlign: 'right', flex: '1 1 58%' }}>{wardText}</span>
+                  </div>
+                )}
               </div>
 
               {/* Candidate Declaration Banner (Large Font, Premium Typography & Compact Spacing) */}
