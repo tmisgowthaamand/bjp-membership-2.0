@@ -198,7 +198,7 @@ export default function ApplicationDetailPage() {
               flexShrink: 0,
               display: 'flex',
               alignItems: 'center',
-              justify-content: 'center'
+              justifyContent: 'center'
             }}>
               <img
                 src={app.photo_url || app.photoUrl || '/bjp_logo.png'}
