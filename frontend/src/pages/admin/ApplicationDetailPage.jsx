@@ -124,8 +124,9 @@ export default function ApplicationDetailPage() {
         <div className="candidate-hero-body">
           <div className="candidate-avatar-large">
             <img
-              src={app.photo_url || app.photoUrl || '/bjp_logo.svg'}
+              src={app.photo_url || app.photoUrl || '/bjp_logo.png'}
               alt="Candidate Avatar"
+              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top' }}
               onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }}
             />
           </div>
@@ -162,12 +163,23 @@ export default function ApplicationDetailPage() {
         {/* Candidate Passport Photo */}
         {(app.photo_url || app.photoUrl) && (
           <DetailSection title="Candidate Passport Photo" icon="person-bounding-box">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <img
-                src={app.photo_url || app.photoUrl}
-                alt="Candidate Passport Photo"
-                style={{ width: 110, height: 130, borderRadius: 10, objectFit: 'cover', border: '2.5px solid #FF6600', boxShadow: '0 4px 10px rgba(255,102,0,0.25)' }}
-              />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
+              <div style={{
+                width: 120,
+                height: 150,
+                borderRadius: 12,
+                overflow: 'hidden',
+                border: '2.5px solid #FF6600',
+                boxShadow: '0 6px 16px rgba(255,102,0,0.22)',
+                background: '#f8fafc',
+                flexShrink: 0
+              }}>
+                <img
+                  src={app.photo_url || app.photoUrl}
+                  alt="Candidate Passport Photo"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+                />
+              </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: '#10B981', marginBottom: 6 }}>
                   <i className="bi bi-check-circle-fill me-1" /> Passport Photo Uploaded
@@ -177,9 +189,9 @@ export default function ApplicationDetailPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="social-link"
-                  style={{ fontSize: 13, fontWeight: 600 }}
+                  style={{ fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4 }}
                 >
-                  <i className="bi bi-box-arrow-up-right me-1" /> View High-Res Image
+                  <i className="bi bi-box-arrow-up-right" /> View High-Res Image
                 </a>
               </div>
             </div>

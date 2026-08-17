@@ -210,7 +210,24 @@ export default function ApplicationsPage() {
                       <td>
                         <span className="app-id-pill">{a.application_id}</span>
                       </td>
-                      <td className="fw-bold">{a.voter?.name || '—'}</td>
+                      <td className="fw-bold" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <img
+                          src={a.photo_url || a.photoUrl || '/bjp_logo.png'}
+                          alt="Candidate Avatar"
+                          style={{
+                            width: 34,
+                            height: 34,
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            objectPosition: 'center top',
+                            border: '1.5px solid #02a14d',
+                            flexShrink: 0,
+                            background: '#f8fafc'
+                          }}
+                          onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }}
+                        />
+                        <span>{a.voter?.name || '—'}</span>
+                      </td>
                       <td>{a.mobile}</td>
                       <td>
                         <span className="membership-tag">{a.membership_id}</span>

@@ -1148,13 +1148,14 @@
 }
 
 .candidate-avatar-large {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background: #ffffff;
-  border: 2px solid #02a14d;
-  padding: 4px;
-  box-shadow: 0 4px 12px rgba(2, 161, 77, 0.2);
+  border: 2.5px solid #02a14d;
+  padding: 2px;
+  box-shadow: 0 4px 14px rgba(2, 161, 77, 0.25);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1164,7 +1165,9 @@
 .candidate-avatar-large img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .candidate-hero-info h2 {
