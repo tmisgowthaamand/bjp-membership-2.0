@@ -4,7 +4,7 @@ import { requireAdmin } from '../middleware/adminAuth.js'
 import multer from 'multer'
 import {
   postLogin, getSession, postLogout,
-  getDashboardStats, getReports, getApplications, getApplicationDetail, updateApplicationPhoto,
+  getDashboardStats, getReports, getApplications, getApplicationDetail, updateApplicationPhoto, updateApplicationMembershipId,
 } from '../controllers/adminController.js'
 
 const router = Router()
@@ -27,5 +27,6 @@ router.get('/reports', requireAdmin, getReports)
 router.get('/applications', requireAdmin, getApplications)
 router.get('/applications/:id', requireAdmin, getApplicationDetail)
 router.post('/applications/:id/photo', requireAdmin, upload.single('file'), updateApplicationPhoto)
+router.post('/applications/:id/membership', requireAdmin, updateApplicationMembershipId)
 
 export default router

@@ -117,6 +117,9 @@ export const admin = {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 120000,
     }),
+
+  updateMembershipId: (id, membership_id) =>
+    api.post(`/admin/api/applications/${id}/membership`, { membership_id }),
 }
 
 export default api

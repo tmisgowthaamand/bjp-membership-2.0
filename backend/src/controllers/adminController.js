@@ -116,3 +116,26 @@ export async function updateApplicationPhoto(req, res) {
     return res.status(500).json({ success: false, message: 'Could not upload candidate photo.' })
   }
 }
+
+export async function updateApplicationMembershipId(req, res) {
+  if (!isAppDbOnline()) return res.status(503).json({ success: false, message: 'Application database unavailable.' })
+  const { id } = req.params
+  const membershipId = String(req.body?.membership_id || '').trim()
+  if (!membershipId) {
+    return res.status(400).json({ success: false, message: 'BJP Membership ID is required.' })
+  }
+  try {
+    const col = getAppDb().collection('applications')
+    const result = await col.updateOne(
+      { application_id: String(id).toUpperCase() },
+      { $set: { membership_id: membershipId, updated_at: new Date() } }
+    )
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Application record not found.' })
+    }
+    return res.json({ success: true, membership_id: membershipId, message: 'BJP Membership ID updated successfully.' })
+  } catch (err) {
+    console.error('[Update Membership ID Error]', err)
+    return res.status(500).json({ success: false, message: 'Could not update BJP Membership ID.' })
+  }
+}

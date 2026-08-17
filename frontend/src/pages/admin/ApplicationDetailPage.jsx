@@ -51,6 +51,31 @@ export default function ApplicationDetailPage() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [photoError, setPhotoError] = useState('')
 
+  const [isEditingMembership, setIsEditingMembership] = useState(false)
+  const [membershipInput, setMembershipInput] = useState('')
+  const [savingMembership, setSavingMembership] = useState(false)
+  const [membershipMsg, setMembershipMsg] = useState('')
+
+  const handleSaveMembership = async () => {
+    if (!membershipInput.trim()) return
+    setSavingMembership(true)
+    setMembershipMsg('')
+    try {
+      const res = await admin.updateMembershipId(id, membershipInput.trim())
+      if (res?.success && res?.membership_id) {
+        setApp((prev) => ({ ...prev, membership_id: res.membership_id }))
+        setIsEditingMembership(false)
+        setMembershipMsg('✅ BJP Membership ID updated successfully.')
+      } else {
+        setMembershipMsg(`❌ ${res?.message || 'Failed to update Membership ID.'}`)
+      }
+    } catch (err) {
+      setMembershipMsg(`❌ ${err?.message || 'Error updating Membership ID.'}`)
+    } finally {
+      setSavingMembership(false)
+    }
+  }
+
   const handlePhotoUpload = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -180,8 +205,99 @@ export default function ApplicationDetailPage() {
           <DetailRow icon="building" label="Assembly Constituency" value={[v.assembly_name, v.assembly_no].filter(Boolean).join(' — ') || v.assembly_no} />
           <DetailRow icon="geo-alt" label="District" value={v.district} />
           <DetailRow icon="signpost-2" label="Part / Booth" value={[v.part_no, v.booth_name].filter(Boolean).join(' — ')} />
-          <DetailRow icon="phone" label="Mobile Number" value={app.mobile} />
-          <DetailRow icon="shield-lock" label="BJP Membership ID" value={app.membership_id} />
+          <div className="detail-row" style={{ alignItems: 'flex-start' }}>
+            <div className="detail-label-col">
+              <i className="bi bi-shield-lock me-1.5 text-saffron" />
+              <span>BJP Membership ID</span>
+            </div>
+            <div className="detail-value-col" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+              {isEditingMembership ? (
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', width: '100%', marginTop: 4 }}>
+                  <input
+                    type="text"
+                    value={membershipInput}
+                    onChange={(e) => setMembershipInput(e.target.value)}
+                    placeholder="Enter BJP Membership ID"
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: 6,
+                      border: '1.5px solid #FF6600',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      outline: 'none',
+                      minWidth: 200,
+                      background: '#fff'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSaveMembership}
+                    disabled={savingMembership || !membershipInput.trim()}
+                    style={{
+                      background: '#FF6600',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 6,
+                      padding: '6px 14px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {savingMembership ? 'Saving...' : 'Save ID'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setIsEditingMembership(false); setMembershipMsg('') }}
+                    disabled={savingMembership}
+                    style={{
+                      background: '#f3f4f6',
+                      color: '#4b5563',
+                      border: '1px solid #d1d5db',
+                      borderRadius: 6,
+                      padding: '6px 12px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <span style={{ fontWeight: 700, color: app.membership_id ? '#10B981' : '#F59E0B' }}>
+                    {app.membership_id || 'Not Set'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMembershipInput(app.membership_id || '')
+                      setIsEditingMembership(true)
+                      setMembershipMsg('')
+                    }}
+                    style={{
+                      background: 'rgba(255, 102, 0, 0.1)',
+                      color: '#FF6600',
+                      border: '1px solid rgba(255, 102, 0, 0.3)',
+                      borderRadius: 6,
+                      padding: '3px 10px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 4
+                    }}
+                  >
+                    <i className="bi bi-pencil-square" />
+                    {app.membership_id ? 'Edit ID' : 'Add Membership ID'}
+                  </button>
+                </div>
+              )}
+              {membershipMsg && <div style={{ fontSize: 12, marginTop: 4 }}>{membershipMsg}</div>}
+            </div>
+          </div>
         </DetailSection>
 
         {/* Candidate Passport Photo */}
