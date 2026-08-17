@@ -492,6 +492,12 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
   const [selectedDistrict, setSelectedDistrict] = useState(contestDistrict || initial?.contestDistrict || 'Chennai')
   const [bodyType, setBodyType] = useState(initial?.bodyType || 'urban')
 
+  useEffect(() => {
+    if (contestDistrict) {
+      setSelectedDistrict(contestDistrict)
+    }
+  }, [contestDistrict])
+
   // Urban local body selections
   const [urbanBodyType, setUrbanBodyType] = useState(initial?.localBody?.urbanType || '')
   const [urbanBodyName, setUrbanBodyName] = useState(initial?.localBody?.urbanBody || '')
