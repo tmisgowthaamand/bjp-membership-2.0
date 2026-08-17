@@ -48,6 +48,30 @@ export default function ApplicationDetailPage() {
     window.print()
   }
 
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [photoError, setPhotoError] = useState('')
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploadingPhoto(true)
+    setPhotoError('')
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await admin.updatePhoto(id, formData)
+      if (res?.success && res?.photo_url) {
+        setApp((prev) => ({ ...prev, photo_url: res.photo_url }))
+      } else {
+        setPhotoError(res?.message || 'Failed to upload photo.')
+      }
+    } catch (err) {
+      setPhotoError(err?.message || 'Error uploading photo.')
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}>
@@ -161,42 +185,68 @@ export default function ApplicationDetailPage() {
         </DetailSection>
 
         {/* Candidate Passport Photo */}
-        {(app.photo_url || app.photoUrl) && (
-          <DetailSection title="Candidate Passport Photo" icon="person-bounding-box">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
-              <div style={{
-                width: 120,
-                height: 150,
-                borderRadius: 12,
-                overflow: 'hidden',
-                border: '2.5px solid #FF6600',
-                boxShadow: '0 6px 16px rgba(255,102,0,0.22)',
-                background: '#f8fafc',
-                flexShrink: 0
-              }}>
-                <img
-                  src={app.photo_url || app.photoUrl}
-                  alt="Candidate Passport Photo"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
-                />
-              </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#10B981', marginBottom: 6 }}>
+        <DetailSection title="Candidate Passport Photo" icon="person-bounding-box">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
+            <div style={{
+              width: 120,
+              height: 150,
+              borderRadius: 12,
+              overflow: 'hidden',
+              border: '2.5px solid #FF6600',
+              boxShadow: '0 6px 16px rgba(255,102,0,0.22)',
+              background: '#f8fafc',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justify-content: 'center'
+            }}>
+              <img
+                src={app.photo_url || app.photoUrl || '/bjp_logo.png'}
+                alt="Candidate Passport Photo"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 15%', display: 'block' }}
+                onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }}
+              />
+            </div>
+            <div>
+              {app.photo_url || app.photoUrl ? (
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#10B981', marginBottom: 8 }}>
                   <i className="bi bi-check-circle-fill me-1" /> Passport Photo Uploaded
                 </div>
-                <a
-                  href={app.photo_url || app.photoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-link"
-                  style={{ fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                >
-                  <i className="bi bi-box-arrow-up-right" /> View High-Res Image
-                </a>
-              </div>
+              ) : (
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#F59E0B', marginBottom: 8 }}>
+                  <i className="bi bi-exclamation-circle-fill me-1" /> Photo Pending
+                </div>
+              )}
+
+              <label className="btn-print-card" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <i className={`bi ${uploadingPhoto ? 'bi-hourglass-split' : 'bi-camera-fill'}`} />
+                {uploadingPhoto ? 'Uploading Photo...' : (app.photo_url || app.photoUrl ? 'Change Candidate Photo' : 'Upload Candidate Photo')}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  disabled={uploadingPhoto}
+                  style={{ display: 'none' }}
+                />
+              </label>
+
+              {(app.photo_url || app.photoUrl) && (
+                <div>
+                  <a
+                    href={app.photo_url || app.photoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                    style={{ fontSize: 13, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                  >
+                    <i className="bi bi-box-arrow-up-right" /> View High-Res Image
+                  </a>
+                </div>
+              )}
+              {photoError && <div style={{ fontSize: 12, color: '#EF4444', marginTop: 4 }}>{photoError}</div>}
             </div>
-          </DetailSection>
-        )}
+          </div>
+        </DetailSection>
 
         {/* Candidate Pitch Video */}
         {(app.video_url || app.videoUrl) && (

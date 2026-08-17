@@ -111,6 +111,12 @@ export const admin = {
 
   getApplication: (id) =>
     api.get(`/admin/api/applications/${id}`),
+
+  updatePhoto: (id, formData) =>
+    api.post(`/admin/api/applications/${id}/photo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000,
+    }),
 }
 
 export default api

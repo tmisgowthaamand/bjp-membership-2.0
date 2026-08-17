@@ -1,12 +1,14 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
 import { requireAdmin } from '../middleware/adminAuth.js'
+import multer from 'multer'
 import {
   postLogin, getSession, postLogout,
-  getDashboardStats, getReports, getApplications, getApplicationDetail,
+  getDashboardStats, getReports, getApplications, getApplicationDetail, updateApplicationPhoto,
 } from '../controllers/adminController.js'
 
 const router = Router()
+const upload = multer({ limits: { fileSize: 15 * 1024 * 1024 } })
 
 const loginLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
@@ -24,5 +26,6 @@ router.get('/stats', requireAdmin, getDashboardStats)
 router.get('/reports', requireAdmin, getReports)
 router.get('/applications', requireAdmin, getApplications)
 router.get('/applications/:id', requireAdmin, getApplicationDetail)
+router.post('/applications/:id/photo', requireAdmin, upload.single('file'), updateApplicationPhoto)
 
 export default router
