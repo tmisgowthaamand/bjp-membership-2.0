@@ -35,3 +35,9 @@ services:
         value: s3.us-east-005.backblazeb2.com
       - key: FAST2SMS_API_KEY
         value: dev_bypass
+      - key: CLOUDINARY_CLOUD_NAME
+        value: n9fgemea
+      - key: CLOUDINARY_API_KEY
+        value: 587186263567254
+      - key: CLOUDINARY_API_SECRET
+        value: p6auY1cSEsSPjVE56Ii19gBzQ_k

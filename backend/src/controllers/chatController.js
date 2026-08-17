@@ -4,6 +4,7 @@ import { createApplication, findApplicationById, findLatestApplicationByMobile }
 import { isVoterDbOnline, isAppDbOnline, getAppDb } from '../config/db.js'
 import { positionsFor, URBAN_BODY_TYPES } from '../constants/localBodies.js'
 import { uploadMedia, b2Configured, getMedia } from '../services/b2Service.js'
+import { uploadToCloudinary, isCloudinaryConfigured } from '../services/cloudinaryService.js'
 
 // ── OTP ────────────────────────────────────────────────────────────
 export async function postSendOtp(req, res) {
@@ -239,34 +240,46 @@ export async function getApplication(req, res) {
   return res.json({ success: true, application: app })
 }
 
-// ── Media upload (Backblaze B2) ────────────────────────────────────
-// Accepts a single multipart file field named "file". Images are optimised
-// with sharp inside the service. Returns the public URL of the stored object.
+// ── Media upload (Cloudinary + B2 Fallback) ─────────────────────────
 export async function postUploadMedia(req, res) {
-  if (!b2Configured()) {
-    return res.status(503).json({ success: false, message: 'Media upload is temporarily unavailable.' })
-  }
   const file = req.file
   if (!file || !file.buffer || !file.buffer.length) {
     return res.status(400).json({ success: false, message: 'No file received.' })
   }
-  // Group uploads by mobile number when available, else a shared folder.
   const mobile = String(req.body?.mobile || '').replace(/\D/g, '').slice(-10) || 'general'
-  try {
-    const result = await uploadMedia({
-      buffer: file.buffer,
-      originalName: file.originalname,
-      mimeType: file.mimetype,
-      folder: `bjp-localbody/${mobile}`,
-    })
-    // Serve media back through our own domain via the proxy below, so the B2
-    // bucket can stay private (no public-bucket requirement). Same-origin URLs
-    // also avoid CORS-tainting the html2canvas poster canvas.
-    const proxyUrl = `/api/media/${result.key}`
-    return res.json({ success: true, url: proxyUrl, key: result.key, bytes: result.bytes })
-  } catch (e) {
-    return res.status(500).json({ success: false, message: 'Could not upload the file. Please try again.' })
+
+  // Primary: Cloudinary HTTPS storage
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadToCloudinary({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        folder: `bjp_localbody/${mobile}`,
+      })
+      return res.json({ success: true, url: result.url, key: result.public_id, bytes: result.bytes })
+    } catch (err) {
+      console.error('[Cloudinary upload failed, attempting B2 fallback]', err)
+    }
   }
+
+  // Fallback: Backblaze B2
+  if (b2Configured()) {
+    try {
+      const result = await uploadMedia({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        folder: `bjp-localbody/${mobile}`,
+      })
+      const proxyUrl = `/api/media/${result.key}`
+      return res.json({ success: true, url: proxyUrl, key: result.key, bytes: result.bytes })
+    } catch (e) {
+      return res.status(500).json({ success: false, message: 'Could not upload the file. Please try again.' })
+    }
+  }
+
+  return res.status(503).json({ success: false, message: 'Media upload service is temporarily unavailable.' })
 }
 
 // ── Organiser message ──────────────────────────────────────────────
