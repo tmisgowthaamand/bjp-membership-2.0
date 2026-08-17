@@ -23,7 +23,11 @@ services:
         value: bjp_localbody_super_secret_jwt_key_2026
       - key: B2_APPLICATION_KEY_ID
         value: 00548ca7ce1e17d0000000002
+      - key: B2_KEY_ID
+        value: 00548ca7ce1e17d0000000002
       - key: B2_APPLICATION_KEY
+        value: K005/rI3F30bA17W9b7jG5w07hVl15Q
+      - key: B2_APP_KEY
         value: K005/rI3F30bA17W9b7jG5w07hVl15Q
       - key: B2_BUCKET_NAME
         value: bjp-localbody-media
