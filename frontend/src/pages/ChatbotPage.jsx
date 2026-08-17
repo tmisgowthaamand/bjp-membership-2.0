@@ -315,9 +315,9 @@ function MembershipCardMsg({ active, onSubmit, disabled }) {
 
   return (
     <div style={cardBox}>
-      <div style={cardTitle}><i className="bi bi-card-heading text-saffron" /> {t('BJP Membership ID (Optional)')}</div>
+      <div style={cardTitle}><i className="bi bi-card-heading text-saffron" /> {t('BJP Membership ID (Mandatory)')}<span style={{ color: '#e74c3c' }}> *</span></div>
       <div style={{ fontSize: 12, color: 'var(--color-ash)', lineHeight: 1.4 }}>
-        {t('Enter your BJP Membership ID if you are already a registered member.')}
+        {t('Enter your 8-digit BJP Primary Membership ID to proceed.')}
       </div>
 
       <div style={{ background: 'var(--color-abyss)', padding: 12, borderRadius: 10, border: '1px solid var(--color-graphite)' }}>
@@ -338,28 +338,18 @@ function MembershipCardMsg({ active, onSubmit, disabled }) {
             style={controlStyle}
             type="text"
             value={val}
-            placeholder={t('Enter BJP Membership ID (Optional)')}
+            placeholder={t('Enter BJP Membership ID (Mandatory)')}
             onChange={(e) => setVal(e.target.value)}
           />
 
           <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
-
             <button
-              style={secondaryBtn(!disabled)}
-              onClick={() => onSubmit('', true)}
-              disabled={disabled}
+              style={primaryBtn(Boolean(val.trim()) && !disabled)}
+              onClick={() => val.trim() && onSubmit(val.trim(), false)}
+              disabled={!val.trim() || disabled}
             >
-              {t('Skip & Proceed')} <i className="bi bi-arrow-right" />
+              {t('Continue')} <i className="bi bi-arrow-right" />
             </button>
-            {val.trim() && (
-              <button
-                style={primaryBtn(true)}
-                onClick={() => onSubmit(val.trim(), false)}
-                disabled={disabled}
-              >
-                {t('Continue')} <i className="bi bi-arrow-right" />
-              </button>
-            )}
           </div>
         </>
       )}
@@ -838,10 +828,10 @@ function PositionMsg({ active, bodyType, initial, onSubmit, disabled }) {
 
 // ── Social media (at least 1 valid URL) ────────────────────
 const SOCIALS = [
-  { key: 'facebook', label: 'Facebook URL', icon: 'facebook', placeholder: 'https://facebook.com/yourpage' },
-  { key: 'instagram', label: 'Instagram URL', icon: 'instagram', placeholder: 'https://instagram.com/yourhandle' },
-  { key: 'twitter', label: 'Twitter / X URL', icon: 'twitter-x', placeholder: 'https://x.com/yourhandle' },
-  { key: 'youtube', label: 'YouTube URL', icon: 'youtube', placeholder: 'https://youtube.com/@yourchannel' },
+  { key: 'facebook', label: 'Facebook Profile / Handle', icon: 'facebook', placeholder: 'facebook.com/yourpage or handle' },
+  { key: 'instagram', label: 'Instagram Profile / Handle', icon: 'instagram', placeholder: 'instagram.com/yourhandle or @handle' },
+  { key: 'twitter', label: 'Twitter / X Profile / Handle', icon: 'twitter-x', placeholder: 'x.com/yourhandle or @handle' },
+  { key: 'youtube', label: 'YouTube Channel / Handle', icon: 'youtube', placeholder: 'youtube.com/@yourchannel or handle' },
 ]
 
 function SocialMediaMsg({ active, initial, onSubmit, disabled }) {
@@ -852,9 +842,6 @@ function SocialMediaMsg({ active, initial, onSubmit, disabled }) {
 
   const handleContinue = () => {
     const filled = SOCIALS.map((s) => [s.key, (vals[s.key] || '').trim()]).filter(([, v]) => v)
-    for (const [k, v] of filled) {
-      if (!URL_RE.test(v)) { setError(t('Please enter a valid URL for {field}.', { field: k })); return }
-    }
     setError('')
     onSubmit(Object.fromEntries(filled))
   }
@@ -863,13 +850,13 @@ function SocialMediaMsg({ active, initial, onSubmit, disabled }) {
     <div style={cardBox}>
       <div style={cardTitle}><i className="bi bi-share-fill text-saffron" /> {t('Add Your Social Media')} ({t('Optional')})</div>
       <div style={{ fontSize: 12, color: 'var(--color-ash)' }}>
-        {t('Add your social media profile URLs (Optional).')}
+        {t('Add your social media profile URLs or handles (Optional).')}
       </div>
 
       {SOCIALS.map((s) => (
         <div key={s.key}>
           <span style={fieldLabel}><i className={`bi bi-${s.icon}`} style={{ marginRight: 6 }} />{t(s.label)}</span>
-          <input style={controlStyle} type="url" value={vals[s.key]} disabled={!active} placeholder={s.placeholder}
+          <input style={controlStyle} type="text" value={vals[s.key]} disabled={!active} placeholder={s.placeholder}
             onChange={(e) => { set(s.key, e.target.value); if (error) setError('') }} />
         </div>
       ))}
@@ -2507,11 +2494,15 @@ export default function ChatbotPage() {
     }
   }
 
-  const handleMembershipSubmit = async (customVal, skipped = false) => {
+  const handleMembershipSubmit = async (customVal) => {
     const rawVal = customVal !== undefined ? customVal : inputValue
-    const membershipId = skipped ? '' : String(rawVal || '').trim()
+    const membershipId = String(rawVal || '').trim()
+    if (!membershipId) {
+      flashSendHint(t('BJP Membership ID is mandatory. Please enter your Membership ID.'))
+      return
+    }
     patchData({ membershipId })
-    addMsg('user', 'text', { text: membershipId ? membershipId : t('Skipped') })
+    addMsg('user', 'text', { text: membershipId })
     setInputValue('')
     await botSay(t('Thank you. Now please enter your EPIC Number (Voter ID).'), 350)
     await botSay(t('Format: letters followed by digits, e.g. ABC1234567'), 200)
@@ -2757,7 +2748,7 @@ export default function ChatbotPage() {
     switch (chatState) {
       case S.AWAIT_MOBILE: return { type: 'tel', placeholder: t('Enter 10-digit mobile number'), maxLength: 10, inputMode: 'numeric' }
       case S.AWAIT_OTP: return { type: 'tel', placeholder: t('Enter OTP'), maxLength: 8, inputMode: 'numeric' }
-      case S.AWAIT_MEMBERSHIP: return { type: 'text', placeholder: t('Enter your BJP Membership ID (Optional)'), maxLength: 40 }
+      case S.AWAIT_MEMBERSHIP: return { type: 'text', placeholder: t('Enter your BJP Membership ID (Mandatory)'), maxLength: 40 }
 
       case S.AWAIT_EPIC: return { type: 'text', placeholder: t('EPIC Number (e.g. ABC1234567)'), maxLength: 12 }
       default: return null
@@ -2769,7 +2760,7 @@ export default function ChatbotPage() {
     const val = inputValue.trim()
     if (chatState === S.AWAIT_MOBILE) return val.length !== 10
     if (chatState === S.AWAIT_OTP) return val.length < 4
-    if (chatState === S.AWAIT_MEMBERSHIP) return false // Optional
+    if (chatState === S.AWAIT_MEMBERSHIP) return !val
 
     if (chatState === S.AWAIT_EPIC) return !/^[A-Z]{2,4}\d{6,8}$/.test(val.toUpperCase())
     return !val

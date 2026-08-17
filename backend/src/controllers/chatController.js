@@ -94,7 +94,9 @@ export async function postSubmitApplication(req, res) {
   }
 
   const membershipId = String(body.membership_id || '').trim()
-  // membership_id is optional (can be blank/skipped)
+  if (!membershipId) {
+    return res.status(400).json({ success: false, message: 'BJP Membership ID is required.' })
+  }
 
   const epic = normalizeEpic(body.epic_no)
   if (!isValidEpic(epic)) {
@@ -167,16 +169,14 @@ export async function postSubmitApplication(req, res) {
     }
   }
 
-  // Social media — at least one valid URL required
+  // Social media — optional, accepts profile links or handles
   const socialIn = body.social_media || {}
   const social = {}
   for (const key of ['facebook', 'instagram', 'twitter', 'youtube']) {
     const v = String(socialIn[key] || '').trim()
     if (v) {
-      if (!URL_RE.test(v)) {
-        return res.status(400).json({ success: false, message: `Please enter a valid ${key} URL.` })
-      }
-      social[key] = v
+      const formatted = /^https?:\/\//i.test(v) ? v : `https://${v.replace(/^@/, '')}`
+      social[key] = formatted
     }
   }
   // Social media is optional — no minimum required. Any entered URLs are validated above.
