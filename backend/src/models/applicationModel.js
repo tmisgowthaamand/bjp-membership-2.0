@@ -112,8 +112,11 @@ export async function getReport({ bodyType, position, from, to, search, page = 1
 export async function getStats() {
   const db = getAppDb()
   const coll = db.collection(COLLECTION)
-  const startOfToday = new Date()
-  startOfToday.setHours(0, 0, 0, 0)
+  // Start of today in IST (UTC+5:30) for accurate server timezone calculation
+  const now = new Date()
+  const istOffsetMs = 5.5 * 60 * 60 * 1000
+  const istDate = new Date(now.getTime() + istOffsetMs)
+  const startOfToday = new Date(Date.UTC(istDate.getUTCFullYear(), istDate.getUTCMonth(), istDate.getUTCDate()) - istOffsetMs)
 
   const [total, rural, urban, today, allApps] = await Promise.all([
     coll.countDocuments({}),
