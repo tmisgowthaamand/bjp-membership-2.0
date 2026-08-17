@@ -1167,7 +1167,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 15%;
 }
 
 .candidate-hero-info h2 {

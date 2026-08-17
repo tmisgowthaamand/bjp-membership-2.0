@@ -126,7 +126,7 @@ export default function ApplicationDetailPage() {
             <img
               src={app.photo_url || app.photoUrl || '/bjp_logo.png'}
               alt="Candidate Avatar"
-              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top' }}
+              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center 15%' }}
               onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }}
             />
           </div>
