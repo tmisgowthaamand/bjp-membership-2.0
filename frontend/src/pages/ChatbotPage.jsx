@@ -1511,7 +1511,7 @@ function ReviewMsg({ active, data, mobile, onConfirm, onEdit, disabled }) {
 
 // ── Submitted confirmation + Organiser Get In Touch (One-time message) ──
 function SubmittedMsg({ result, alreadyApplied, appData }) {
-  const { t, lang } = useLang()
+  const { t, lang, setLang } = useLang()
   const initialSentMsg = result?.organiser_message || null
   const [sentMsg, setSentMsg] = useState(initialSentMsg)
   const [orgMsg, setOrgMsg] = useState('')
@@ -1731,10 +1731,10 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             </div>
             <div style={{ textAlign: 'center', flex: 1, padding: '0 4px' }}>
               <div className="poster-header-text" style={{ fontSize: 11.5, fontWeight: 900, letterSpacing: '0.03em', color: '#f76201', textTransform: 'uppercase', lineHeight: 1.2 }}>
-                BHARATIYA JANATA PARTY
+                {t('BHARATIYA JANATA PARTY')}
               </div>
               <div style={{ fontSize: 8.5, fontWeight: 800, color: '#475569', marginTop: 1 }}>
-                TAMIL NADU LOCAL BODY ELECTIONS 2026-27
+                {t('TAMIL NADU LOCAL BODY ELECTIONS 2026-27')}
               </div>
             </div>
             <div style={{ width: 14 }} />
@@ -1779,21 +1779,21 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             fontSize: 11, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>Application ID:</span>
+              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Application ID')}:</span>
               <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12 }}>{result.application_id}</span>
             </div>
             {epicNo && (
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-                <span style={{ color: '#64748B', fontWeight: 500 }}>EPIC / Voter ID:</span>
+                <span style={{ color: '#64748B', fontWeight: 500 }}>{t('EPIC / Voter ID')}:</span>
                 <span style={{ fontWeight: 700, color: '#0F172A' }}>{epicNo}</span>
               </div>
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>Contest Preference:</span>
-              <span style={{ fontWeight: 700, color: '#E65C00' }}>{firstPos}</span>
+              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Contest Preference')}:</span>
+              <span style={{ fontWeight: 700, color: '#E65C00' }}>{t(firstPos)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#64748B', fontWeight: 500 }}>Local Body Ward:</span>
+              <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Local Body Ward')}:</span>
               <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 9, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>{lbSummary}</span>
             </div>
           </div>
@@ -1815,12 +1815,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
           }}>
             <div>
-              <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>Submitted Timestamp</div>
+              <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>{t('Submitted Timestamp')}</div>
               <div style={{ fontSize: 9.5, fontWeight: 700, color: '#0F172A', marginTop: 1 }}>
                 {fmtDateTime(result.submitted_at)}
               </div>
               <div style={{ fontSize: 8, color: '#FF6600', marginTop: 1, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3 }}>
-                <i className="bi bi-shield-check" /> Official Party Verification 2026-27
+                <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
               </div>
             </div>
             {qrUrl && (
@@ -2027,10 +2027,10 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 </div>
                 <div style={{ textAlign: 'center', flex: 1, padding: '0 6px' }}>
                   <div className="poster-header-text" style={{ fontSize: 12.5, fontWeight: 900, letterSpacing: '0.03em', color: '#f76201', textTransform: 'uppercase' }}>
-                    BHARATIYA JANATA PARTY
+                    {t('BHARATIYA JANATA PARTY')}
                   </div>
                   <div style={{ fontSize: 9.5, fontWeight: 800, color: '#475569', marginTop: 2 }}>
-                    TAMIL NADU LOCAL BODY ELECTIONS 2026-27
+                    {t('TAMIL NADU LOCAL BODY ELECTIONS 2026-27')}
                   </div>
                 </div>
                 <div style={{ width: 20 }} />
@@ -2075,21 +2075,21 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 fontSize: 12, zIndex: 1, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', color: '#0F172A'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>Application ID:</span>
+                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Application ID')}:</span>
                   <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 13 }}>{result.application_id}</span>
                 </div>
                 {epicNo && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                    <span style={{ color: '#64748B', fontWeight: 500 }}>EPIC / Voter ID:</span>
+                    <span style={{ color: '#64748B', fontWeight: 500 }}>{t('EPIC / Voter ID')}:</span>
                     <span style={{ fontWeight: 700, color: '#0F172A' }}>{epicNo}</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>Contest Preference:</span>
-                  <span style={{ fontWeight: 700, color: '#E65C00' }}>{firstPos}</span>
+                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Contest Preference')}:</span>
+                  <span style={{ fontWeight: 700, color: '#E65C00' }}>{t(firstPos)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#64748B', fontWeight: 500 }}>Local Body Ward:</span>
+                  <span style={{ color: '#64748B', fontWeight: 500 }}>{t('Local Body Ward')}:</span>
                   <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 9, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 200 }}>{lbSummary}</span>
                 </div>
               </div>
@@ -2111,12 +2111,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
               }}>
                 <div>
-                  <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>Submitted Timestamp</div>
+                  <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>{t('Submitted Timestamp')}</div>
                   <div style={{ fontSize: 9.5, fontWeight: 700, color: '#0F172A', marginTop: 1 }}>
                     {fmtDateTime(result.submitted_at)}
                   </div>
                   <div style={{ fontSize: 8, color: '#FF6600', marginTop: 1, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <i className="bi bi-shield-check" /> Official Party Verification 2026-27
+                    <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
                   </div>
                 </div>
                 {qrUrl && (

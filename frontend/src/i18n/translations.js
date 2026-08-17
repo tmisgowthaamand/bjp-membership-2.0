@@ -257,6 +257,20 @@ export const translations = {
     'Ward Development Priorities': 'வார்டு வளர்ச்சி முன்னுரிமைகள்',
     'Grievance Plan': 'குறைதீர்ப்பு திட்டம்',
     'I have applied to the Bharatiya Janata Party to contest the local body elections and have received the necessary certificate.': 'நான் உள்ளாட்சி தேர்தலில் போட்டியிட பாரதிய ஜனதா கட்சியில் விண்ணப்பித்து அதற்கான சான்றிதழ் பெற்றுள்ளேன்..!',
+
+    // ── 9:16 Poster Card & Language Switcher ──────────────
+    'BHARATIYA JANATA PARTY': 'பாரதிய ஜனதா கட்சி',
+    'TAMIL NADU LOCAL BODY ELECTIONS 2026-27': 'தமிழ்நாடு உள்ளாட்சித் தேர்தல் 2026-27',
+    'EPIC / Voter ID': 'வாக்காளர் அடையாள எண் (Voter ID)',
+    'Contest Preference': 'போட்டியிடும் விருப்பம்',
+    'Local Body Ward': 'உள்ளாட்சி வார்டு',
+    'Submitted Timestamp': 'சமர்ப்பிக்கப்பட்ட நேரம்',
+    'Official Party Verification 2026-27': 'அதிகாரப்பூர்வ கட்சி சரிபார்ப்பு 2026-27',
+    'Download 9:16 Card Image': '9:16 அட்டைப் படத்தைப் பதிவிறக்குக',
+    'Generating PNG Card...': 'PNG அட்டை உருவாக்கப்படுகிறது...',
+    'Close': 'மூடு',
+    'Card Language / மொழி:': 'அட்டை மொழி / Language:',
+    'View / Download 9:16 Digital Application Poster Card': '9:16 டிஜிட்டல் போஸ்டர் அட்டையைக் காண்க / பதிவிறக்குக',
   },
 }
 
