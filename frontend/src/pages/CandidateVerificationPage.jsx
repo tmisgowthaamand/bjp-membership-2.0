@@ -95,7 +95,12 @@ export default function CandidateVerificationPage() {
   useEffect(() => {
     if (appId) {
       const currentUrl = window.location.href
-      QRCode.toDataURL(currentUrl, { margin: 1, width: 140, color: { dark: '#0F172A', light: '#FFFFFF' } })
+      QRCode.toDataURL(currentUrl, {
+        margin: 2,
+        width: 500,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#0F172A', light: '#FFFFFF' }
+      })
         .then(setQrUrl)
         .catch(() => { })
     }
@@ -461,21 +466,31 @@ export default function CandidateVerificationPage() {
               <div style={{
                 background: '#FFFFFF', color: '#0F172A',
                 borderRadius: 12, padding: '10px 12px', display: 'flex', alignItems: 'center',
-                justifyContent: 'space-between', boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1
+                justifyContent: 'space-between', gap: 8, boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1
               }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <span style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>Submitted Timestamp</span>
-                  <span style={{ fontSize: 9.5, fontWeight: 800, color: '#0F172A' }}>{formattedTime}</span>
-                  <span style={{ fontSize: 8, color: '#f76201', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3, marginTop: 1 }}>
-                    🛡️ Official Party Verification 2026-27
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+                  <span style={{ fontSize: 8, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Submitted Timestamp</span>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: '#0F172A' }}>{formattedTime}</span>
+                  <span style={{
+                    fontSize: 8, color: '#059669', fontWeight: 800,
+                    background: '#ECFDF5', border: '1px solid #10B981',
+                    padding: '2.5px 8px', borderRadius: 10,
+                    display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, width: 'fit-content'
+                  }}>
+                    <i className="bi bi-shield-check" /> Official Party Verification 2026-27
                   </span>
                 </div>
                 {qrUrl && (
-                  <a href={window.location.href} target="_blank" rel="noopener noreferrer" title="Click to open verification link">
-                    <div style={{ background: '#FFF', padding: 2, borderRadius: 6, border: '1px solid #E2E8F0', display: 'flex', cursor: 'pointer' }}>
-                      <img src={qrUrl} alt="Verification QR Code" style={{ width: 46, height: 46 }} />
-                    </div>
-                  </a>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+                    <a href={window.location.href} target="_blank" rel="noopener noreferrer" title="Click to open verification link" style={{ textDecoration: 'none', display: 'block' }}>
+                      <div style={{ background: '#FFF', padding: 3, borderRadius: 8, border: '1.5px solid #CBD5E1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)', display: 'flex', cursor: 'pointer' }}>
+                        <img src={qrUrl} alt="Verification QR Code" style={{ width: 50, height: 50, borderRadius: 4, display: 'block', imageRendering: 'pixelated' }} />
+                      </div>
+                    </a>
+                    <span style={{ fontSize: 7.5, fontWeight: 800, color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                      SCAN TO VERIFY
+                    </span>
+                  </div>
                 )}
               </div>
             </div>

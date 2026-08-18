@@ -1633,7 +1633,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
         })
         .catch(() => { })
 
-      QRCode.toDataURL(verifyLinkUrl, { margin: 1, width: 140, color: { dark: '#0F172A', light: '#FFFFFF' } })
+      QRCode.toDataURL(verifyLinkUrl, {
+        margin: 2,
+        width: 500,
+        errorCorrectionLevel: 'M',
+        color: { dark: '#0F172A', light: '#FFFFFF' }
+      })
         .then(setQrUrl)
         .catch(() => { })
     }
@@ -1882,29 +1887,54 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
           </div>
 
           {/* QR Code & Verification Stamp Footer (Pure White Panel inside Saffron Card) */}
+          {/* QR Code & Verification Stamp Footer (Pure White Corporate Panel) */}
           <div style={{
             background: '#FFFFFF', borderRadius: 12, padding: '8px 10px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
           }}>
-            <div>
-              <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>{t('Submitted Timestamp')}</div>
-              <div style={{ fontSize: 9.5, fontWeight: 700, color: '#0F172A', marginTop: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+              <div style={{ fontSize: 7.5, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                {t('Submitted Timestamp')}
+              </div>
+              <div style={{ fontSize: 9.5, fontWeight: 800, color: '#0F172A' }}>
                 {fmtDateTime(result.submitted_at)}
               </div>
-              <div style={{ fontSize: 8, color: '#FF6600', marginTop: 1, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3 }}>
+              <div style={{
+                fontSize: 7.5, color: '#059669', fontWeight: 800,
+                background: '#ECFDF5', border: '1px solid #10B981',
+                padding: '2px 6px', borderRadius: 10,
+                display: 'inline-flex', alignItems: 'center', gap: 3, marginTop: 2, width: 'fit-content'
+              }}>
                 <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
               </div>
             </div>
             {qrUrl && (
-              <a href={verifyLinkUrl} target="_blank" rel="noopener noreferrer" title="Click to view candidate verification page">
-                <img
-                  src={qrUrl}
-                  alt="QR Verification"
-                  className="poster-qr-img"
-                  style={{ width: 44, height: 44, borderRadius: 6, border: '1px solid #CBD5E1', background: '#FFF', display: 'block', cursor: 'pointer' }}
-                />
-              </a>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+                <a
+                  href={verifyLinkUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Scan or click to view official verification record"
+                  style={{ textDecoration: 'none', display: 'block' }}
+                >
+                  <div style={{
+                    padding: 3, background: '#FFFFFF', borderRadius: 8,
+                    border: '1.5px solid #CBD5E1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                  }}>
+                    <img
+                      src={qrUrl}
+                      alt="QR Verification"
+                      className="poster-qr-img"
+                      style={{ width: 48, height: 48, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
+                    />
+                  </div>
+                </a>
+                <span style={{ fontSize: 7, fontWeight: 800, color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                  SCAN TO VERIFY
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -2190,25 +2220,54 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 {t('I have applied to the Bharatiya Janata Party to contest the local body elections and have received the necessary certificate.')}
               </div>
 
-              {/* QR Code & Verification Stamp Footer (Pure White Panel inside Saffron Card) */}
+              {/* QR Code & Verification Stamp Footer (Pure White Corporate Panel) */}
               <div style={{
                 background: '#FFFFFF', borderRadius: 12, padding: '10px 12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
                 boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
               }}>
-                <div>
-                  <div style={{ fontSize: 8, color: '#64748B', fontWeight: 500 }}>{t('Submitted Timestamp')}</div>
-                  <div style={{ fontSize: 9.5, fontWeight: 700, color: '#0F172A', marginTop: 1 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+                  <div style={{ fontSize: 8, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    {t('Submitted Timestamp')}
+                  </div>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: '#0F172A' }}>
                     {fmtDateTime(result.submitted_at)}
                   </div>
-                  <div style={{ fontSize: 8, color: '#FF6600', marginTop: 1, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <div style={{
+                    fontSize: 8, color: '#059669', fontWeight: 800,
+                    background: '#ECFDF5', border: '1px solid #10B981',
+                    padding: '2.5px 8px', borderRadius: 10,
+                    display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, width: 'fit-content'
+                  }}>
                     <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
                   </div>
                 </div>
                 {qrUrl && (
-                  <a href={verifyLinkUrl} target="_blank" rel="noopener noreferrer" title="Click to view candidate verification page">
-                    <img src={qrUrl} alt="QR Verification" className="poster-qr-img" style={{ width: 48, height: 48, borderRadius: 6, border: '1px solid #CBD5E1', background: '#FFF', display: 'block', cursor: 'pointer' }} />
-                  </a>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
+                    <a
+                      href={verifyLinkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Scan or click to view official verification record"
+                      style={{ textDecoration: 'none', display: 'block' }}
+                    >
+                      <div style={{
+                        padding: 3, background: '#FFFFFF', borderRadius: 8,
+                        border: '1.5px solid #CBD5E1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}>
+                        <img
+                          src={qrUrl}
+                          alt="QR Verification"
+                          className="poster-qr-img"
+                          style={{ width: 52, height: 52, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
+                        />
+                      </div>
+                    </a>
+                    <span style={{ fontSize: 7.5, fontWeight: 800, color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                      SCAN TO VERIFY
+                    </span>
+                  </div>
                 )}
               </div>
             </div>
