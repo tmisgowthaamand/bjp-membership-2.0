@@ -9,7 +9,7 @@ export default function CandidateVerificationPage() {
   const { lang, setLang, t } = useLang()
   const [searchParams, setSearchParams] = useSearchParams()
   const { id: routeId } = useParams()
-  const appId = searchParams.get('app_id') || searchParams.get('id') || routeId || ''
+  const appId = searchParams.get('app_id') || searchParams.get('id') || searchParams.get('membership_id') || routeId || ''
   const urlLang = searchParams.get('lang')
 
   const [loading, setLoading] = useState(true)

@@ -37,8 +37,15 @@ export async function createApplication(doc) {
 
 export async function findApplicationById(applicationId) {
   const db = getAppDb()
+  const cleanId = String(applicationId).trim()
   return db.collection(COLLECTION).findOne(
-    { application_id: String(applicationId).trim().toUpperCase() },
+    {
+      $or: [
+        { application_id: cleanId.toUpperCase() },
+        { membership_id: cleanId },
+        { mobile: cleanId },
+      ]
+    },
     { projection: { _id: 0 } }
   )
 }

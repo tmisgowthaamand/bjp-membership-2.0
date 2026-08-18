@@ -1610,12 +1610,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
   const posPrefs = activeApp.position_preferences || result?.position_preferences || appData?.positionPrefs || []
   const firstPos = posPrefs[0] || 'Local Body Candidate'
 
-  const targetAppId = activeApp.application_id || result?.application_id || appData?.applicationId || ''
+  const targetAppId = activeApp.application_id || result?.application_id || appData?.applicationId || activeApp.membership_id || result?.membership_id || appData?.membershipId || ''
 
   const getPublicOrigin = () => {
     if (typeof window !== 'undefined' && window.location.origin) {
       const orig = window.location.origin
-      if (!orig.includes('localhost') && !orig.includes('127.0.0.1') && !orig.includes('file:')) {
+      if (orig && !orig.includes('localhost') && !orig.includes('127.0.0.1') && !orig.includes('file:')) {
         return orig
       }
     }
