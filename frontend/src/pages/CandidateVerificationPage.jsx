@@ -96,10 +96,10 @@ export default function CandidateVerificationPage() {
     if (appId) {
       const currentUrl = window.location.href
       QRCode.toDataURL(currentUrl, {
-        margin: 2,
-        width: 500,
-        errorCorrectionLevel: 'M',
-        color: { dark: '#0F172A', light: '#FFFFFF' }
+        margin: 1,
+        width: 600,
+        errorCorrectionLevel: 'L',
+        color: { dark: '#000000', light: '#FFFFFF' }
       })
         .then(setQrUrl)
         .catch(() => { })
@@ -484,7 +484,7 @@ export default function CandidateVerificationPage() {
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
                     <a href={window.location.href} target="_blank" rel="noopener noreferrer" title="Click to open verification link" style={{ textDecoration: 'none', display: 'block' }}>
                       <div style={{ background: '#FFF', padding: 3, borderRadius: 8, border: '1.5px solid #CBD5E1', boxShadow: '0 2px 6px rgba(0,0,0,0.06)', display: 'flex', cursor: 'pointer' }}>
-                        <img src={qrUrl} alt="Verification QR Code" style={{ width: 50, height: 50, borderRadius: 4, display: 'block', imageRendering: 'pixelated' }} />
+                        <img src={qrUrl} alt="Verification QR Code" style={{ width: 66, height: 66, borderRadius: 4, display: 'block', imageRendering: 'pixelated' }} />
                       </div>
                     </a>
                     <span style={{ fontSize: 7.5, fontWeight: 800, color: '#0F172A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>

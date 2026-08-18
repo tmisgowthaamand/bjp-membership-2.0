@@ -1622,7 +1622,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
     return 'https://bjp-membership.vercel.app'
   }
 
-  const verifyLinkUrl = `${getPublicOrigin()}/verify?app_id=${encodeURIComponent(targetAppId)}&lang=${encodeURIComponent(lang)}`
+  const verifyLinkUrl = `${getPublicOrigin()}/verify/${encodeURIComponent(targetAppId)}`
 
   useEffect(() => {
     if (targetAppId) {
@@ -1634,15 +1634,15 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
         .catch(() => { })
 
       QRCode.toDataURL(verifyLinkUrl, {
-        margin: 2,
-        width: 500,
-        errorCorrectionLevel: 'M',
-        color: { dark: '#0F172A', light: '#FFFFFF' }
+        margin: 1,
+        width: 600,
+        errorCorrectionLevel: 'L',
+        color: { dark: '#000000', light: '#FFFFFF' }
       })
         .then(setQrUrl)
         .catch(() => { })
     }
-  }, [targetAppId, lang, verifyLinkUrl])
+  }, [targetAppId, verifyLinkUrl])
 
   const handleDownloadPoster = async () => {
     if (!posterRef.current) return
@@ -1927,7 +1927,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                       src={qrUrl}
                       alt="QR Verification"
                       className="poster-qr-img"
-                      style={{ width: 48, height: 48, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
+                      style={{ width: 60, height: 60, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
                     />
                   </div>
                 </a>
@@ -2260,7 +2260,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                           src={qrUrl}
                           alt="QR Verification"
                           className="poster-qr-img"
-                          style={{ width: 52, height: 52, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
+                          style={{ width: 66, height: 66, borderRadius: 4, display: 'block', cursor: 'pointer', imageRendering: 'pixelated' }}
                         />
                       </div>
                     </a>
