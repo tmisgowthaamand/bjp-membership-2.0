@@ -65,38 +65,26 @@ export default function CandidateVerificationPage() {
   const photoUrl = appData?.photo_url || appData?.photoUrl || appData?.photo_preview || appData?.voter?.photo || ''
   const candidateImg = photoUrl && photoUrl.trim() ? photoUrl : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300'
   const posPrefs = appData?.position_preferences || []
-  const primaryPos = t(posPrefs[0] || 'Local Body Candidate')
-
-  const formatLbName = (name) => {
-    if (!name) return ''
-    if (lang !== 'ta') return name
-    return String(name)
-      .replace(/Town Panchayat/gi, 'பேரூராட்சி')
-      .replace(/Municipality/gi, 'நகராட்சி')
-      .replace(/Corporation/gi, 'மாநகராட்சி')
-      .replace(/Panchayat Union/gi, 'ஊராட்சி ஒன்றியம்')
-      .replace(/Village Panchayat/gi, 'கிராம ஊராட்சி')
-      .replace(/District Panchayat/gi, 'மாவட்ட ஊராட்சி')
-  }
+  const primaryPos = posPrefs[0] || 'Local Body Candidate'
 
   // Location summary
   const getLbSummary = () => {
-    if (!appData) return t('Tamil Nadu Local Body')
+    if (!appData) return 'Tamil Nadu Local Body'
     let res = ''
     if (appData.body_type === 'urban') {
       const type = appData.ward_details?.urban_type || 'Urban Local Body'
       const name = appData.ward_details?.urban_body_name || ''
       const ward = appData.ward_details?.ward || ''
-      const wText = ward ? (lang === 'ta' ? `வார்டு ${ward}` : `Ward ${ward}`) : ''
-      res = [formatLbName(type), name, wText].filter(Boolean).join(' - ')
+      const wText = ward ? `Ward ${ward}` : ''
+      res = [type, name, wText].filter(Boolean).join(' - ')
     } else {
       const union = appData.ward_details?.panchayat_union || ''
       const panchayat = appData.ward_details?.village_panchayat || ''
       const ward = appData.ward_details?.ward || ''
-      const wText = ward ? (lang === 'ta' ? `வார்டு ${ward}` : `Ward ${ward}`) : ''
+      const wText = ward ? `Ward ${ward}` : ''
       res = [union, panchayat, wText].filter(Boolean).join(' - ')
     }
-    return res.replace(/[\s\-]+$/, '').trim() || t('Tamil Nadu Local Body')
+    return res.replace(/[\s\-]+$/, '').trim() || 'Tamil Nadu Local Body'
   }
 
   const lbSummary = getLbSummary()
