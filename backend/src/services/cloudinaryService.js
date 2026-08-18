@@ -52,3 +52,18 @@ export async function uploadToCloudinary({ buffer, originalName, mimeType, folde
     uploadStream.end(buffer)
   })
 }
+
+export async function deleteFromCloudinary(photoUrl) {
+  if (!photoUrl || typeof photoUrl !== 'string' || !isCloudinaryConfigured()) return null
+  try {
+    // Extract public_id from Cloudinary URL: .../upload/v12345/bjp_localbody/filename.jpg -> bjp_localbody/filename
+    const matches = photoUrl.match(/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/)
+    if (matches && matches[1]) {
+      const publicId = matches[1]
+      return await cloudinary.uploader.destroy(publicId)
+    }
+  } catch (err) {
+    console.error('[Cloudinary Delete Error]', err)
+  }
+  return null
+}

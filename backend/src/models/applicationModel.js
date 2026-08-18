@@ -50,12 +50,35 @@ export async function findApplicationById(applicationId) {
   )
 }
 
-// Paginated + searchable list for the admin panel.
-export async function listApplications({ search = '', page = 1, pageSize = 20 } = {}) {
+function buildDistrictRegex(districtStr) {
+  const d = String(districtStr || '').trim()
+  if (!d) return null
+  const norm = d.toLowerCase().replace(/\s+/g, '')
+
+  if (norm.includes('sivagang')) return { $regex: 'Sivagang', $options: 'i' }
+  if (norm.includes('iruvall') || norm.includes('iruval')) return { $regex: 'T?h?iruvall?ur', $options: 'i' }
+  if (norm.includes('kanch')) return { $regex: 'Kanch', $options: 'i' }
+  if (norm.includes('trichy') || norm.includes('tiruch')) return { $regex: 'T?h?iruch', $options: 'i' }
+  if (norm.includes('thooth')) return { $regex: 'Thooth', $options: 'i' }
+  if (norm.includes('kanya') || norm.includes('kanni')) return { $regex: 'Kan[n]?iyakumari', $options: 'i' }
+  if (norm.includes('tirupat') || norm.includes('tirupath')) return { $regex: 'Tirupat', $options: 'i' }
+  if (norm.includes('iruvannam')) return { $regex: 'T?h?iruvannam', $options: 'i' }
+  if (norm.includes('iruvar')) return { $regex: 'T?h?iruvar', $options: 'i' }
+
+  const dSafe = d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return { $regex: dSafe, $options: 'i' }
+}
+
+export async function getApplications({ page = 1, pageSize = 10, query = '', body_type = '', district = '' } = {}) {
   const db = getAppDb()
   const coll = db.collection(COLLECTION)
+
   const q = {}
-  const term = String(search || '').trim()
+  if (body_type === 'rural' || body_type === 'urban') {
+    q.body_type = body_type
+  }
+
+  const term = String(query || '').trim()
   if (term) {
     const safe = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     q.$or = [
@@ -66,6 +89,25 @@ export async function listApplications({ search = '', page = 1, pageSize = 20 } 
       { 'voter.name': { $regex: safe, $options: 'i' } },
     ]
   }
+
+  const distTerm = String(district || '').trim()
+  if (distTerm) {
+    const distMatch = buildDistrictRegex(distTerm)
+    const districtFilterArray = [
+      { 'local_body.district': distMatch },
+      { 'voter.district': distMatch },
+      { 'voter.district_name': distMatch },
+      { 'ward_details.district': distMatch },
+      { district: distMatch },
+    ]
+    if (q.$or) {
+      q.$and = [{ $or: q.$or }, { $or: districtFilterArray }]
+      delete q.$or
+    } else {
+      q.$or = districtFilterArray
+    }
+  }
+
   const pageNum = Math.max(1, parseInt(page, 10) || 1)
   const size = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 20))
   const skip = (pageNum - 1) * size
@@ -76,16 +118,27 @@ export async function listApplications({ search = '', page = 1, pageSize = 20 } 
   return { applications: rows, total, page: pageNum, pageSize: size }
 }
 
+export { getApplications as listApplications }
+
 // Filtered report query for the admin Reports page.
-// Filters: bodyType (rural|urban), position (matches any preference),
-// from/to (submitted_at date range, inclusive), search (id/name/mobile/etc).
-export async function getReport({ bodyType, position, from, to, search, page = 1, pageSize = 20 } = {}) {
+export async function getReport({ bodyType, position, from, to, search, district, page = 1, pageSize = 20 } = {}) {
   const db = getAppDb()
   const coll = db.collection(COLLECTION)
   const q = {}
 
   if (bodyType === 'rural' || bodyType === 'urban') q.body_type = bodyType
   if (position && String(position).trim()) q.position_preferences = String(position).trim()
+
+  if (district && String(district).trim()) {
+    const distMatch = buildDistrictRegex(district)
+    q.$or = [
+      { 'local_body.district': distMatch },
+      { 'voter.district': distMatch },
+      { 'voter.district_name': distMatch },
+      { 'ward_details.district': distMatch },
+      { district: distMatch },
+    ]
+  }
 
   const range = {}
   if (from) { const d = new Date(from); if (!Number.isNaN(d.getTime())) range.$gte = d }
@@ -222,4 +275,121 @@ export async function findLatestApplicationByMobile(mobile) {
     { mobile: m },
     { projection: { _id: 0 }, sort: { submitted_at: -1 } }
   )
+}
+
+// District Analytics Breakdown from real database records (DB1, DB2, DB3)
+export async function getDistrictAnalyticsCounts() {
+  const district_counts = {}
+
+  // 1. Fetch district names dynamically from DB2 (ward_db)
+  if (isWardDbOnline()) {
+    try {
+      const wardDb = getWardDb()
+      const collections = ['corporations', 'municipalities', 'town_panchayats', 'panchayats_unions', 'grama_panchayats']
+      for (const colName of collections) {
+        try {
+          const dists = await wardDb.collection(colName).distinct('district_name')
+          dists.forEach((d) => {
+            if (d && typeof d === 'string' && d.trim()) {
+              const clean = d.trim()
+              if (district_counts[clean] === undefined) {
+                district_counts[clean] = 0
+              }
+            }
+          })
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
+  // 2. Fetch submission counts per district dynamically from DB3 (app_db)
+  try {
+    const db = getAppDb()
+    const coll = db.collection(COLLECTION)
+    const rows = await coll.aggregate([
+      {
+        $project: {
+          rawDistrict: {
+            $ifNull: [
+              '$local_body.district',
+              {
+                $ifNull: [
+                  '$voter.district',
+                  {
+                    $ifNull: [
+                      '$voter.district_name',
+                      {
+                        $ifNull: [
+                          '$ward_details.district',
+                          '$district'
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        $match: {
+          rawDistrict: { $ne: null, $exists: true }
+        }
+      },
+      {
+        $group: {
+          _id: '$rawDistrict',
+          count: { $sum: 1 }
+        }
+      }
+    ]).toArray()
+
+    rows.forEach((r) => {
+      if (r._id && String(r._id).trim()) {
+        const clean = String(r._id).trim()
+        district_counts[clean] = (district_counts[clean] || 0) + r.count
+      }
+    })
+  } catch (err) {
+    console.error('[District Analytics Error]', err)
+  }
+
+  return district_counts
+}
+
+// Update candidate application fields
+export async function updateApplicationRecord(applicationId, patchData) {
+  const db = getAppDb()
+  const cleanId = String(applicationId).trim()
+  const result = await db.collection(COLLECTION).updateOne(
+    {
+      $or: [
+        { application_id: cleanId.toUpperCase() },
+        { membership_id: cleanId }
+      ]
+    },
+    {
+      $set: {
+        ...patchData,
+        updated_at: new Date()
+      }
+    }
+  )
+  return result
+}
+
+// Delete candidate application record
+export async function deleteApplicationRecord(applicationId) {
+  const db = getAppDb()
+  const cleanId = String(applicationId).trim()
+  const result = await db.collection(COLLECTION).deleteOne(
+    {
+      $or: [
+        { application_id: cleanId.toUpperCase() },
+        { membership_id: cleanId }
+      ]
+    }
+  )
+  return result
 }

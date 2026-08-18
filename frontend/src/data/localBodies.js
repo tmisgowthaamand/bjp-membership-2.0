@@ -116,6 +116,12 @@ export const CORPORATIONS_BY_DISTRICT = {
       "wards": 45
     }
   ],
+  "Thiruvallur": [
+    {
+      "name": "Avadi Municipal Corporation",
+      "wards": 48
+    }
+  ],
   "Tiruvallur": [
     {
       "name": "Avadi Municipal Corporation",
@@ -236,6 +242,15 @@ export const MUNICIPALITIES_BY_DISTRICT = {
     "Narasingapuram Municipality",
     "Salem City Municipal Corporation",
     "Tharamangalam Municipality"
+  ],
+  "Thiruvallur": [
+    "Avadi City Municipal Corporation",
+    "Poonamallee Municipality",
+    "Ponneri Municipality",
+    "Thirunindravur Municipality",
+    "Thiruthani Municipality",
+    "Thiruverkadu Municipality",
+    "Thiruvallur Municipality"
   ],
   "Tiruvallur": [
     "Avadi City Municipal Corporation",
@@ -1470,6 +1485,22 @@ export const BLOCKS_BY_DISTRICT = {
     "SRIPERUMBUDUR",
     "KUNDRATHUR"
   ],
+  "THIRUVALLUR": [
+    "VILLIVAKKAM",
+    "PUZHAL",
+    "MINJUR",
+    "SHOLAVARAM",
+    "GUMMIDIPOONDI",
+    "TIRUVALANGADU",
+    "TIRUTTANI",
+    "PALLIPATTU",
+    "R.K.PET",
+    "THIRUVALLUR",
+    "POONAMALLEE",
+    "KADAMBATHUR",
+    "ELLAPURAM",
+    "POONDI"
+  ],
   "TIRUVALLUR": [
     "VILLIVAKKAM",
     "PUZHAL",
@@ -1478,13 +1509,13 @@ export const BLOCKS_BY_DISTRICT = {
     "GUMMIDIPOONDI",
     "TIRUVALANGADU",
     "TIRUTTANI",
-    "PALLIPET",
+    "PALLIPATTU",
     "R.K.PET",
-    "TIRUVALLUR",
-    "POONDI",
+    "THIRUVALLUR",
+    "POONAMALLEE",
     "KADAMBATHUR",
     "ELLAPURAM",
-    "POONAMALLEE"
+    "POONDI"
   ],
   "CUDDALORE": [
     "CUDDALORE",
@@ -2544,6 +2575,23 @@ export const PANCHAYATS_BY_BLOCK = {
     "Vellathur",
     "Venkataperumalrajapuram",
     "Kadananagaram"
+  ],
+  "THIRUVALLUR": [
+    "Aranvoyal",
+    "Arumbakkam",
+    "Ayalur",
+    "Ayathur",
+    "Ikkadu",
+    "Ikkadukandigai",
+    "Kalyanakuppam",
+    "Koyambakkam",
+    "Kilambakkam",
+    "Kakkalur",
+    "Keelanur",
+    "Melanur",
+    "Melakondaiyur",
+    "Othikadu",
+    "Pakkam"
   ],
   "TIRUVALLUR": [
     "Aranvoyal",

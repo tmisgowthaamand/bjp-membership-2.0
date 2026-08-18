@@ -12,13 +12,20 @@ const NAV_ITEMS = [
 export default function AdminLayout() {
   const navigate = useNavigate()
   const [checking, setChecking]       = useState(true)
-  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768)
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 1024)
   const [timeStr, setTimeStr]         = useState('')
+  const [userSession, setUserSession] = useState({ user: 'Admin', role: 'super_admin', assigned_district: '' })
 
   useEffect(() => {
     admin.getSession()
-      .then((data) => {
+      .then((res) => {
+        const data = res.data || res
         if (data && data.success === true) {
+          setUserSession({
+            user: data.user || 'Admin',
+            role: data.role || 'super_admin',
+            assigned_district: data.assigned_district || '',
+          })
           setChecking(false)
         } else {
           navigate('/admin/login', { replace: true })
@@ -44,22 +51,32 @@ export default function AdminLayout() {
 
   if (checking) {
     return (
-      <div className="page-loader">
-        <div className="spinner-border text-danger" role="status" />
+      <div className="page-loader" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC' }}>
+        <div className="spinner-border text-danger" role="status" style={{ width: '3rem', height: '3rem' }} />
       </div>
     )
   }
 
+  const roleLabel =
+    userSession.role === 'district_admin'
+      ? 'District Admin (Read Only)'
+      : userSession.role === 'state_admin'
+      ? 'State Admin — Operations'
+      : 'Super Admin — Master Control'
+
+  const isMobile = window.innerWidth <= 1024
+  const showBackdrop = isMobile && sidebarOpen
+
   return (
-    <div className="admin-layout">
-      {/* Mobile backdrop */}
+    <div className={`admin-layout role-layout-${userSession.role}`} data-admin-role={userSession.role}>
+      {/* Mobile Sidebar Backdrop (Only on Mobile screens <= 768px) */}
       <div
-        className={`admin-sidebar-backdrop ${sidebarOpen ? 'visible' : ''}`}
+        className={`admin-sidebar-backdrop ${showBackdrop ? 'visible' : ''}`}
         onClick={() => setSidebarOpen(false)}
         aria-hidden="true"
       />
 
-      {/* Sidebar */}
+      {/* Sidebar Navigation */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
         <div className="admin-sidebar-header">
           <img src="/bjp_logo.svg" alt="BJP" className="admin-logo"
@@ -67,7 +84,7 @@ export default function AdminLayout() {
           {sidebarOpen && (
             <div>
               <div className="admin-brand">BJP Tamil Nadu</div>
-              <div className="admin-tagline">Local Body Candidate Portal</div>
+              <div className="admin-tagline" style={{ color: 'var(--role-accent)' }}>Election Admin Portal</div>
             </div>
           )}
         </div>
@@ -77,13 +94,29 @@ export default function AdminLayout() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}
               className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
               title={!sidebarOpen ? item.label : undefined}
+              style={({ isActive }) => isActive ? { background: 'var(--role-accent)', color: '#FFF' } : undefined}
             >
               <i className={`bi bi-${item.icon}`} />
               {sidebarOpen && <span>{item.label}</span>}
             </NavLink>
           ))}
+
+          {/* Super-Admin Only Navigation Link */}
+          {userSession.role === 'super_admin' && (
+            <NavLink
+              to="/admin/assign"
+              onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}
+              className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
+              title={!sidebarOpen ? 'Assign Admin' : undefined}
+              style={({ isActive }) => isActive ? { background: 'var(--role-accent)', color: '#FFF' } : undefined}
+            >
+              <i className="bi bi-person-plus-fill" />
+              {sidebarOpen && <span>Assign Admin</span>}
+            </NavLink>
+          )}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -94,36 +127,40 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Main Workspace Area */}
       <div className="admin-main">
         <header className="admin-topbar">
-          <button className="admin-toggle-btn" onClick={() => setSidebarOpen((o) => !o)} aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
-            <i className={`bi bi-${sidebarOpen ? 'layout-sidebar-reverse' : 'layout-sidebar'}`} />
-          </button>
-          <div className="admin-topbar-brand">
-            <span className="bjp-badge-pill">BJP TN 2026</span>
-            <span>Local Body Elections Admin</span>
+          <div className="admin-topbar-left">
+            <button className="admin-toggle-btn" onClick={() => setSidebarOpen((o) => !o)} aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}>
+              <i className={`bi bi-${sidebarOpen ? 'layout-sidebar-reverse' : 'layout-sidebar'}`} />
+            </button>
+
+            <div className="admin-topbar-brand">
+              <span className={`bjp-badge-pill role-badge-${userSession.role}`}>{roleLabel}</span>
+              <span style={{ fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>BJP TN 2026</span>
+            </div>
           </div>
 
           <div className="admin-topbar-right">
             <div className="admin-topbar-clock">
-              <i className="bi bi-clock-history me-1" />
+              <i className="bi bi-clock-history" style={{ color: 'var(--role-accent)' }} />
               <span>{timeStr}</span>
             </div>
+
             <div className="admin-user-badge">
-              <div className="admin-avatar">
+              <div className="admin-avatar" style={{ background: 'var(--role-accent)' }}>
                 <i className="bi bi-person-fill" />
               </div>
               <div className="admin-user-info">
-                <span className="admin-name">Admin User</span>
-                <span className="admin-role">Super Admin</span>
+                <span className="admin-name">{userSession.user}</span>
+                <span className="admin-role">{roleLabel}</span>
               </div>
             </div>
           </div>
         </header>
 
         <main className="admin-content">
-          <Outlet />
+          <Outlet context={{ userSession }} />
         </main>
       </div>
     </div>

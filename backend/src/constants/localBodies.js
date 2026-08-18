@@ -22,7 +22,7 @@ export const ALL_DISTRICTS = [
   'Krishnagiri', 'Madurai', 'Mayiladuthurai', 'Nagapattinam', 'Namakkal', 'Nilgiris',
   'Perambalur', 'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga',
   'Tenkasi', 'Thanjavur', 'Theni', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli',
-  'Tirupathur', 'Tiruppur', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore',
+  'Tirupathur', 'Tiruppur', 'Thiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Vellore',
   'Viluppuram', 'Virudhunagar',
 ]
 

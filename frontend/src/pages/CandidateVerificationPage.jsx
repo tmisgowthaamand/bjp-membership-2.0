@@ -208,7 +208,7 @@ export default function CandidateVerificationPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <img src="/bjp_logo.png" alt="BJP Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
           <div>
-            <div style={{ fontSize: 13, fontWeight: 900, color: '#f76201', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <div style={{ fontSize: 13, fontWeight: 900, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               BHARATIYA JANATA PARTY
             </div>
             <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 600 }}>
@@ -223,7 +223,7 @@ export default function CandidateVerificationPage() {
               className={`lang-toggle-btn${lang === 'en' ? ' active' : ''}`}
               onClick={() => handleSwitchLang('en')}
               style={{
-                background: lang === 'en' ? '#f76201' : 'transparent',
+                background: lang === 'en' ? '#2563EB' : 'transparent',
                 color: '#FFF', border: 'none', borderRadius: 12, padding: '4px 10px',
                 fontSize: 11, fontWeight: 700, cursor: 'pointer'
               }}
@@ -235,7 +235,7 @@ export default function CandidateVerificationPage() {
               className={`lang-toggle-btn${lang === 'ta' ? ' active' : ''}`}
               onClick={() => handleSwitchLang('ta')}
               style={{
-                background: lang === 'ta' ? '#f76201' : 'transparent',
+                background: lang === 'ta' ? '#2563EB' : 'transparent',
                 color: '#FFF', border: 'none', borderRadius: 12, padding: '4px 10px',
                 fontSize: 11, fontWeight: 700, cursor: 'pointer'
               }}
@@ -245,13 +245,13 @@ export default function CandidateVerificationPage() {
           </div>
           <Link to="/" style={{
             fontSize: 12,
-            color: '#f76201',
+            color: '#3B82F6',
             textDecoration: 'none',
             fontWeight: 700,
-            background: 'rgba(247, 98, 1, 0.12)',
+            background: 'rgba(37, 99, 235, 0.12)',
             padding: '6px 12px',
             borderRadius: 20,
-            border: '1px solid rgba(247, 98, 1, 0.3)'
+            border: '1px solid rgba(37, 99, 235, 0.3)'
           }}>
             Apply Now →
           </Link>
@@ -344,10 +344,10 @@ export default function CandidateVerificationPage() {
                 width: '100%',
                 maxWidth: 360,
                 aspectRatio: '9 / 16',
-                background: 'linear-gradient(165deg, #f76201 0%, #d85400 100%)',
-                border: '3px solid #f76201',
+                background: 'linear-gradient(165deg, #1E40AF 0%, #1E3A8A 100%)',
+                border: '3px solid #2563EB',
                 borderRadius: 22,
-                boxShadow: '0 16px 40px rgba(247, 98, 1, 0.35)',
+                boxShadow: '0 16px 40px rgba(37, 99, 235, 0.35)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -377,17 +377,17 @@ export default function CandidateVerificationPage() {
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1
               }}>
-                <div style={{ width: 38, height: 38, background: '#FFF7ED', borderRadius: '50%', border: '1px solid #FFE4D6', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, flexShrink: 0 }}>
+                <div style={{ width: 38, height: 38, background: '#EFF6FF', borderRadius: '50%', border: '1px solid #BFDBFE', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 3, flexShrink: 0 }}>
                   <svg viewBox="0 0 141 151" width="30" height="30">
                     <path fill="#000000" d="m19.4 88.3c-1.1-1.8-0.9-3.4-0.3-5.1 1.4-3.7 4.2-6.2 7.3-8.3 0.4-0.2 0.7-0.5 0.9-0.6-2.1-1.5-4.5-2.8-6.5-4.6-5.1-4.6-7.9-10.6-9.8-17-1.8-5.9-2.4-12.1-2.4-18.2 0-7.7-1.7-15.1-5.3-21.9-1.1-2-2.4-3.9-3.7-5.9 1.4-1.3 3.2-1.5 5-1.5 5.7-0.1 10.9 1.6 15.8 4.4 5.1 3 9.2 7 12.6 11.7 0.2 0.3 0.5 0.6 0.8 1 2.3-7.3-1.5-12.6-5.3-18 2-1.2 4.1-0.9 6.1-0.6 7.6 1.1 13.7 5 18.7 10.6 1.9 2.1 3.4 4.5 5 6.8 0.3 0.3 0.5 0.7 0.5 0.8 4.3-7.2 8.5-14.4 13-22 4.8 6.1 7.8 12.6 10.8 18.9 2.4-2.7 4.8-5.5 7.4-8 3.8-3.6 8.2-6.3 13.2-7.7 2.7-0.7 4.2-0.7 7 0.3-3.4 6.1-4.8 12.5-3.1 19.3 1.4-1.9 2.7-4 4.3-5.8 5.3-6.2 11.7-10.4 19.9-11.7 2.4-0.4 4.9-0.6 7.2 0.1 0.7 0.2 1.4 0.6 2.3 1-0.4 0.5-0.7 0.8-1 1.1-4.4 5-7.3 10.6-7.5 17.4-0.1 3.8 0.2 7.6 0.5 11.4 0.6 8-0.1 15.7-3.5 23.1-2.4 5.3-5.8 9.9-10.1 13.9-0.1 0.1-0.3 0.3-0.4 0.4-0.1 0.1-0.1 0.1-0.1 0.2 4.2 3.8 8 7.7 6 14.3-0.8-0.5-1.4-0.9-2-1.3-1.6-1.1-3.3-1.3-5.1-0.7-2.9 0.8-5.3 2.5-7.5 4.4-3 2.7-6.4 4.5-10.4 5.2-3.8 0.7-7.6 0.5-11.3-1-0.4-0.2-0.9-0.2-1.3-0.1-6.3 1.4-10.8 7-10.7 13 0.1 6.8-0.3 13.6-2.1 20.2-0.7 2.4-1.7 4.6-2.6 6.9q2.7-0.3 5.7-0.6c0.6-0.1 1.2-0.2 1.8 0 1 0.2 1.3 1 1.1 2-0.2 1.1-1.1 2-1.9 2-2.7-0.1-5.4-0.2-8.1-0.1-1.7 0-1.9-1.4-2.6-2.3-0.7-0.8 0-1.3 0.4-1.9 2-2.9 2.9-6.2 3.3-9.7 0.6-4.9 0.9-9.8 1.2-14.7 0.1-1.5-0.4-2-2.1-2.3 0 0.5-0.1 1-0.1 1.5 0 5.4 0 10.7-1.1 16-0.9 4.1-2.2 7.9-5.3 10.9-3.2 3.1-7.2 4.1-11.5 4-2.1-0.1-4.3-0.3-6.4-0.8-2.1-0.5-2.4-2.2-0.8-3.7 1.6-1.6 3.6-1.9 5.8-1.8 2.9 0.2 5.9 0.5 8.8 0.8 1 0.1 1.5-0.3 2-1.1 3.2-4.7 4.7-10 5.2-15.6 0.3-4.4 0.1-8.8-1.6-13-1.2-2.9-3-5.2-5.8-6.8-1.9-1.1-3.7-2.3-5.6-3.4-0.3-0.2-0.8-0.3-1-0.2-4 1.9-8 1.4-12 0.3-2.8-0.8-5.2-2.2-7.5-3.9-2.5-1.8-5.2-3.2-8.2-3.7-2.1-0.1 4.0 0.4-6 1.7zm37.5 47.4c-1.1 0.1-2.2 0.3-3.2 0.4-1.5 0.1-2.7-0.5-4.2 0-0.2 0.1-0.9 0.3-0.9 0.6 0 0.2 0.2 0.4 0.8 0.6 1.3 0.4 2.2 0.1 5.4 0 1.1 0 1.8-0.5 2.1-1.6z" />
                     <path fill="#00a650" d="m24.1 82.9c0.1 0.1 0.2 0.2 0.4 0.3 0.6-0.1 1.2-0.2 1.8-0.2 3.4-0.1 5.5 1.7 9.2 3.6 1.5 0.8 3.9 2 7.1 2.8 1.8 0.5 7.2 1.9 8.5 0 0.5-0.7-0.1-1.1 0.3-3.5 0.3-2 0.9-3.5 1-3.8 0.4-0.8 1-2 2.1-3.2-0.2-0.1-0.5-0.2-0.7-0.3-2.7-1.1-5.4-2.2-8.2-3.3-0.6-0.2-1.3-0.3-1.9-0.1-3.4 1.1-6.8 1.6-10.4 0.6-0.5-0.1-1.2-0.1-1.6 0.2-1.7 1.1-3.4 2.2-4.9 3.5-1.1 0.9-1.8 2.3-2.7 3.4z" />
                     <path fill="#00a650" d="m70 99.2c1 0.5 2.4 1 3.8 0.5 1.7-0.7 1.5-2.3 3.5-4.5 0.7-0.7 2-2.1 5.4-3.5 1.2-0.5 2.3-1.1 3.3-2 2.9-2.6 3-7.2 0.3-9.7-0.6-0.6-1.2-0.7-2-0.4-7.9 2.9-15.9 2.7-23.8 0.1-1.3-0.4-2-0.1-2.8 0.9-2 2.6-2 6.8 0.1 9.2 1.1 1.3 2.7 2.1 4 3.2 1.9 1.7 3.2 1.4 4.9 2.7 1.6 1.2 2.7 2.6 3.3 3.5z" />
                     <path fill="#00a650" d="m90.6 80.3c0.6 0.9 1 1.8 1.3 2.7 0.1 0.5 0.5 2 0.2 4-0.3 2-1 2.2-0.8 2.9 0.5 1.8 5.4 2.6 9.5 1.5 2.2-0.6 3.8-1.7 6.7-3.6 2.8-1.9 3-2.5 4.8-3.4 1.7-0.9 4.2-1.8 7.9-1.9-0.3-0.8-0.7-1.9-1.5-2.9-0.5-0.6-1.1-1.1-1.7-1.6-1.1-0.8-2.3-1-3.7-0.6-1.5 0.5-3.2 0.8-4.7 1.3-3.6 1-7.2 1.2-10.9 0.3-2.7-0.6-4.9 0.2-7.1 1.3z" />
-                    <path fill="#f47216" d="m72.2 8.7c7.5 11.2 13.4 23 16.2 36.1 1.3 6 2 12.1 0.7 18.3-1.2 5.1-3.7 9.5-7.8 12.7-6 4.6-14.4 4.1-20.2-1.2-5.3-4.8-7.7-10.9-7.8-17.9-0.1-6.9 1.7-13.5 4.1-19.9 3.6-9.8 8.8-18.9 14.6-27.6-0.1-0.2 0-0.3 0.2-0.5zm-39 48.4c-1.7-5.5-2.5-11.2-2.5-17 0-4.2 0.9-8.5 1.3-12.7 0.1-0.5-0.1-1.2-0.4-1.5-2.5-2.8-4.8-5.7-7.5-8.2-5.1-4.6-11-7.4-17.7-7.6 1.3 2.9 2.9 5.7 3.9 8.8 2.6 7.4 3.1 15.1 3.1 22.9 0 4 0.7 7.8 2.2 11.4 2.5 6.2 6.1 11.7 11.7 15.6 4 2.8 8.5 3.6 13.6 2.1-3.8-4.1-6.1-8.8-7.7-13.8zm68.9 17.3c1.8 0.1 3.7 0.5 5.5 0.4 3.9-0.2 7.2-2.1 9.9-4.9 7.4-7.5 11.3-16.6 11-27.2-0.1-5.6-0.6-11.2-0.7-16.7-0.1-4.8 1.4-9.3 4-13.3 0.7-1.1 1.6-2.2 2.5-3.4-3.2 0.1-6.1 0.8-8.9 2.1-7.5 3.6-12.6 9.6-16.2 17-0.2 0.3-0.2 0.8-0.1 1.1 1.2 4.9 2.2 9.9 2.6 14.9 0.4 6 0.1 11.8-1.9 17.5-1.6 4.6-4.1 8.6-7.8 11.9 0.1 0.3 0.1 0.4 0.1 0.6zm-13.4 2.6c9.4-1.8 17.1-9.7 18.8-19.4 1.1-6.5 0.5-13-0.7-19.4-0.9-4.6-2.2-9.1-3.3-13.7-0.9-3.8-1.4-7.6-0.4-11.4 0.4-1.5 0.9-2.9 1.5-4.7-1.6 0.4-3.1 0.7-4.5 1.3-6.5 2.5-10.9 7.3-14.4 13.2-0.2 0.3-0.2 0.9 0 1.3 4.4 8.3 7.5 17.1 8.2 26.6 0.3 3.4 0.4 7-0.1 10.4-0.7 5-3.1 9.4-5.6 13.6-0.5 0.8-0.9 1.5-1.6 2.6 1-0.3 1.5-0.3 2.1-0.4zm-50.7-63.3c1.2 4 0.9 8.2-0.1 12.2-1.6 5.7-2.4 11.5-2.3 17.5 0.1 6.4 1.4 12.5 4.3 18.2 2.8 5.4 6.6 9.8 12.1 12.5 1.2 0.6 2.5 1 3.9 1.6-1.1-1.8-2.1-3.2-2.9-4.8-4-8.1-4.8-16.6-3.2-25.5 1.1-5.9 3.2-11.5 5.5-17.1 0.2-0.5 0.3-1.4 0-1.9-2.8-4.9-6.1-9.4-10.3-13.2-2.8-2.6-5.9-4.6-9.5-5.5 0.9 2.1 1.9 4 2.5 6z" />
+                    <path fill="#2563EB" d="m72.2 8.7c7.5 11.2 13.4 23 16.2 36.1 1.3 6 2 12.1 0.7 18.3-1.2 5.1-3.7 9.5-7.8 12.7-6 4.6-14.4 4.1-20.2-1.2-5.3-4.8-7.7-10.9-7.8-17.9-0.1-6.9 1.7-13.5 4.1-19.9 3.6-9.8 8.8-18.9 14.6-27.6-0.1-0.2 0-0.3 0.2-0.5zm-39 48.4c-1.7-5.5-2.5-11.2-2.5-17 0-4.2 0.9-8.5 1.3-12.7 0.1-0.5-0.1-1.2-0.4-1.5-2.5-2.8-4.8-5.7-7.5-8.2-5.1-4.6-11-7.4-17.7-7.6 1.3 2.9 2.9 5.7 3.9 8.8 2.6 7.4 3.1 15.1 3.1 22.9 0 4 0.7 7.8 2.2 11.4 2.5 6.2 6.1 11.7 11.7 15.6 4 2.8 8.5 3.6 13.6 2.1-3.8-4.1-6.1-8.8-7.7-13.8zm68.9 17.3c1.8 0.1 3.7 0.5 5.5 0.4 3.9-0.2 7.2-2.1 9.9-4.9 7.4-7.5 11.3-16.6 11-27.2-0.1-5.6-0.6-11.2-0.7-16.7-0.1-4.8 1.4-9.3 4-13.3 0.7-1.1 1.6-2.2 2.5-3.4-3.2 0.1-6.1 0.8-8.9 2.1-7.5 3.6-12.6 9.6-16.2 17-0.2 0.3-0.2 0.8-0.1 1.1 1.2 4.9 2.2 9.9 2.6 14.9 0.4 6 0.1 11.8-1.9 17.5-1.6 4.6-4.1 8.6-7.8 11.9 0.1 0.3 0.1 0.4 0.1 0.6zm-13.4 2.6c9.4-1.8 17.1-9.7 18.8-19.4 1.1-6.5 0.5-13-0.7-19.4-0.9-4.6-2.2-9.1-3.3-13.7-0.9-3.8-1.4-7.6-0.4-11.4 0.4-1.5 0.9-2.9 1.5-4.7-1.6 0.4-3.1 0.7-4.5 1.3-6.5 2.5-10.9 7.3-14.4 13.2-0.2 0.3-0.2 0.9 0 1.3 4.4 8.3 7.5 17.1 8.2 26.6 0.3 3.4 0.4 7-0.1 10.4-0.7 5-3.1 9.4-5.6 13.6-0.5 0.8-0.9 1.5-1.6 2.6 1-0.3 1.5-0.3 2.1-0.4zm-50.7-63.3c1.2 4 0.9 8.2-0.1 12.2-1.6 5.7-2.4 11.5-2.3 17.5 0.1 6.4 1.4 12.5 4.3 18.2 2.8 5.4 6.6 9.8 12.1 12.5 1.2 0.6 2.5 1 3.9 1.6-1.1-1.8-2.1-3.2-2.9-4.8-4-8.1-4.8-16.6-3.2-25.5 1.1-5.9 3.2-11.5 5.5-17.1 0.2-0.5 0.3-1.4 0-1.9-2.8-4.9-6.1-9.4-10.3-13.2-2.8-2.6-5.9-4.6-9.5-5.5 0.9 2.1 1.9 4 2.5 6z" />
                   </svg>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1, padding: '0 6px' }}>
-                  <div style={{ fontSize: 12.5, fontWeight: 900, letterSpacing: '0.03em', color: '#f76201', textTransform: 'uppercase' }}>
+                  <div style={{ fontSize: 12.5, fontWeight: 900, letterSpacing: '0.03em', color: '#2563EB', textTransform: 'uppercase' }}>
                     BHARATIYA JANATA PARTY
                   </div>
                   <div style={{ fontSize: 9.5, fontWeight: 800, color: '#475569', marginTop: 2 }}>
@@ -420,7 +420,7 @@ export default function CandidateVerificationPage() {
                   </div>
                   <div style={{
                     position: 'absolute', bottom: 0, right: 0,
-                    background: '#00A650', color: '#FFF', width: 26, height: 26,
+                    background: '#059669', color: '#FFF', width: 26, height: 26,
                     borderRadius: '50%', border: '2.5px solid #FFF',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900
                   }}>
@@ -442,7 +442,7 @@ export default function CandidateVerificationPage() {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
                   <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Application ID')}</span>
-                  <span style={{ fontWeight: 900, color: '#f76201', fontFamily: 'monospace', fontSize: 13 }}>{appData.application_id || appId}</span>
+                  <span style={{ fontWeight: 900, color: '#2563EB', fontFamily: 'monospace', fontSize: 13 }}>{appData.application_id || appId}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
                   <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('EPIC / Voter ID')}</span>
@@ -450,7 +450,7 @@ export default function CandidateVerificationPage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
                   <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Contest Preference')}</span>
-                  <span style={{ fontWeight: 700, color: '#d85400', textAlign: 'right', lineHeight: 1.25, wordBreak: 'break-word', flex: 1, paddingLeft: 8 }}>{primaryPos}</span>
+                  <span style={{ fontWeight: 700, color: '#1E40AF', textAlign: 'right', lineHeight: 1.25, wordBreak: 'break-word', flex: 1, paddingLeft: 8 }}>{primaryPos}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Local Body Ward')}</span>
@@ -508,7 +508,7 @@ export default function CandidateVerificationPage() {
                 disabled={downloading}
                 style={{
                   width: '100%',
-                  background: 'linear-gradient(135deg, #f76201 0%, #d85400 100%)',
+                  background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
                   color: '#FFFFFF',
                   border: 'none',
                   borderRadius: 14,
@@ -520,7 +520,7 @@ export default function CandidateVerificationPage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 10,
-                  boxShadow: '0 6px 20px rgba(247, 98, 1, 0.4)',
+                  boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
                   transition: 'all 0.2s ease',
                   opacity: downloading ? 0.8 : 1
                 }}

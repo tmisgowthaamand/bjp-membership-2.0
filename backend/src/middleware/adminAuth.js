@@ -8,8 +8,8 @@ function secret() {
 }
 
 // Signed, tamper-proof token: base64url(payload).base64url(hmac)
-export function signSession(username) {
-  const payload = { u: username, exp: Date.now() + SESSION_TTL_MS }
+export function signSession(username, role = 'super_admin', assignedDistrict = '') {
+  const payload = { u: username, r: role, d: assignedDistrict, exp: Date.now() + SESSION_TTL_MS }
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
   const sig = crypto.createHmac('sha256', secret()).update(body).digest('base64url')
   return `${body}.${sig}`
@@ -74,4 +74,16 @@ export function requireAdmin(req, res, next) {
   }
   req.admin = payload
   next()
+}
+
+export function requireRole(allowedRoles = []) {
+  return (req, res, next) => {
+    requireAdmin(req, res, () => {
+      const userRole = req.admin?.r || req.admin?.role || 'super_admin'
+      if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+        return res.status(403).json({ success: false, message: 'Access forbidden. Insufficient permissions for this operation.' })
+      }
+      next()
+    })
+  }
 }

@@ -103,6 +103,9 @@ export const admin = {
   getStats: () =>
     api.get('/admin/api/stats'),
 
+  getDistrictAnalytics: () =>
+    api.get('/admin/api/district-analytics'),
+
   getReports: (params) =>
     api.get('/admin/api/reports', { params }),
 
@@ -112,6 +115,12 @@ export const admin = {
   getApplication: (id) =>
     api.get(`/admin/api/applications/${id}`),
 
+  updateApplication: (id, data) =>
+    api.put(`/admin/api/applications/${id}`, data),
+
+  deleteApplication: (id) =>
+    api.delete(`/admin/api/applications/${id}`),
+
   updatePhoto: (id, formData) =>
     api.post(`/admin/api/applications/${id}/photo`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -120,6 +129,21 @@ export const admin = {
 
   updateMembershipId: (id, membership_id) =>
     api.post(`/admin/api/applications/${id}/membership`, { membership_id }),
+
+  getAdminUsers: () =>
+    api.get('/admin/api/users'),
+
+  createAdminUser: (formData) =>
+    api.post('/admin/api/users', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 60000,
+    }),
+
+  updateAdminUser: (username, data) =>
+    api.put(`/admin/api/users/${username}`, data),
+
+  deleteAdminUser: (username) =>
+    api.delete(`/admin/api/users/${username}`),
 }
 
 export default api
