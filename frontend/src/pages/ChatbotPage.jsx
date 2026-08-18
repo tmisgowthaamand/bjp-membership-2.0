@@ -1671,13 +1671,14 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
           <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-ash)', display: 'flex', alignItems: 'center', gap: 4 }}>
             <i className="bi bi-translate" /> Card Language / மொழி:
           </span>
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.08)', borderRadius: 16, padding: 2, border: '1px solid rgba(255,255,255,0.15)' }}>
+          <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.06)', borderRadius: 16, padding: 2, border: '1px solid rgba(0, 0, 0, 0.08)' }}>
             <button
               type="button"
               onClick={() => setLang('en')}
               style={{
                 background: lang === 'en' ? '#f76201' : 'transparent',
-                color: '#FFF', border: 'none', borderRadius: 12, padding: '3px 10px',
+                color: lang === 'en' ? '#FFF' : 'var(--color-ash)',
+                border: 'none', borderRadius: 12, padding: '3px 10px',
                 fontSize: 11, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s'
               }}
             >
@@ -1688,7 +1689,8 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
               onClick={() => setLang('ta')}
               style={{
                 background: lang === 'ta' ? '#f76201' : 'transparent',
-                color: '#FFF', border: 'none', borderRadius: 12, padding: '3px 10px',
+                color: lang === 'ta' ? '#FFF' : 'var(--color-ash)',
+                border: 'none', borderRadius: 12, padding: '3px 10px',
                 fontSize: 11, fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s'
               }}
             >
@@ -1764,14 +1766,21 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 className="poster-avatar-img"
                 style={{
                   width: 84, height: 84, borderRadius: '50%',
-                  backgroundImage: `url("${candidateImg}")`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'top center',
-                  backgroundRepeat: 'no-repeat',
                   border: '4px solid #FFFFFF', boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
-                  backgroundColor: '#FFFFFF'
+                  backgroundColor: '#FFFFFF', overflow: 'hidden',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}
-              />
+              >
+                <img
+                  src={candidateImg}
+                  alt="Candidate"
+                  style={{
+                    width: '100%', height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center'
+                  }}
+                />
+              </div>
               <div style={{
                 position: 'absolute', bottom: 0, right: 0,
                 background: '#00A650', color: '#FFF', width: 22, height: 22,
@@ -2066,14 +2075,21 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                     className="poster-avatar-img"
                     style={{
                       width: 94, height: 94, borderRadius: '50%',
-                      backgroundImage: `url("${candidateImg}")`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'top center',
-                      backgroundRepeat: 'no-repeat',
                       border: '4px solid #FFFFFF', boxShadow: '0 6px 18px rgba(0,0,0,0.25)',
-                      backgroundColor: '#FFFFFF'
+                      backgroundColor: '#FFFFFF', overflow: 'hidden',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }}
-                  />
+                  >
+                    <img
+                      src={candidateImg}
+                      alt="Candidate"
+                      style={{
+                        width: '100%', height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center'
+                      }}
+                    />
+                  </div>
                   <div style={{
                     position: 'absolute', bottom: 0, right: 0,
                     background: '#00A650', color: '#FFF', width: 26, height: 26,
