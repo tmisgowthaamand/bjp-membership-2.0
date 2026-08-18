@@ -1567,7 +1567,8 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
 
   const activeApp = fetchedApp || result || {}
 
-  const candName = activeApp.voter?.name || result?.voter?.name || appData?.voter?.name || 'Candidate'
+  const rawCandName = activeApp.voter?.name || result?.voter?.name || appData?.voter?.name || 'Candidate'
+  const candName = rawCandName.replace(/[\s\-\/\,]+$/, '').trim() || 'Candidate'
   const photoUrl = activeApp.photo_url || activeApp.photoUrl || result?.photo_url || result?.photoUrl || appData?.photoUrl || appData?.photo_url || appData?.photoPreview || activeApp.voter?.photo || result?.voter?.photo || ''
   const candidateImg = photoUrl && photoUrl.trim() ? photoUrl : 'https://raw.githubusercontent.com/twbs/icons/main/icons/person-circle.svg'
   const epicNo = activeApp.epic_no || activeApp.voter?.epic_no || result?.epic_no || appData?.epic || result?.voter?.epic_no || ''
@@ -1606,7 +1607,9 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
   }
 
   const lbDetails = getLbDetails()
-  const wardText = lbDetails.ward ? `Ward ${lbDetails.ward}` : ''
+  const rawLbName = (lbDetails.name || '').replace(/[\s\-]+$/, '').trim()
+  const formattedLbName = formatLbName(rawLbName) || (lang === 'ta' ? 'தமிழ்நாடு உள்ளாட்சி அமைப்பு' : 'Tamil Nadu Local Body')
+  const wardText = lbDetails.ward ? (lang === 'ta' ? `வார்டு ${lbDetails.ward}` : `Ward ${lbDetails.ward}`) : ''
   const posPrefs = activeApp.position_preferences || result?.position_preferences || appData?.positionPrefs || []
   const firstPos = posPrefs[0] || 'Local Body Candidate'
 
@@ -1852,7 +1855,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
-              <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
+              <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12, textAlign: 'right', flex: '1 1 58%' }}>{targetAppId}</span>
             </div>
             {epicNo && (
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
@@ -1862,11 +1865,11 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{firstPos}</span>
+              <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{t(firstPos)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3 : 0 }}>
               <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
-              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
+              <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{formattedLbName}</span>
             </div>
             {wardText && (
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -2186,7 +2189,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Application ID')}:</span>
-                  <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12.5, textAlign: 'right', flex: '1 1 58%' }}>{result.application_id}</span>
+                  <span style={{ fontWeight: 800, fontFamily: 'monospace', color: '#FF6600', fontSize: 12.5, textAlign: 'right', flex: '1 1 58%' }}>{targetAppId}</span>
                 </div>
                 {epicNo && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
@@ -2196,11 +2199,11 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 3.5 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Contest Preference')}:</span>
-                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25 }}>{firstPos}</span>
+                  <span style={{ fontWeight: 700, color: '#E65C00', textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{t(firstPos)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: wardText ? '1px solid #F1F5F9' : 'none', paddingBottom: wardText ? 3.5 : 0 }}>
                   <span style={{ color: '#64748B', fontWeight: 600, flex: '0 0 42%' }}>{t('Local Body')}:</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{lbDetails.name}</span>
+                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10.5, textAlign: 'right', flex: '1 1 58%', lineHeight: 1.25, wordBreak: 'break-word' }}>{formattedLbName}</span>
                 </div>
                 {wardText && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

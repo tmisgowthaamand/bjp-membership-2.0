@@ -59,26 +59,44 @@ export default function CandidateVerificationPage() {
   }, [appId])
 
   // Extract variables
-  const candName = appData?.voter?.name || 'Candidate'
+  const rawCandName = appData?.voter?.name || 'Candidate'
+  const candName = rawCandName.replace(/[\s\-\/\,]+$/, '').trim() || 'Candidate'
   const epicNo = appData?.voter?.epic_no || appData?.epic_no || 'N/A'
   const photoUrl = appData?.photo_url || appData?.photoUrl || appData?.photo_preview || appData?.voter?.photo || ''
   const candidateImg = photoUrl && photoUrl.trim() ? photoUrl : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300'
   const posPrefs = appData?.position_preferences || []
-  const primaryPos = posPrefs[0] || 'Local Body Candidate'
+  const primaryPos = t(posPrefs[0] || 'Local Body Candidate')
+
+  const formatLbName = (name) => {
+    if (!name) return ''
+    if (lang !== 'ta') return name
+    return String(name)
+      .replace(/Town Panchayat/gi, 'பேரூராட்சி')
+      .replace(/Municipality/gi, 'நகராட்சி')
+      .replace(/Corporation/gi, 'மாநகராட்சி')
+      .replace(/Panchayat Union/gi, 'ஊராட்சி ஒன்றியம்')
+      .replace(/Village Panchayat/gi, 'கிராம ஊராட்சி')
+      .replace(/District Panchayat/gi, 'மாவட்ட ஊராட்சி')
+  }
 
   // Location summary
   const getLbSummary = () => {
-    if (!appData) return 'Tamil Nadu Local Body'
+    if (!appData) return t('Tamil Nadu Local Body')
+    let res = ''
     if (appData.body_type === 'urban') {
       const type = appData.ward_details?.urban_type || 'Urban Local Body'
       const name = appData.ward_details?.urban_body_name || ''
       const ward = appData.ward_details?.ward || ''
-      return [type, name, ward ? `Ward ${ward}` : ''].filter(Boolean).join(' - ')
+      const wText = ward ? (lang === 'ta' ? `வார்டு ${ward}` : `Ward ${ward}`) : ''
+      res = [formatLbName(type), name, wText].filter(Boolean).join(' - ')
+    } else {
+      const union = appData.ward_details?.panchayat_union || ''
+      const panchayat = appData.ward_details?.village_panchayat || ''
+      const ward = appData.ward_details?.ward || ''
+      const wText = ward ? (lang === 'ta' ? `வார்டு ${ward}` : `Ward ${ward}`) : ''
+      res = [union, panchayat, wText].filter(Boolean).join(' - ')
     }
-    const union = appData.ward_details?.panchayat_union || ''
-    const panchayat = appData.ward_details?.village_panchayat || ''
-    const ward = appData.ward_details?.ward || ''
-    return [union, panchayat, ward ? `Ward ${ward}` : ''].filter(Boolean).join(' - ')
+    return res.replace(/[\s\-]+$/, '').trim() || t('Tamil Nadu Local Body')
   }
 
   const lbSummary = getLbSummary()
@@ -434,21 +452,21 @@ export default function CandidateVerificationPage() {
                 borderRadius: 14, padding: '12px', display: 'flex', flexDirection: 'column', gap: 6,
                 fontSize: 12, boxShadow: '0 6px 18px rgba(0,0,0,0.15)', zIndex: 1
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>Application ID</span>
-                  <span style={{ fontWeight: 900, color: '#f76201', fontFamily: 'monospace', fontSize: 13 }}>{appData.application_id}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
+                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Application ID')}</span>
+                  <span style={{ fontWeight: 900, color: '#f76201', fontFamily: 'monospace', fontSize: 13 }}>{appData.application_id || appId}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>EPIC / Voter ID</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
+                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('EPIC / Voter ID')}</span>
                   <span style={{ fontWeight: 700, color: '#0F172A' }}>{epicNo}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
-                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>Contest Preference</span>
-                  <span style={{ fontWeight: 700, color: '#d85400' }}>{primaryPos}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #F1F5F9', paddingBottom: 5 }}>
+                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Contest Preference')}</span>
+                  <span style={{ fontWeight: 700, color: '#d85400', textAlign: 'right', lineHeight: 1.25, wordBreak: 'break-word', flex: 1, paddingLeft: 8 }}>{primaryPos}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>Local Body Ward</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 9, textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 210 }}>{lbSummary}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#64748B', fontSize: 11.5, fontWeight: 500 }}>{t('Local Body Ward')}</span>
+                  <span style={{ fontWeight: 700, color: '#0F172A', fontSize: 10, textAlign: 'right', lineHeight: 1.25, wordBreak: 'break-word', flex: 1, paddingLeft: 8 }}>{lbSummary}</span>
                 </div>
               </div>
 
