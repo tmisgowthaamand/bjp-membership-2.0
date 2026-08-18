@@ -385,7 +385,10 @@ function PhotoUploadMsg({ active, initial, onSubmit, disabled }) {
   }
 
   const handleContinue = () => {
-    if (!preview && !photoFile) return
+    if (!preview && !photoFile) {
+      onSubmit({ photoFile: null, photoUrl: '' })
+      return
+    }
     onSubmit({ photoFile, photoUrl: preview })
   }
 
@@ -911,7 +914,8 @@ function VideoUploadMsg({ active, initial, onSubmit, disabled }) {
   const handleContinue = () => {
     const finalUrl = videoUrl.trim()
     if (!finalUrl && !videoFile) {
-      setError(t('Please paste a video link or upload an MP4 video file, or click Skip.'))
+      setError('')
+      onSubmit({ videoUrl: '', videoFile: null, videoFileName: '' })
       return
     }
     if (finalUrl && !finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
@@ -1107,7 +1111,8 @@ function ShortTextsMsg({ active, initial, onSubmit, disabled }) {
     const trim1 = devP.trim()
     const trim2 = grievP.trim()
     if (!trim1 && !trim2) {
-      setError(t('Please fill in at least one field, or click Skip.'))
+      setError('')
+      onSubmit({ devPriorities: '', grievancePlan: '' })
       return
     }
     if (over1 || over2) {
@@ -1253,7 +1258,8 @@ function DocUploadMsg({ active, initial, onSubmit, disabled }) {
 
   const handleContinue = () => {
     if (!docFile) {
-      setError(t('Please select a document file to upload, or click Skip.'))
+      setError('')
+      onSubmit({ docFile: null, docFileName: '' })
       return
     }
     setError('')
