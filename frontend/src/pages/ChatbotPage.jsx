@@ -8,7 +8,7 @@ import {
   wardsForCorporation, districtPanchayatWards, unionsForDistrict, blocksForDistrict,
   panchayatsForBlock, positionsFor
 } from '../data/localBodies.js'
-import QRCode from 'qrcode'
+
 
 
 // ── Flow states ────────────────────────────────────────────
@@ -1656,14 +1656,17 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
         })
         .catch(() => { })
 
-      QRCode.toDataURL(verifyLinkUrl, {
-        margin: 1,
-        width: 600,
-        errorCorrectionLevel: 'L',
-        color: { dark: '#000000', light: '#FFFFFF' }
+      import('qrcode').then((QRCodeModule) => {
+        const QRCode = QRCodeModule.default || QRCodeModule
+        QRCode.toDataURL(verifyLinkUrl, {
+          margin: 1,
+          width: 600,
+          errorCorrectionLevel: 'L',
+          color: { dark: '#000000', light: '#FFFFFF' }
+        })
+          .then(setQrUrl)
+          .catch(() => { })
       })
-        .then(setQrUrl)
-        .catch(() => { })
     }
   }, [targetAppId, verifyLinkUrl])
 
@@ -1671,6 +1674,8 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
     if (!posterRef.current) return
     setDownloading(true)
     try {
+      const html2canvasModule = await import('html2canvas')
+      const html2canvas = html2canvasModule.default || html2canvasModule
       const canvas = await html2canvas(posterRef.current, {
         scale: 2,
         useCORS: true,

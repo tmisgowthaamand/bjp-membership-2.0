@@ -1780,10 +1780,10 @@
 .msg-time,
 .chatbot-app.bjp-theme .msg-time {
   font-size: 10.5px !important;
-  font-weight: 600 !important;
-  color: #7d7367 !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
   margin-top: 4px !important;
-  opacity: 0.9 !important;
+  opacity: 1 !important;
 }
 
 /* Bot & User Avatars */

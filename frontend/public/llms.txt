@@ -1,0 +1,18 @@
+# BJP Tamil Nadu — Local Body Candidate Application Portal 2026
+
+> Official candidate registration and verification portal for Bharatiya Janata Party (BJP) Tamil Nadu Local Body Elections 2026-27.
+
+## Portal Overview
+- Organization: Bharatiya Janata Party (BJP) – Tamil Nadu
+- Website: https://tnbjp.com/
+- Target Audience: Local body election candidates across all 38 districts of Tamil Nadu.
+
+## Core Features
+- Online Candidate Application: Interactive chat workflow to submit candidate details, electoral EPIC voter verification, and ward/panchayat preferences.
+- Candidate Verification Portal: Instant QR-code and mobile-based verification of submitted candidate applications.
+- Multi-Language Support: Available in English and Tamil (தமிழ்).
+
+## Key Routes
+- Candidate Application: https://tnbjp.com/
+- Candidate Verification: https://tnbjp.com/verify
+- Admin Management Suite: https://tnbjp.com/admin/login
