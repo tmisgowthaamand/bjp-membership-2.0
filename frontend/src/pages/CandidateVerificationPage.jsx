@@ -481,6 +481,9 @@ export default function CandidateVerificationPage() {
                   <span style={{ fontSize: 9.5, fontWeight: 700, color: '#475569' }}>
                     Local Body Elections 2026-27
                   </span>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: '#0F172A', marginTop: 2 }}>
+                    Submitted: {formattedTime}
+                  </span>
                 </div>
                 {qrUrl && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
