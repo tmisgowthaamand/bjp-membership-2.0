@@ -2152,20 +2152,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
             boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
-              <div style={{ fontSize: 7.5, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                {t('Submitted Timestamp')}
-              </div>
-              <div style={{ fontSize: 9.5, fontWeight: 800, color: '#0F172A' }}>
-                {fmtDateTime(result.submitted_at)}
-              </div>
-              <div style={{
-                fontSize: 7.5, color: '#059669', fontWeight: 800,
-                background: '#ECFDF5', border: '1px solid #10B981',
-                padding: '2px 6px', borderRadius: 10,
-                display: 'inline-flex', alignItems: 'center', gap: 3, marginTop: 2, width: 'fit-content'
-              }}>
-                <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
-              </div>
+              <span style={{ fontSize: 10.5, fontWeight: 900, color: '#D85400', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                BJP TAMIL NADU
+              </span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: '#475569' }}>
+                Local Body Elections 2026-27
+              </span>
             </div>
             {qrUrl && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
@@ -2485,20 +2477,12 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
                 boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1, color: '#0F172A'
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
-                  <div style={{ fontSize: 8, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    {t('Submitted Timestamp')}
-                  </div>
-                  <div style={{ fontSize: 10, fontWeight: 800, color: '#0F172A' }}>
-                    {fmtDateTime(result.submitted_at)}
-                  </div>
-                  <div style={{
-                    fontSize: 8, color: '#059669', fontWeight: 800,
-                    background: '#ECFDF5', border: '1px solid #10B981',
-                    padding: '2.5px 8px', borderRadius: 10,
-                    display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, width: 'fit-content'
-                  }}>
-                    <i className="bi bi-shield-check" /> {t('Official Party Verification 2026-27')}
-                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 900, color: '#D85400', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                    BJP TAMIL NADU
+                  </span>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, color: '#475569' }}>
+                    Local Body Elections 2026-27
+                  </span>
                 </div>
                 {qrUrl && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, flexShrink: 0 }}>
