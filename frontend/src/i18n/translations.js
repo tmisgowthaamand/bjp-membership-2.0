@@ -279,8 +279,6 @@ export const translations = {
     'Local Body': 'உள்ளாட்சி அமைப்பு',
     'Ward No / Area': 'வார்டு எண்',
     'Ward': 'வார்டு',
-    'Submitted Timestamp': 'சமர்ப்பிக்கப்பட்ட நேரம்',
-    'Official Party Verification 2026-27': 'அதிகாரப்பூர்வ கட்சி சரிபார்ப்பு 2026-27',
     'Download 9:16 Card Image': '9:16 அட்டைப் படத்தைப் பதிவிறக்குக',
     'Generating PNG Card...': 'PNG அட்டை உருவாக்கப்படுகிறது...',
     'Close': 'மூடு',
