@@ -445,20 +445,19 @@ function MembershipCardMsg({ active, onSubmit, disabled }) {
 
       {/* Membership Helpline Banner */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(255, 102, 0, 0.07) 0%, rgba(255, 102, 0, 0.02) 100%)',
-        border: '1.5px solid rgba(255, 102, 0, 0.22)',
-        borderRadius: 12,
-        padding: '12px 14px',
+        background: 'linear-gradient(135deg, rgba(255, 102, 0, 0.08) 0%, rgba(255, 102, 0, 0.03) 100%)',
+        border: '1.5px solid rgba(255, 102, 0, 0.25)',
+        borderRadius: 14,
+        padding: '14px 16px',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 10
+        flexDirection: 'column',
+        gap: 12
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--color-chalk)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-chalk)', lineHeight: 1.3 }}>
             {t("Not a BJP member yet?")}
           </div>
-          <div style={{ fontSize: 11.5, color: 'var(--color-ash)' }}>
+          <div style={{ fontSize: 12, color: 'var(--color-ash)', lineHeight: 1.35 }}>
             {t("Call helpline to join immediately:")}
           </div>
         </div>
@@ -468,17 +467,18 @@ function MembershipCardMsg({ active, onSubmit, disabled }) {
             background: 'linear-gradient(135deg, #FF7700 0%, #E65C00 100%)',
             color: '#FFFFFF',
             fontWeight: 800,
-            fontSize: 12.5,
-            padding: '8px 14px',
-            borderRadius: 8,
+            fontSize: 13,
+            padding: '10px 16px',
+            borderRadius: 10,
             textDecoration: 'none',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 6,
+            justifyContent: 'center',
+            gap: 8,
             whiteSpace: 'nowrap',
-            boxShadow: '0 3px 10px rgba(230, 92, 0, 0.3)',
+            boxShadow: '0 4px 12px rgba(230, 92, 0, 0.3)',
             transition: 'all 0.2s ease',
-            flexShrink: 0
+            width: '100%'
           }}
         >
           <i className="bi bi-telephone-fill" />
