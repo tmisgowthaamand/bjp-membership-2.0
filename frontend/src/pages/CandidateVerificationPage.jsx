@@ -475,15 +475,11 @@ export default function CandidateVerificationPage() {
                 justifyContent: 'space-between', gap: 8, boxShadow: '0 4px 14px rgba(0,0,0,0.15)', zIndex: 1
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
-                  <span style={{ fontSize: 8, color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Submitted Timestamp</span>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: '#0F172A' }}>{formattedTime}</span>
-                  <span style={{
-                    fontSize: 8, color: '#059669', fontWeight: 800,
-                    background: '#ECFDF5', border: '1px solid #10B981',
-                    padding: '2.5px 8px', borderRadius: 10,
-                    display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, width: 'fit-content'
-                  }}>
-                    <i className="bi bi-shield-check" /> Official Party Verification 2026-27
+                  <span style={{ fontSize: 11, fontWeight: 900, color: '#D85400', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                    BJP TAMIL NADU
+                  </span>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, color: '#475569' }}>
+                    Local Body Elections 2026-27
                   </span>
                 </div>
                 {qrUrl && (
