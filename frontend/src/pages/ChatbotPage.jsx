@@ -188,7 +188,8 @@ function WelcomeBannerMsg({ onStart }) {
   return (
     <div className="welcome-banner">
       <picture>
-        <source srcSet="/banner.webp" type="image/webp" />
+        <source media="(max-width: 640px)" srcSet="/banner-mobile.webp" type="image/webp" width="640" height="267" />
+        <source srcSet="/banner.webp" type="image/webp" width="1200" height="500" />
         <img
           src="/banner.png"
           alt="BJP Tamil Nadu Local Body Candidate Application 2026"
@@ -218,7 +219,8 @@ function WelcomeBackBannerMsg({ name, subtitle }) {
   return (
     <div className="welcome-banner welcome-back-banner">
       <picture>
-        <source srcSet="/banner.webp" type="image/webp" />
+        <source media="(max-width: 640px)" srcSet="/banner-mobile.webp" type="image/webp" width="640" height="267" />
+        <source srcSet="/banner.webp" type="image/webp" width="1200" height="500" />
         <img
           src="/banner.png"
           alt="BJP Tamil Nadu Local Body Candidate Application 2026"
