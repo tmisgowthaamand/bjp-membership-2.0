@@ -1,8 +1,30 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react'
 import { admin } from '../../api'
-import { normalizeDistrictName, getDistrictColorIntensity, TN_38_DISTRICTS } from '../../data/districtNormalizer'
+import { normalizeDistrictName, getDistrictColorIntensity, getDistrictNumber, TN_38_DISTRICTS } from '../../data/districtNormalizer'
 import Map3DContainer from '../../features/map3d/Map3DContainer'
 import '../../styles/tn-map.css'
+
+export function LocationPinIcon({ size = 16, color = '#2563EB', fill = '#2563EB', style = {} }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ display: 'inline-block', verticalAlign: '-3px', ...style }}
+    >
+      <path
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill={fill}
+        stroke="#FFFFFF"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="9" r="2.5" fill="#FFFFFF" />
+    </svg>
+  )
+}
 
 // Distinct Vibrant District Color Palette for all 38 Districts
 const DISTRICT_PALETTE = {
@@ -90,7 +112,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
     setLoading(true)
     setError(null)
     Promise.allSettled([
-      fetch('/tn-districts.geojson').then((res) => res.json()),
+      fetch('/tn-districts.geojson?v=38').then((res) => res.json()),
       admin.getDistrictAnalytics(),
     ]).then(([geoRes, countRes]) => {
       if (geoRes.status === 'fulfilled') setGeoJson(geoRes.value)
@@ -279,11 +301,12 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
           boxShadow: '0 8px 24px rgba(37,99,235,0.25)', border: '1px solid rgba(255,255,255,0.2)'
         }}>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#93C5FD' }}>
-              📍 Selected District Live Registry Filter
+            <div style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#93C5FD', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <LocationPinIcon size={14} color="#93C5FD" fill="#93C5FD" />
+              <span>Selected District Live Registry Filter</span>
             </div>
             <div style={{ fontSize: 22, fontWeight: 900, fontFamily: 'Outfit, sans-serif', marginTop: 2 }}>
-              {selectedDistrict.toUpperCase()} DISTRICT
+              DISTRICT #{getDistrictNumber(selectedDistrict)} — {selectedDistrict.toUpperCase()}
             </div>
             <div style={{ fontSize: 13, fontWeight: 600, color: '#E0E7FF', marginTop: 2 }}>
               Live Database Submissions: <strong style={{ color: '#FFFFFF', fontSize: 15 }}>{normalizedCounts[selectedDistrict] || 0} Applications</strong>
@@ -328,7 +351,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#2563EB', display: 'inline-block', animation: 'pulse 1s infinite' }} />
             <span style={{ fontSize: 13, fontWeight: 800, color: '#1E4ED8' }}>
-              Animating District {animatedIndex + 1} of 38: <strong>{currentAnimDistrict}</strong>
+              Animating District {animatedIndex + 1} of 38: <strong>#{animatedIndex + 1} {currentAnimDistrict}</strong>
             </span>
           </div>
           <span style={{ fontSize: 12, fontWeight: 700, color: '#2563EB' }}>
@@ -436,6 +459,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                     const pointsStr = coordsToPoints(projected)
                     const centroid = getCentroid(projected)
                     const count = Number(normalizedCounts[normName]) || 0
+                    const distNum = getDistrictNumber(normName)
                     const isSelected = selectedDistrict && selectedDistrict.toLowerCase() === normName.toLowerCase()
                     const isHovered = hoveredDistrict === normName
                     const isAnimatedActive = currentAnimDistrict === normName
@@ -483,12 +507,12 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                           y={count > 0 ? ly - 5 : ly}
                           textAnchor="middle"
                           fill="#FFFFFF"
-                          fontSize={normName.length > 12 ? '7.5' : '8.5'}
+                          fontSize={normName.length > 12 ? '8.5' : normName.length > 9 ? '9.5' : '11.5'}
                           fontWeight="800"
                           fontFamily="Outfit, sans-serif"
                           style={{
                             pointerEvents: 'none',
-                            textShadow: '0 1px 3px rgba(0,0,0,0.65)'
+                            textShadow: '0 1px 4px rgba(15,23,42,0.85)'
                           }}
                         >
                           {normName}
@@ -537,7 +561,10 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                 boxShadow: '0 10px 25px -5px rgba(15,23,42,0.4)', pointerEvents: 'none', zIndex: 99,
                 border: '1.5px solid #2563EB', backdropFilter: 'blur(6px)'
               }}>
-                <div style={{ fontWeight: 800, color: '#60A5FA', fontSize: 13 }}>📍 {hoveredDistrict}</div>
+                <div style={{ fontWeight: 800, color: '#60A5FA', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <LocationPinIcon size={14} color="#60A5FA" fill="#2563EB" />
+                  <span>#{getDistrictNumber(hoveredDistrict)} {hoveredDistrict}</span>
+                </div>
                 <div style={{ display: 'flex', gap: 10, marginTop: 3, fontSize: 11, color: '#E2E8F0' }}>
                   <span>Real Applications: <strong>{normalizedCounts[hoveredDistrict] || 0}</strong></span>
                   <span style={{ color: '#94A3B8' }}>
@@ -547,8 +574,9 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
               </div>
             )}
 
-            <div style={{ textAlign: 'center', marginTop: 14, fontSize: 11, fontWeight: 800, color: '#64748B', letterSpacing: '0.04em' }}>
-              🗺️ 38 Complete Districts • Dynamic Mercator Projection Engine
+            <div style={{ textAlign: 'center', marginTop: 14, fontSize: 11, fontWeight: 800, color: '#64748B', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <LocationPinIcon size={14} color="#2563EB" fill="#2563EB" />
+              <span>38 Complete Districts (#1 to #38) • Dynamic Mercator Projection Engine</span>
             </div>
           </div>
         )}
@@ -560,13 +588,15 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
             <span style={{ fontSize: 12, fontWeight: 800, color: '#2563EB' }}>Total: {totalApps} Applications</span>
           </div>
 
-          <div style={{ maxHeight: 520, overflowY: 'auto', paddingRight: 6 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(145px, 1fr))', gap: 10 }}>
-              {TN_38_DISTRICTS.map((name) => {
+          <div style={{ maxHeight: 540, overflowY: 'auto', paddingRight: 6 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(172px, 1fr))', gap: 10 }}>
+              {TN_38_DISTRICTS.map((name, idx) => {
                 const count = Number(normalizedCounts[name]) || 0
+                const distNum = idx + 1
                 const isSelected = selectedDistrict && selectedDistrict.toLowerCase() === name.toLowerCase()
                 const isAnimatedActive = currentAnimDistrict === name
                 const pct = totalApps ? Math.round((count / totalApps) * 100) : 0
+                const fontSize = name.length > 14 ? 10.5 : name.length > 12 ? 11 : 12
 
                 return (
                   <div
@@ -584,13 +614,28 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                       boxShadow: isAnimatedActive ? '0 4px 12px rgba(245,158,11,0.3)' : isSelected ? '0 4px 12px rgba(37,99,235,0.25)' : 'none'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
                       <span style={{
-                        width: 10, height: 10, borderRadius: '50%',
-                        background: isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB',
-                        border: '1px solid rgba(0,0,0,0.1)', flexShrink: 0
-                      }} />
-                      <span style={{ fontSize: 12, fontWeight: 800, fontFamily: 'Outfit, sans-serif', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        fontSize: 10, fontWeight: 900,
+                        background: isSelected ? 'rgba(255,255,255,0.25)' : '#E2E8F0',
+                        color: isSelected ? '#FFFFFF' : '#475569',
+                        padding: '1px 5px', borderRadius: 6,
+                        fontFamily: 'JetBrains Mono, monospace', flexShrink: 0
+                      }}>
+                        #{distNum}
+                      </span>
+                      <LocationPinIcon size={12} color={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} fill={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} />
+                      <span
+                        title={name}
+                        style={{
+                          fontSize,
+                          fontWeight: 800,
+                          fontFamily: 'Outfit, sans-serif',
+                          flex: 1,
+                          letterSpacing: name.length > 13 ? '-0.2px' : 'normal',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
                         {name}
                       </span>
                     </div>

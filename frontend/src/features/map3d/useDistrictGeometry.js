@@ -36,7 +36,7 @@ export function useDistrictGeometry(geoData, countLookup = {}) {
 
       function processPolygon(rings) {
         if (!rings || rings.length === 0) return
-        
+
         // Outer boundary
         const outerRing = rings[0]
         const shape = new THREE.Shape()

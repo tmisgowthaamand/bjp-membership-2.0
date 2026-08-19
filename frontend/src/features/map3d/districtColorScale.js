@@ -1,4 +1,4 @@
-// Low-Contrast Soft Executive Pastel Palette for Tamil Nadu 38 Districts
+// Exact Executive Soft Pastel Palette from Commit 6faaf03
 const SOFT_PASTEL_DISTRICT_COLORS = {
   chennai: '#C7D2FE',         // Soft Pastel Indigo
   thiruvallur: '#FECDD3',     // Soft Pastel Rose
@@ -52,7 +52,7 @@ const SOFT_PASTEL_DISTRICT_COLORS = {
   kanniyakumari: '#DDD6FE',
 }
 
-// Map each district name to its low-contrast soft pastel color
+// Map each district name to its soft pastel color
 export function getDistrictBaseColor(name = '') {
   const norm = name
     .trim()
@@ -75,3 +75,5 @@ export function getExtrusionDepth(count = 0) {
   if (!count || count === 0) return baseDepth
   return Math.min(baseDepth + count * 0.025, 2.4)
 }
+
+

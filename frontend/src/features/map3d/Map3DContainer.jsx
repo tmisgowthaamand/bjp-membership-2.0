@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Map3D } from './Map3D'
-import { DistrictTooltip } from './DistrictTooltip'
+import { DistrictTooltip, LocationPinIcon } from './DistrictTooltip'
 import { useDistrictGeometry } from './useDistrictGeometry'
 import { buildCountLookup, normalizeDistrictName } from './districtIndex'
+import { getDistrictNumber } from '../../data/districtNormalizer'
 import '../../styles/tn-map.css'
 
 export default function Map3DContainer({
@@ -20,7 +21,7 @@ export default function Map3DContainer({
 
   // 1. Fetch the 38-district GeoJSON
   useEffect(() => {
-    fetch('/tn-districts.geojson')
+    fetch('/tn-districts.geojson?v=38')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load GeoJSON')
         return res.json()
@@ -68,12 +69,29 @@ export default function Map3DContainer({
     }
   }
 
-  const [cameraZ, setCameraZ] = useState(37) // 37 Z distance fits all 38 districts with ample margin
+  const getInitialCameraZ = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 480) return 46
+      if (window.innerWidth < 768) return 40
+    }
+    return 35
+  }
+
+  const [cameraZ, setCameraZ] = useState(getInitialCameraZ)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const targetZ = getInitialCameraZ()
+      setCameraZ(targetZ)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const applyZoom = (zVal) => {
     setCameraZ(zVal)
     if (controlsRef.current) {
-      controlsRef.current.object.position.set(0, 0.5, zVal)
+      controlsRef.current.object.position.set(0, 0.2, zVal)
       controlsRef.current.update()
     }
   }
@@ -84,19 +102,23 @@ export default function Map3DContainer({
   }
 
   const zoomOut = () => {
-    const nextZ = Math.min(52, cameraZ + 4)
+    const nextZ = Math.min(55, cameraZ + 4)
     applyZoom(nextZ)
   }
 
   const resetView = () => {
-    applyZoom(37)
+    const defaultZ = getInitialCameraZ()
+    applyZoom(defaultZ)
     if (controlsRef.current) {
       controlsRef.current.reset()
+      controlsRef.current.object.position.set(0, 0.2, defaultZ)
+      controlsRef.current.update()
     }
   }
 
   return (
-    <div ref={containerRef} className="tn-map-wrapper" style={{ height: 600, background: '#f8fafc' }}>
+    <div ref={containerRef} className="tn-map-wrapper" style={{ height: 'min(620px, 75vh)', minHeight: 520, background: '#f8fafc', borderRadius: 20 }}>
+
       {loading && (
         <div className="tn-map-loading">
           <div className="tn-map-spinner" />
@@ -204,8 +226,9 @@ export default function Map3DContainer({
 
           {/* Selected District Badge */}
           {selectedDistrict && (
-            <div className="tn-selected-badge">
-              <span>📍 {selectedDistrict}</span>
+            <div className="tn-selected-badge" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <LocationPinIcon size={14} color="#FFFFFF" fill="#FFFFFF" />
+              <span>#{getDistrictNumber(selectedDistrict)} {selectedDistrict}</span>
               <button onClick={() => onSelectDistrict && onSelectDistrict('')}>
                 ✕
               </button>

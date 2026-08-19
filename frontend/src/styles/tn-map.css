@@ -131,8 +131,9 @@
 }
 
 .tn-tooltip-district {
-  font-size: 13px;
-  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
   color: #ffffff;
   margin-bottom: 4px;
   letter-spacing: 0.3px;
@@ -145,19 +146,22 @@
 }
 
 .tn-tooltip-num {
+  font-family: 'JetBrains Mono', monospace;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 900;
   color: #3B82F6;
   line-height: 1;
 }
 
 .tn-tooltip-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.65);
   font-weight: 500;
 }
 
 .tn-tooltip-empty {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11.5px;
   color: rgba(255, 255, 255, 0.45);
   margin-top: 2px;
@@ -180,6 +184,7 @@
 }
 
 .tn-legend-title {
+  font-family: 'Outfit', sans-serif;
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
@@ -204,6 +209,7 @@
 }
 
 .tn-legend-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -347,8 +353,9 @@
 
 .tn-district-name {
   flex: 1;
+  font-family: 'Outfit', sans-serif;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -369,9 +376,35 @@
 }
 
 .tn-district-count {
+  font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   font-weight: 800;
   color: var(--role-accent, #2563EB);
   min-width: 36px;
   text-align: right;
+}
+
+/* ── Mobile & Tablet Responsiveness ──────────────────────────── */
+@media (max-width: 768px) {
+  .admin-card {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .tn-map-wrapper {
+    height: 380px !important;
+    border-radius: 14px !important;
+  }
+
+  .tn-selected-badge {
+    font-size: 11px;
+    padding: 5px 12px;
+    max-width: 90%;
+  }
+
+  .tn-map-legend {
+    bottom: 8px;
+    left: 8px;
+    padding: 6px 10px;
+  }
 }

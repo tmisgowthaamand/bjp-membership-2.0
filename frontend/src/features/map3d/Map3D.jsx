@@ -16,14 +16,15 @@ function SceneContent({
 
   return (
     <>
-      {/* High Performance Cool Theme Lighting Setup */}
-      <ambientLight intensity={1.25} color="#ffffff" />
-      <directionalLight position={[-12, 18, 20]} intensity={1.3} color="#ffffff" />
-      <directionalLight position={[14, -10, 14]} intensity={0.45} color="#e0f2fe" />
-      <pointLight position={[0, 0, 20]} intensity={0.35} />
+      {/* Bright Luminous High-Clarity Lighting Setup */}
+      <ambientLight intensity={1.9} color="#ffffff" />
+      <directionalLight position={[-10, 20, 22]} intensity={1.7} color="#ffffff" />
+      <directionalLight position={[14, -10, 16]} intensity={0.75} color="#ffffff" />
+      <directionalLight position={[0, 14, 20]} intensity={0.5} color="#ffffff" />
+      <pointLight position={[0, 0, 24]} intensity={0.55} color="#ffffff" />
 
-      {/* 3D Tamil Nadu Map - Front-facing with slight isometric tilt */}
-      <group rotation={[-0.18, 0.1, 0]}>
+      {/* 3D Tamil Nadu Map - Elevated Group for Perfect Southern/Northern Fit */}
+      <group position={[0, 1.2, 0]} rotation={[-0.18, 0.1, 0]}>
         {/* 38 3D District Blocks */}
         {districts.map((d) => (
           <DistrictMesh
@@ -49,19 +50,20 @@ export function Map3D({
   onPointerOut,
   onClick,
   controlsRef,
-  cameraZ = 37,
+  cameraZ = 35,
 }) {
   return (
     <Canvas
-      dpr={[1, 1.5]}
+      dpr={[1, 2]}
       gl={{
         antialias: true,
         alpha: true,
         powerPreference: 'high-performance',
+        precision: 'highp',
       }}
       style={{ width: '100%', height: '100%', background: '#f8fafc' }}
     >
-      <PerspectiveCamera makeDefault position={[0, 0.5, cameraZ]} fov={38} />
+      <PerspectiveCamera makeDefault position={[0, 0.2, cameraZ]} fov={38} />
       <OrbitControls
         ref={controlsRef}
         enablePan={true}
@@ -86,3 +88,4 @@ export function Map3D({
     </Canvas>
   )
 }
+

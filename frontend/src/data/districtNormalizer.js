@@ -4,45 +4,46 @@
  */
 
 export const TN_38_DISTRICTS = [
-  'Chennai',
-  'Thiruvallur',
-  'Kancheepuram',
-  'Chengalpattu',
-  'Vellore',
-  'Ranipet',
-  'Tirupathur',
-  'Tiruvannamalai',
-  'Villupuram',
-  'Kallakurichi',
-  'Cuddalore',
-  'Krishnagiri',
-  'Dharmapuri',
-  'Salem',
-  'Erode',
-  'Nilgiris',
-  'Coimbatore',
-  'Tiruppur',
-  'Namakkal',
-  'Karur',
-  'Tiruchirappalli',
-  'Perambalur',
   'Ariyalur',
+  'Chengalpattu',
+  'Chennai',
+  'Coimbatore',
+  'Cuddalore',
+  'Dharmapuri',
+  'Dindigul',
+  'Erode',
+  'Kallakurichi',
+  'Kancheepuram',
+  'Kanniyakumari',
+  'Karur',
+  'Krishnagiri',
+  'Madurai',
   'Mayiladuthurai',
   'Nagapattinam',
-  'Tiruvarur',
-  'Thanjavur',
+  'Namakkal',
+  'Nilgiris',
+  'Perambalur',
   'Pudukkottai',
-  'Dindigul',
-  'Theni',
-  'Madurai',
-  'Sivagangai',
-  'Virudhunagar',
   'Ramanathapuram',
+  'Ranipet',
+  'Salem',
+  'Sivagangai',
   'Tenkasi',
-  'Tirunelveli',
+  'Thanjavur',
+  'Theni',
+  'Thiruvallur',
+  'Thiruvarur',
   'Thoothukudi',
-  'Kanniyakumari',
+  'Tiruchirappalli',
+  'Tirunelveli',
+  'Tirupathur',
+  'Tiruppur',
+  'Tiruvannamalai',
+  'Vellore',
+  'Villupuram',
+  'Virudhunagar',
 ]
+
 
 const ALIAS_MAP = {
   tiruvallur: 'Thiruvallur',
@@ -60,6 +61,10 @@ const ALIAS_MAP = {
   sivaganga: 'Sivagangai',
   kanyakumari: 'Kanniyakumari',
   tuticorin: 'Thoothukudi',
+  thoothukkudi: 'Thoothukudi',
+  mayiladuthurai: 'Mayiladuthurai',
+  mayiladuthurai_rural: 'Mayiladuthurai',
+  mayiladuturai: 'Mayiladuthurai',
   ranippettai: 'Ranipet',
   tiruppattur: 'Tirupathur',
   kallakkurichi: 'Kallakurichi',
@@ -81,6 +86,15 @@ export function normalizeDistrictName(rawDistrict) {
   if (matched) return matched
 
   return clean.replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+/**
+ * Returns canonical 1-38 district number for any given district name.
+ */
+export function getDistrictNumber(rawDistrict) {
+  const norm = normalizeDistrictName(rawDistrict)
+  const idx = TN_38_DISTRICTS.indexOf(norm)
+  return idx !== -1 ? idx + 1 : null
 }
 
 /**

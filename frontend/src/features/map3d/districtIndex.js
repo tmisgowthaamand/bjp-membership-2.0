@@ -1,11 +1,11 @@
-// Canonical 38 Districts of Tamil Nadu (from Spec)
+// Official 38 Districts of Tamil Nadu (Canonical Government Order)
 export const TN_DISTRICTS = [
-  'Chennai', 'Thiruvallur', 'Kanchipuram', 'Chengalpattu', 'Ranipet', 'Vellore', 'Tirupattur',
-  'Krishnagiri', 'Dharmapuri', 'Tiruvannamalai', 'Viluppuram', 'Kallakurichi', 'Salem',
-  'Namakkal', 'Perambalur', 'Ariyalur', 'Cuddalore', 'Mayiladuthurai', 'Nagapattinam',
-  'Tiruvarur', 'Thanjavur', 'Tiruchirappalli', 'Karur', 'Nilgiris', 'Erode', 'Coimbatore',
-  'Tiruppur', 'Dindigul', 'Pudukkottai', 'Theni', 'Madurai', 'Sivaganga', 'Virudhunagar',
-  'Ramanathapuram', 'Thoothukudi', 'Tenkasi', 'Tirunelveli', 'Kanyakumari'
+  'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Dindigul',
+  'Erode', 'Kallakurichi', 'Kancheepuram', 'Kanniyakumari', 'Karur', 'Krishnagiri',
+  'Madurai', 'Mayiladuthurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur',
+  'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivagangai', 'Tenkasi',
+  'Thanjavur', 'Theni', 'Thiruvallur', 'Thiruvarur', 'Thoothukudi', 'Tiruchirappalli',
+  'Tirunelveli', 'Tirupathur', 'Tiruppur', 'Tiruvannamalai', 'Vellore', 'Villupuram', 'Virudhunagar'
 ]
 
 // Normalizes district names across variations
