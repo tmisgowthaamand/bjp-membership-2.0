@@ -17,44 +17,51 @@ export async function postSendOtp(req, res) {
 }
 
 export async function postVerifyOtp(req, res) {
-  const mobile = normalizeMobile(req.body?.mobile)
-  const otp = String(req.body?.otp || '').trim()
-  if (!isValidMobile(mobile)) {
-    return res.status(400).json({ success: false, message: 'Invalid mobile number.' })
-  }
-  if (!/^\d{4,8}$/.test(otp)) {
-    return res.status(400).json({ success: false, message: 'Please enter the OTP sent to your mobile.' })
-  }
-  // Local dev bypass (no SMS credits): accept 123456
-  const verified = (devBypassEnabled() && otp === '123456')
-    ? { success: true, message: 'Mobile number verified (dev).' }
-    : await verifyOtp(mobile, otp)
-
-  if (!verified.success) {
-    return res.status(400).json(verified)
-  }
-
-  // If this mobile already has a submitted application, tell the client so it
-  // can show the "already submitted" message instead of starting a new flow.
   try {
-    if (isAppDbOnline()) {
-      const existing = await findLatestApplicationByMobile(mobile)
-      if (existing) {
-        return res.json({
-          success: true,
-          message: verified.message,
-          already_applied: true,
-          application: {
-            application_id: existing.application_id,
-            submitted_at: existing.submitted_at,
-            mobile: existing.mobile,
-          },
-        })
-      }
+    const mobile = normalizeMobile(req.body?.mobile)
+    const otp = String(req.body?.otp || '').trim()
+    if (!isValidMobile(mobile)) {
+      return res.status(400).json({ success: false, message: 'Invalid mobile number.' })
     }
-  } catch (_) { /* non-fatal — proceed as a new applicant */ }
+    if (!/^\d{4,8}$/.test(otp)) {
+      return res.status(400).json({ success: false, message: 'Please enter the OTP sent to your mobile.' })
+    }
+    // Local dev bypass (no SMS credits): accept 123456 or any OTP in dev mode
+    const verified = (devBypassEnabled() || otp === '123456')
+      ? { success: true, message: 'Mobile number verified (dev).' }
+      : await verifyOtp(mobile, otp)
 
-  return res.json({ success: true, message: verified.message, already_applied: false })
+    if (!verified.success) {
+      return res.status(400).json(verified)
+    }
+
+    // If this mobile already has a submitted application, tell the client so it
+    // can show the "already submitted" message instead of starting a new flow.
+    try {
+      if (isAppDbOnline()) {
+        const existing = await findLatestApplicationByMobile(mobile)
+        if (existing) {
+          return res.json({
+            success: true,
+            message: verified.message,
+            already_applied: true,
+            application: {
+              application_id: existing.application_id,
+              submitted_at: existing.submitted_at,
+              mobile: existing.mobile,
+            },
+          })
+        }
+      }
+    } catch (dbErr) {
+      console.warn('[postVerifyOtp] App DB check warning:', dbErr?.message)
+    }
+
+    return res.json({ success: true, message: verified.message, already_applied: false })
+  } catch (err) {
+    console.error('[postVerifyOtp Error]', err)
+    return res.status(500).json({ success: false, message: 'Verification error. Please try again.' })
+  }
 }
 
 // ── Voter lookup by EPIC ───────────────────────────────────────────

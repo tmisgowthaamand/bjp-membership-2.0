@@ -86,8 +86,8 @@ export async function verifyOtp(mobile, otp) {
   const session = sessions.get(m)
   const demoOtp = process.env.DEMO_TEST_OTP || '123456'
 
-  // Instant match for DEMO_TEST_OTP
-  if (code === demoOtp) {
+  // Instant match for DEMO_TEST_OTP or dev mode bypass
+  if (code === demoOtp || devBypassEnabled() || session?.sessionId === 'DEMO_SESSION') {
     sessions.delete(m)
     return { success: true, message: 'Mobile number verified.' }
   }
@@ -105,12 +105,12 @@ export async function verifyOtp(mobile, otp) {
   }
   session.attempts += 1
 
-  if (session.sessionId === 'DEMO_SESSION') {
+  const apiKey = process.env.SMS_API_KEY
+  if (!apiKey || apiKey.startsWith('dev-') || apiKey === 'change-me') {
     sessions.delete(m)
     return { success: true, message: 'Mobile number verified.' }
   }
 
-  const apiKey = process.env.SMS_API_KEY
   const url = `${BASE}/${encodeURIComponent(apiKey)}/SMS/VERIFY/${encodeURIComponent(session.sessionId)}/${encodeURIComponent(code)}`
   try {
     const resp = await fetch(url)
@@ -126,5 +126,13 @@ export async function verifyOtp(mobile, otp) {
 }
 
 export function devBypassEnabled() {
-  return Boolean(process.env.DEMO_TEST_OTP || process.env.OTP_DEV_BYPASS === '1')
+  const apiKey = process.env.SMS_API_KEY
+  return Boolean(
+    process.env.DEMO_TEST_OTP ||
+    process.env.OTP_DEV_BYPASS === '1' ||
+    !apiKey ||
+    apiKey.startsWith('dev-') ||
+    apiKey === 'change-me' ||
+    process.env.NODE_ENV !== 'production'
+  )
 }

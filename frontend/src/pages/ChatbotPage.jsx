@@ -186,7 +186,18 @@ function localBodyComplete(bodyType, lb, ruralPosition = '') {
 function WelcomeBannerMsg({ onStart }) {
   const { t } = useLang()
   return (
-    <div className="welcome-banner">
+    <div className="welcome-banner" style={{
+      background: 'var(--color-carbon)',
+      borderRadius: 16,
+      border: '1px solid var(--color-graphite)',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
+      overflow: 'hidden',
+      width: '100%',
+      maxWidth: 480,
+      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       <picture>
         <source media="(max-width: 640px)" srcSet="/banner-mobile.webp" type="image/webp" width="640" height="267" />
         <source srcSet="/banner.webp" type="image/webp" width="1200" height="500" />
@@ -198,13 +209,76 @@ function WelcomeBannerMsg({ onStart }) {
           height="500"
           decoding="async"
           onError={(e) => { e.target.style.display = 'none' }}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
         />
       </picture>
-      <div className="banner-content">
-        <h2>{t('BJP Tamil Nadu — Local Body Candidate Application 2026')}</h2>
-        <p>{t('Apply to contest the upcoming Local Body Elections. Verify your mobile and voter details, then tell us where you want to serve.')}</p>
-        <button className="btn-start" onClick={onStart} aria-label={t('Start Application')}>
-          <i className="bi bi-play-circle-fill" aria-hidden="true" /> {t('Start Application')}
+      <div className="banner-content" style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>
+        <h2 style={{ fontSize: 16, fontWeight: 800, color: 'var(--color-chalk)', margin: 0, lineHeight: 1.35 }}>
+          {t('BJP Tamil Nadu — Local Body Candidate Application 2026')}
+        </h2>
+        <p style={{ fontSize: 13, color: 'var(--color-ash)', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>
+          {t('Apply to contest the upcoming Local Body Elections. Verify your mobile and voter details, then tell us where you want to serve.')}
+        </p>
+
+        {/* Website Saffron & Slate Theme Checklist Container (Kept in English) */}
+        <div className="welcome-checklist" style={{
+          background: 'rgba(255, 102, 0, 0.06)',
+          border: '1.5px solid rgba(255, 102, 0, 0.25)',
+          borderRadius: 12,
+          padding: '12px 14px',
+          margin: '4px 0 6px 0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8
+        }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#FF6600', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <i className="bi bi-journal-check" style={{ fontSize: 15, color: '#FF6600' }} />
+            Keep these ready before you begin:
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 7, fontSize: 13, color: 'var(--color-chalk)', fontWeight: 600 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-check-circle-fill" style={{ color: '#10B981', fontSize: 15, flexShrink: 0 }} />
+              <span>BJP Membership ID</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-check-circle-fill" style={{ color: '#10B981', fontSize: 15, flexShrink: 0 }} />
+              <span>Voter ID (EPIC number)</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-check-circle-fill" style={{ color: '#10B981', fontSize: 15, flexShrink: 0 }} />
+              <span>Passport-size photo (JPEG/PNG, max 15 MB)</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <i className="bi bi-check-circle-fill" style={{ color: '#10B981', fontSize: 15, flexShrink: 0 }} />
+              <span>Ward / Local Body Information</span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          className="btn-start"
+          onClick={onStart}
+          aria-label={t('Start Application')}
+          style={{
+            background: 'linear-gradient(135deg, #FF7700 0%, #E65C00 100%)',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: 10,
+            padding: '11px 20px',
+            fontSize: 14,
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            width: 'fit-content',
+            boxShadow: '0 4px 14px rgba(230, 92, 0, 0.35)',
+            transition: 'all 0.2s ease',
+            marginTop: 4
+          }}
+        >
+          <i className="bi bi-play-circle-fill" aria-hidden="true" style={{ fontSize: 16 }} />
+          <span>{t('Start Application')}</span>
         </button>
       </div>
     </div>
@@ -329,57 +403,139 @@ const cardBox = {
 }
 const cardTitle = { fontSize: 13, fontWeight: 700, color: 'var(--color-chalk)', display: 'flex', alignItems: 'center', gap: 8 }
 
-// ── BJP Membership Card (Optional + Online Apply Link) ──────
+// ── BJP Membership Card (High Quality Design) ──────
 function MembershipCardMsg({ active, onSubmit, disabled }) {
   const { t } = useLang()
   const [val, setVal] = useState('')
 
   return (
-    <div style={cardBox}>
-      <div style={cardTitle}><i className="bi bi-card-heading text-saffron" /> {t('BJP Membership ID (Mandatory)')}<span style={{ color: '#e74c3c' }}> *</span></div>
-      <div style={{ fontSize: 12, color: 'var(--color-ash)', lineHeight: 1.4 }}>
-        {t('Enter your 8-digit BJP Primary Membership ID to proceed.')}
+    <div style={{
+      ...cardBox,
+      background: 'var(--color-carbon)',
+      border: '1px solid var(--color-graphite)',
+      borderRadius: 16,
+      padding: '18px 20px',
+      boxShadow: '0 4px 18px rgba(0, 0, 0, 0.05)',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14
+    }}>
+      {/* Header Title & Step Indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: 'var(--color-chalk)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <i className="bi bi-card-heading" style={{ color: '#FF6600', fontSize: 18 }} />
+          {t('BJP Primary Membership ID')}
+        </div>
+        <span style={{
+          fontSize: 11,
+          fontWeight: 700,
+          background: 'rgba(255, 102, 0, 0.1)',
+          color: '#FF6600',
+          padding: '3px 9px',
+          borderRadius: 12,
+          border: '1px solid rgba(255, 102, 0, 0.25)'
+        }}>
+          {t('Step 1 of 8')}
+        </span>
       </div>
 
-      <div style={{ background: 'var(--color-abyss)', padding: 12, borderRadius: 10, border: '1px solid var(--color-graphite)' }}>
+      <div style={{ fontSize: 13, color: 'var(--color-ash)', lineHeight: 1.45 }}>
+        {t('Enter your 8-digit BJP Primary Membership ID to proceed with your application.')}
+      </div>
+
+      {/* Membership Helpline Banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(255, 102, 0, 0.07) 0%, rgba(255, 102, 0, 0.02) 100%)',
+        border: '1.5px solid rgba(255, 102, 0, 0.22)',
+        borderRadius: 12,
+        padding: '12px 14px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 10
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--color-chalk)' }}>
+            {t("Not a BJP member yet?")}
+          </div>
+          <div style={{ fontSize: 11.5, color: 'var(--color-ash)' }}>
+            {t("Call helpline to join immediately:")}
+          </div>
+        </div>
         <a
-          href="https://membership.bjp.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ fontSize: 13, color: 'var(--color-signal-mint)', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}
+          href="tel:8800002024"
+          style={{
+            background: 'linear-gradient(135deg, #FF7700 0%, #E65C00 100%)',
+            color: '#FFFFFF',
+            fontWeight: 800,
+            fontSize: 12.5,
+            padding: '8px 14px',
+            borderRadius: 8,
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            whiteSpace: 'nowrap',
+            boxShadow: '0 3px 10px rgba(230, 92, 0, 0.3)',
+            transition: 'all 0.2s ease',
+            flexShrink: 0
+          }}
         >
-          <i className="bi bi-box-arrow-up-right" />
-          {t("Aren't a BJP member? Click here to join BJP Membership")}
+          <i className="bi bi-telephone-fill" />
+          <span>Call 8800002024</span>
         </a>
       </div>
 
       {active && (
-        <>
-          <input
-            style={controlStyle}
-            type="text"
-            value={val}
-            placeholder={t('Enter BJP Membership ID (Mandatory)')}
-            onChange={(e) => setVal(e.target.value)}
-          />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
+          <div>
+            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-chalk)', marginBottom: 6, display: 'block' }}>
+              {t('Membership ID (8 Digits)')}
+            </label>
+            <input
+              style={{
+                ...controlStyle,
+                fontSize: 14,
+                padding: '11px 14px',
+                borderRadius: 10,
+                border: '1.5px solid var(--color-graphite)',
+                background: 'var(--color-carbon)',
+                color: 'var(--color-chalk)'
+              }}
+              type="text"
+              value={val}
+              maxLength={20}
+              placeholder={t('e.g. 12345678')}
+              onChange={(e) => setVal(e.target.value)}
+            />
+          </div>
 
           <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
             <button
-              style={primaryBtn(Boolean(val.trim()) && !disabled)}
+              type="button"
+              style={{ ...secondaryBtn(!disabled), flex: 1 }}
+              disabled={disabled}
+              onClick={() => onSubmit('', true)}
+            >
+              {t('Skip & Proceed')} <i className="bi bi-arrow-right" />
+            </button>
+            <button
+              type="button"
+              style={{ ...primaryBtn(Boolean(val.trim()) && !disabled), flex: 1 }}
               onClick={() => val.trim() && onSubmit(val.trim(), false)}
               disabled={!val.trim() || disabled}
             >
               {t('Continue')} <i className="bi bi-arrow-right" />
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   )
 }
 
 // ── Candidate Passport Size Photo Upload (Max 15MB) ────────
-function PhotoUploadMsg({ active, initial, onSubmit, disabled }) {
+function PhotoUploadMsg({ active, initial, onSubmit, onBack, disabled }) {
   const { t } = useLang()
   const [photoFile, setPhotoFile] = useState(null)
   const [preview, setPreview] = useState(initial?.photoUrl || '')
@@ -454,15 +610,24 @@ function PhotoUploadMsg({ active, initial, onSubmit, disabled }) {
 
       {active && (
         <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
+          {onBack && (
+            <button
+              style={{ ...secondaryBtn(!disabled), flex: 1 }}
+              disabled={disabled}
+              onClick={onBack}
+            >
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
           <button
-            style={secondaryBtn(!disabled)}
+            style={{ ...secondaryBtn(!disabled), flex: 1 }}
             disabled={disabled}
             onClick={() => onSubmit({ photoFile: null, photoUrl: '' })}
           >
             {t('Skip')}
           </button>
           <button
-            style={primaryBtn(Boolean(preview) && !disabled)}
+            style={{ ...primaryBtn(Boolean(preview) && !disabled), flex: 1 }}
             disabled={!preview || disabled}
             onClick={handleContinue}
           >
@@ -478,20 +643,29 @@ function PhotoUploadMsg({ active, initial, onSubmit, disabled }) {
 }
 
 // ── Contesting District Step (Step 8) ──────────────────────────────
-function DistrictMsg({ active, initial, voterDistrict, onSubmit, disabled }) {
+function DistrictMsg({ active, initial, defaultDistrict, onSubmit, onBack, disabled }) {
   const { t } = useLang()
-  const [district, setDistrict] = useState(initial || voterDistrict || 'Chennai')
+
+  // Helper to match district case-insensitively with ALL_DISTRICTS (e.g. "CHENNAI" -> "Chennai")
+  const resolveDistrict = (raw) => {
+    if (!raw) return ''
+    const target = String(raw).trim().toLowerCase()
+    return ALL_DISTRICTS.find((d) => d.toLowerCase() === target) || raw
+  }
+
+  const voterDistrict = resolveDistrict(defaultDistrict)
+  const initialDistrict = resolveDistrict(initial) || voterDistrict
+  const [district, setDistrict] = useState(initialDistrict)
 
   useEffect(() => {
-    if (initial) setDistrict(initial)
-  }, [initial])
+    const resolved = resolveDistrict(initial || defaultDistrict)
+    if (resolved && (!district || district !== resolved)) {
+      setDistrict(resolved)
+    }
+  }, [initial, defaultDistrict])
 
   const handleSelectChange = (e) => {
-    const newDist = e.target.value
-    setDistrict(newDist)
-    if (newDist && onSubmit) {
-      onSubmit({ district: newDist })
-    }
+    setDistrict(e.target.value)
   }
 
   return (
@@ -514,17 +688,31 @@ function DistrictMsg({ active, initial, voterDistrict, onSubmit, disabled }) {
       </div>
 
       {active && (
-        <button style={primaryBtn(Boolean(district) && !disabled)} disabled={!district || disabled}
-          onClick={() => district && onSubmit({ district })}>
-          {t('Confirm District')} <i className="bi bi-arrow-right" />
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 10, width: '100%' }}>
+          {onBack && (
+            <button
+              style={{ ...secondaryBtn(!disabled), flex: 1 }}
+              disabled={disabled}
+              onClick={onBack}
+            >
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
+          <button
+            style={{ ...primaryBtn(Boolean(district) && !disabled), flex: 1 }}
+            disabled={!district || disabled}
+            onClick={() => district && onSubmit({ district })}
+          >
+            {t('Confirm District')} <i className="bi bi-arrow-right" />
+          </button>
+        </div>
       )}
     </div>
   )
 }
 
 // ── Local Body step (7 Position Flows with Cascading Dropdowns) ─────
-function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) {
+function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, onBack, disabled }) {
   const { t } = useLang()
   const [bodyType, setBodyType] = useState(initial?.bodyType || 'urban')
 
@@ -793,10 +981,24 @@ function LocalBodyMsg({ active, contestDistrict, initial, onSubmit, disabled }) 
       )}
 
       {active && (
-        <button style={primaryBtn(isReady() && !disabled)} disabled={!isReady() || disabled}
-          onClick={handleSubmit}>
-          {t('Continue')} <i className="bi bi-arrow-right" />
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 10, width: '100%' }}>
+          {onBack && (
+            <button
+              style={{ ...secondaryBtn(!disabled), flex: 1 }}
+              disabled={disabled}
+              onClick={onBack}
+            >
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
+          <button
+            style={{ ...primaryBtn(isReady() && !disabled), flex: 1 }}
+            disabled={!isReady() || disabled}
+            onClick={handleSubmit}
+          >
+            {t('Continue')} <i className="bi bi-arrow-right" />
+          </button>
+        </div>
       )}
     </div>
   )
@@ -1025,7 +1227,7 @@ function VideoUploadMsg({ active, initial, onSubmit, disabled }) {
 
 
 // ── Long text step (work / experience, local area) ─────────
-function LongTextMsg({ active, title, icon, prompt, expectText, initial, onSubmit, disabled }) {
+function LongTextMsg({ active, title, icon, prompt, expectText, initial, onSubmit, onBack, disabled }) {
   const { t } = useLang()
   const [text, setText] = useState(initial || '')
   const [showInfo, setShowInfo] = useState(false)
@@ -1105,17 +1307,31 @@ function LongTextMsg({ active, title, icon, prompt, expectText, initial, onSubmi
         {words} / {MAX_WORDS} {t('words')}
       </div>
       {active && (
-        <button style={primaryBtn(ready && !disabled)} disabled={!ready || disabled}
-          onClick={() => ready && onSubmit(text.trim())}>
-          {t('Continue')} <i className="bi bi-arrow-right" />
-        </button>
+        <div style={{ display: 'flex', gap: 10, marginTop: 10, width: '100%' }}>
+          {onBack && (
+            <button
+              style={{ ...secondaryBtn(!disabled), flex: 1 }}
+              disabled={disabled}
+              onClick={onBack}
+            >
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
+          <button
+            style={{ ...primaryBtn(ready && !disabled), flex: 1 }}
+            disabled={!ready || disabled}
+            onClick={() => ready && onSubmit(text.trim())}
+          >
+            {t('Continue')} <i className="bi bi-arrow-right" />
+          </button>
+        </div>
       )}
     </div>
   )
 }
 
 // ── Two free-text fields (max 150 words each) ─────────────
-function ShortTextsMsg({ active, initial, onSubmit, disabled }) {
+function ShortTextsMsg({ active, initial, onSubmit, onBack, disabled }) {
   const { t } = useLang()
   const [devP, setDevP] = useState(initial?.devPriorities || '')
   const [grievP, setGrievP] = useState(initial?.grievancePlan || '')
@@ -1239,10 +1455,15 @@ function ShortTextsMsg({ active, initial, onSubmit, disabled }) {
 
       {active && (
         <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
-          <button style={secondaryBtn(!disabled)} onClick={() => onSubmit({ devPriorities: '', grievancePlan: '' })} disabled={disabled}>
+          {onBack && (
+            <button style={{ ...secondaryBtn(!disabled), flex: 1 }} disabled={disabled} onClick={onBack}>
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
+          <button style={{ ...secondaryBtn(!disabled), flex: 1 }} onClick={() => onSubmit({ devPriorities: '', grievancePlan: '' })} disabled={disabled}>
             {t('Skip')}
           </button>
-          <button style={primaryBtn(!disabled)} disabled={disabled} onClick={handleContinue}>
+          <button style={{ ...primaryBtn(!disabled), flex: 1 }} disabled={disabled} onClick={handleContinue}>
             {t('Continue')} <i className="bi bi-arrow-right" />
           </button>
         </div>
@@ -1252,7 +1473,7 @@ function ShortTextsMsg({ active, initial, onSubmit, disabled }) {
 }
 
 // ── Candidate Document Upload (PDF or DOCX, max 15MB) ───────
-function DocUploadMsg({ active, initial, onSubmit, disabled }) {
+function DocUploadMsg({ active, initial, onSubmit, onBack, disabled }) {
 
   const { t } = useLang()
   const [docFile, setDocFile] = useState(initial?.docFile || null)
@@ -1325,11 +1546,15 @@ function DocUploadMsg({ active, initial, onSubmit, disabled }) {
 
       {active && (
         <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
-
-          <button style={secondaryBtn(!disabled)} onClick={() => onSubmit({ docFile: null, docFileName: '' })} disabled={disabled}>
+          {onBack && (
+            <button style={{ ...secondaryBtn(!disabled), flex: 1 }} disabled={disabled} onClick={onBack}>
+              <i className="bi bi-arrow-left" /> {t('Back')}
+            </button>
+          )}
+          <button style={{ ...secondaryBtn(!disabled), flex: 1 }} onClick={() => onSubmit({ docFile: null, docFileName: '' })} disabled={disabled}>
             {t('Skip')}
           </button>
-          <button style={primaryBtn(!disabled)} disabled={disabled} onClick={handleContinue}>
+          <button style={{ ...primaryBtn(!disabled), flex: 1 }} disabled={disabled} onClick={handleContinue}>
             {t('Continue')} <i className="bi bi-arrow-right" />
           </button>
         </div>
@@ -1362,7 +1587,7 @@ function KV({ k, v }) {
   )
 }
 
-function ReviewMsg({ active, data, mobile, onConfirm, onEdit, disabled }) {
+function ReviewMsg({ active, data, mobile, onConfirm, onEdit, onBack, disabled }) {
   const { t } = useLang()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(data)
@@ -1556,11 +1781,16 @@ function ReviewMsg({ active, data, mobile, onConfirm, onEdit, disabled }) {
           </div>
         ) : (
           <div className="card-action-btns" style={{ display: 'flex', flexWrap: 'wrap', gap: 10, width: '100%' }}>
-            <button style={{ ...secondaryBtn(!disabled), flex: '1 1 110px' }} disabled={disabled}
+            {onBack && (
+              <button style={{ ...secondaryBtn(!disabled), flex: '1 1 90px' }} disabled={disabled} onClick={onBack}>
+                <i className="bi bi-arrow-left" /> {t('Back')}
+              </button>
+            )}
+            <button style={{ ...secondaryBtn(!disabled), flex: '1 1 90px' }} disabled={disabled}
               onClick={() => { setDraft(data); setEditing(true) }}>
               <i className="bi bi-pencil-fill" /> {t('Edit')}
             </button>
-            <button style={{ ...primaryBtn(!disabled), flex: '2 1 160px' }} disabled={disabled} onClick={onConfirm}>
+            <button style={{ ...primaryBtn(!disabled), flex: '2 1 140px' }} disabled={disabled} onClick={onConfirm}>
               <i className="bi bi-send-fill" /> {t('Confirm & Submit')}
             </button>
           </div>
@@ -2472,17 +2702,110 @@ export default function ChatbotPage() {
     addMsg('bot', 'text', { text })
   }, [addMsg])
 
+  const cardTypeForState = {
+    [S.CONFIRM_VOTER]: 'voter_card',
+    [S.PHOTO_UPLOAD]: 'photo_upload',
+    [S.DISTRICT]: 'district',
+    [S.LOCAL_BODY]: 'local_body',
+    [S.WORK]: 'work',
+    [S.LOCAL_AREA]: 'local_area',
+    [S.SHORT_TEXTS]: 'short_texts',
+    [S.DOC_UPLOAD]: 'doc_upload',
+    [S.REVIEW]: 'review',
+  }
+
+  const handleGoBack = (targetState) => {
+    const targetCardType = cardTypeForState[targetState]
+    setMessages((prev) => {
+      if (!targetCardType) return prev
+      const idx = prev.findLastIndex((m) => m.type === targetCardType)
+      if (idx !== -1) {
+        return prev.slice(0, idx + 1)
+      }
+      return prev
+    })
+    setChatState(targetState)
+  }
+
   useEffect(() => {
     if (initializedRef.current) return
     initializedRef.current = true
 
-    clearSession()
-    stopOtpCountdown()
-    setAppData(emptyAppData())
-    mobileRef.current = ''
-    setMessages([])
-    addMsg('bot', 'welcome_banner', {})
-    setChatState(S.WELCOME)
+    const session = loadSession()
+    if (session && session.chatState && session.chatState !== S.WELCOME && session.chatState !== S.SUBMITTED) {
+      const restoredAppData = { ...emptyAppData(), ...session.appData }
+      setAppData(restoredAppData)
+      mobileRef.current = session.mobile || restoredAppData.mobile || ''
+      setChatState(session.chatState)
+
+      const msgs = []
+      msgs.push({
+        id: `${Date.now()}-wb`,
+        from: 'bot',
+        type: 'welcome_back_banner',
+        name: restoredAppData.voter?.name || '',
+        subtitle: 'Welcome back! You can continue your application from where you left off.',
+        ts: new Date()
+      })
+      if (mobileRef.current) {
+        msgs.push({ id: `${Date.now()}-m`, from: 'user', type: 'text', text: maskMobile(mobileRef.current), ts: new Date() })
+        msgs.push({ id: `${Date.now()}-mv`, from: 'bot', type: 'text', text: '✅ Mobile verified!', ts: new Date() })
+      }
+
+      const stepOrder = [
+        S.AWAIT_MEMBERSHIP,
+        S.AWAIT_EPIC,
+        S.CONFIRM_VOTER,
+        S.PHOTO_UPLOAD,
+        S.DISTRICT,
+        S.LOCAL_BODY,
+        S.WORK,
+        S.LOCAL_AREA,
+        S.SHORT_TEXTS,
+        S.DOC_UPLOAD,
+        S.REVIEW
+      ]
+
+      const stepCardMap = {
+        [S.AWAIT_MEMBERSHIP]: 'membership_card',
+        [S.AWAIT_EPIC]: 'text',
+        [S.CONFIRM_VOTER]: 'voter_card',
+        [S.PHOTO_UPLOAD]: 'photo_upload',
+        [S.DISTRICT]: 'district',
+        [S.LOCAL_BODY]: 'local_body',
+        [S.WORK]: 'work',
+        [S.LOCAL_AREA]: 'local_area',
+        [S.SHORT_TEXTS]: 'short_texts',
+        [S.DOC_UPLOAD]: 'doc_upload',
+        [S.REVIEW]: 'review'
+      }
+
+      const currentIndex = stepOrder.indexOf(session.chatState)
+      if (currentIndex !== -1) {
+        for (let i = 0; i <= currentIndex; i++) {
+          const st = stepOrder[i]
+          const cardType = stepCardMap[st]
+          if (st === S.AWAIT_EPIC) {
+            if (restoredAppData.membershipId) {
+              msgs.push({ id: `${Date.now()}-mem`, from: 'user', type: 'text', text: restoredAppData.membershipId, ts: new Date() })
+            }
+            msgs.push({ id: `${Date.now()}-epic-prompt`, from: 'bot', type: 'text', text: 'Please enter your EPIC Number (Voter ID).', ts: new Date() })
+          } else if (cardType) {
+            msgs.push({ id: `${Date.now()}-card-${st}`, from: 'bot', type: cardType, ts: new Date() })
+          }
+        }
+      }
+
+      setMessages(msgs)
+    } else {
+      clearSession()
+      stopOtpCountdown()
+      setAppData(emptyAppData())
+      mobileRef.current = ''
+      setMessages([])
+      addMsg('bot', 'welcome_banner', {})
+      setChatState(S.WELCOME)
+    }
   }, [addMsg])
 
   // Persist session active state for active chatbot users (refreshed sliding 30-min window)
@@ -2655,7 +2978,7 @@ export default function ChatbotPage() {
           setChatState(S.SUBMITTED)
           return
         }
-        await botSay(t('✅ Mobile verified! Please enter your BJP Membership ID (Optional).'), 300)
+        await botSay(t('✅ Mobile verified! Please enter your BJP Primary Membership ID below.'), 300)
         addMsg('bot', 'membership_card', {})
         setChatState(S.AWAIT_MEMBERSHIP)
       } else {
@@ -2707,9 +3030,10 @@ export default function ChatbotPage() {
 
   const handleConfirmVoter = async () => {
     addMsg('user', 'text', { text: t('✓ Details confirmed') })
-    const defDist = appData.voter?.district || 'Chennai'
+    const rawDist = appData.voter?.district || 'Chennai'
+    const matchedDist = ALL_DISTRICTS.find((d) => d.toLowerCase() === String(rawDist).trim().toLowerCase()) || rawDist
     if (!appData.contestDistrict) {
-      patchData({ contestDistrict: defDist })
+      patchData({ contestDistrict: matchedDist })
     }
     await botSay(t('Please upload your Candidate Passport Size Photo (Max 15 MB).'), 350)
     addMsg('bot', 'photo_upload', {})
@@ -2754,18 +3078,18 @@ export default function ChatbotPage() {
     const pos = positionPrefs?.[0] || ''
     const distName = contestDistrict || appData.contestDistrict || ''
     addMsg('user', 'text', { text: `${distName ? distName + ' · ' : ''}${bodyType === 'rural' ? t('Rural') : t('Urban')} · ${pos}${summary ? ' · ' + summary : ''}` })
-    await botSay(t('Please add your social media profiles (Optional).'), 350)
-    addMsg('bot', 'social', {})
-    setChatState(S.SOCIAL)
+    await botSay(t('Tell us about your Work / Experience (maximum 500 words).'), 350)
+    addMsg('bot', 'work', {})
+    setChatState(S.WORK)
   }
 
   const handlePositionSubmit = async (prefs) => {
     const padded = [prefs[0] || '', prefs[1] || '', prefs[2] || '']
     patchData({ positionPrefs: padded })
     addMsg('user', 'text', { text: prefs.join(' → ') })
-    await botSay(t('Please add your social media profiles.'), 350)
-    addMsg('bot', 'social', {})
-    setChatState(S.SOCIAL)
+    await botSay(t('Tell us about your Work / Experience (maximum 500 words).'), 350)
+    addMsg('bot', 'work', {})
+    setChatState(S.WORK)
   }
 
   const handleSocialSubmit = async (social) => {
@@ -2921,8 +3245,6 @@ export default function ChatbotPage() {
     switch (chatState) {
       case S.AWAIT_MOBILE: return { type: 'tel', placeholder: t('Enter 10-digit mobile number'), maxLength: 10, inputMode: 'numeric' }
       case S.AWAIT_OTP: return { type: 'tel', placeholder: t('Enter OTP'), maxLength: 8, inputMode: 'numeric' }
-      case S.AWAIT_MEMBERSHIP: return { type: 'text', placeholder: t('Enter your BJP Membership ID (Mandatory)'), maxLength: 40 }
-
       case S.AWAIT_EPIC: return { type: 'text', placeholder: t('EPIC Number (e.g. ABC1234567)'), maxLength: 12 }
       default: return null
     }
@@ -3009,6 +3331,7 @@ export default function ChatbotPage() {
             initial={appData.contestDistrict}
             defaultDistrict={appData.voter?.district}
             onSubmit={handleDistrictSubmit}
+            onBack={() => handleGoBack(S.PHOTO_UPLOAD)}
             disabled={isTyping}
           />
         )
@@ -3018,6 +3341,7 @@ export default function ChatbotPage() {
             active={isLatest && chatState === S.PHOTO_UPLOAD}
             initial={{ photoUrl: appData.photoUrl }}
             onSubmit={handlePhotoSubmit}
+            onBack={() => handleGoBack(S.CONFIRM_VOTER)}
             disabled={isTyping}
           />
         )
@@ -3030,6 +3354,7 @@ export default function ChatbotPage() {
             contestDistrict={appData.contestDistrict || appData.voter?.district || 'Chennai'}
             initial={{ bodyType: appData.bodyType, localBody: appData.localBody, positionPrefs: appData.positionPrefs }}
             onSubmit={handleLocalBodySubmit}
+            onBack={() => handleGoBack(S.DISTRICT)}
             disabled={isTyping}
           />
         )
@@ -3072,6 +3397,7 @@ export default function ChatbotPage() {
             sampleText="Served as BJP Ward General Secretary for 3 years. Organized 20+ booth-level mobilization meetings, led Yuva Morcha membership drives, managed polling agents during assembly elections, and regularly petition local authorities for public civic issues."
             initial={appData.workExperience}
             onSubmit={handleWorkSubmit}
+            onBack={() => handleGoBack(S.LOCAL_BODY)}
             disabled={isTyping}
           />
         )
@@ -3085,6 +3411,7 @@ export default function ChatbotPage() {
             expectText="We expect an analysis of key local issues (water, roads, sanitation, street lights, youth employment) in your ward/panchayat and your proposed solutions if elected."
             initial={appData.localArea}
             onSubmit={handleLocalAreaSubmit}
+            onBack={() => handleGoBack(S.WORK)}
             disabled={isTyping}
           />
         )
@@ -3095,6 +3422,7 @@ export default function ChatbotPage() {
             active={isLatest && chatState === S.SHORT_TEXTS}
             initial={{ devPriorities: appData.devPriorities, grievancePlan: appData.grievancePlan }}
             onSubmit={handleShortTextsSubmit}
+            onBack={() => handleGoBack(S.LOCAL_AREA)}
             disabled={isTyping}
           />
         )
@@ -3104,6 +3432,7 @@ export default function ChatbotPage() {
             active={isLatest && chatState === S.DOC_UPLOAD}
             initial={{ docFile: appData.docFile, docFileName: appData.docFileName }}
             onSubmit={handleDocUploadSubmit}
+            onBack={() => handleGoBack(S.SHORT_TEXTS)}
             disabled={isTyping}
           />
         )
@@ -3117,6 +3446,7 @@ export default function ChatbotPage() {
             mobile={mobileRef.current}
             onConfirm={handleReviewConfirm}
             onEdit={handleReviewEdit}
+            onBack={() => handleGoBack(S.DOC_UPLOAD)}
             disabled={isTyping || chatState === S.SUBMITTING}
           />
         )
@@ -3322,38 +3652,6 @@ export default function ChatbotPage() {
           {/* Input area — render only when an active text/number input is required */}
           {inputCfg && (
             <footer className="chat-input-area">
-              {chatState === S.AWAIT_MEMBERSHIP && (
-                <div className="membership-quick-bar" style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '10px 14px',
-                  background: 'var(--color-abyss)',
-                  border: '1px solid var(--color-graphite)',
-                  borderRadius: 10,
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  gap: 8,
-                }}>
-                  <a
-                    href="https://membership.bjp.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ fontSize: 12, color: 'var(--color-signal-mint)', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1.3 }}
-                  >
-                    <i className="bi bi-box-arrow-up-right" style={{ flexShrink: 0 }} />
-                    <span>{t("Aren't a BJP member? Apply Online & Proceed")}</span>
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleMembershipSubmit('', true)}
-                    style={{ background: 'var(--color-carbon)', border: '1px solid var(--color-graphite)', color: 'var(--color-chalk)', fontWeight: 700, fontSize: 12, padding: '6px 12px', borderRadius: 6, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 4 }}
-                  >
-                    {t('Skip & Proceed')} <i className="bi bi-arrow-right" />
-                  </button>
-                </div>
-              )}
-
               <form className="chat-form" onSubmit={handleSubmit} style={{ position: 'relative' }}>
 
                 {sendHint && <div className="send-hint-bubble" role="status">{sendHint}</div>}

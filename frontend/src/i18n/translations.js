@@ -7,6 +7,11 @@ export const translations = {
     // ── Welcome / banner ──────────────────────────────────
     'BJP Tamil Nadu — Local Body Candidate Application 2026': 'தமிழ்நாடு பாஜக — உள்ளாட்சித் தேர்தல் வேட்பாளர் விண்ணப்பம் 2026',
     'Apply to contest the upcoming Local Body Elections. Verify your mobile and voter details, then tell us where you want to serve.': 'வரவிருக்கும் உள்ளாட்சித் தேர்தலில் போட்டியிட விண்ணப்பியுங்கள். உங்கள் கைபேசி மற்றும் வாக்காளர் விவரங்களைச் சரிபார்த்து, நீங்கள் போட்டியிட விரும்பும் இடத்தை எங்களுக்குத் தெரிவியுங்கள்.',
+    'Keep these ready before you begin:': 'தொடங்குவதற்கு முன் இவற்றைத் தயாராக வைத்துக்கொள்ளவும்:',
+    'BJP Membership ID': 'பாஜக உறுப்பினர் எண் (Membership ID)',
+    'Voter ID (EPIC number)': 'வாக்காளர் அடையாள அட்டை (EPIC எண்)',
+    'Passport-size photo (JPEG/PNG, max 15 MB)': 'பாஸ்போர்ட் அளவு புகைப்படம் (அதிகபட்சம் 15 MB)',
+    'Ward / Local Body Information': 'வார்டு / உள்ளாட்சி பற்றிய விவரங்கள்',
     'Start Application': 'விண்ணப்பத்தைத் தொடங்கு',
     '👋 Welcome back!': '👋 மீண்டும் வருக!',
     '👋 Welcome back, {name}!': '👋 மீண்டும் வருக, {name}!',
@@ -37,7 +42,13 @@ export const translations = {
     '✅ Mobile verified.': '✅ கைபேசி எண் சரிபார்க்கப்பட்டது.',
     'ℹ️ You have already submitted an application with this mobile number.': 'ℹ️ இந்த கைபேசி எண்ணில் ஏற்கனவே விண்ணப்பம் சமர்ப்பிக்கப்பட்டுள்ளது.',
 
-    // ── Membership / EPIC ─────────────────────────────────
+    '✅ Mobile verified! Please enter your BJP Primary Membership ID below.': '✅ கைபேசி எண் சரிபார்க்கப்பட்டது! உங்கள் பாஜக உறுப்பினர் அடையாள எண்ணை கீழே உள்ளிடவும்.',
+    'BJP Primary Membership ID': 'பாஜக முதன்மை உறுப்பினர் அடையாள எண்',
+    'Enter your 8-digit BJP Primary Membership ID to proceed with your application.': 'உங்கள் விண்ணப்பத்தைத் தொடர 8 இலக்க பாஜக முதன்மை உறுப்பினர் எண்ணை உள்ளிடவும்.',
+    'Not a BJP member yet?': 'இன்னும் பாஜக உறுப்பினராக இல்லையா?',
+    'Call helpline to join immediately:': 'உடனடியாக இணைய உதவி எண்ணை அழைக்கவும்:',
+    'Call 8800002024': '8800002024 அழைக்கவும்',
+    'Membership ID (8 Digits)': 'உறுப்பினர் எண் (8 இலக்கங்கள்)',
     'Please enter your BJP Membership ID.': 'உங்கள் பாஜக உறுப்பினர் அடையாள எண்ணை (Membership ID) உள்ளிடவும்.',
     'Please enter your BJP Membership ID': 'உங்கள் பாஜக உறுப்பினர் அடையாள எண்ணை உள்ளிடவும்',
     'Enter your BJP Membership ID': 'உங்கள் பாஜக உறுப்பினர் அடையாள எண்ணை உள்ளிடவும்',

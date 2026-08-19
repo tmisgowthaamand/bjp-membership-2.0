@@ -408,3 +408,16 @@
     padding: 6px 10px;
   }
 }
+
+/* ── KPI & District Directory Grid Column Locks ───────────────── */
+.tn-kpi-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 10px !important;
+}
+
+.tn-district-directory-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 10px !important;
+}

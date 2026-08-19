@@ -52,6 +52,12 @@ app.use('/admin/api', adminRoutes)
 
 app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found.' }))
 
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+  console.error('[Unhandled Server Error]', err)
+  res.status(500).json({ success: false, message: err?.message || 'Internal Server Error' })
+})
+
 const defaultPort = process.env.NODE_ENV === 'production' ? 10000 : 5000
 const rawPort = parseInt(process.env.PORT || String(defaultPort), 10)
 const PORT = (!isNaN(rawPort) && rawPort >= 1 && rawPort <= 65535) ? rawPort : defaultPort

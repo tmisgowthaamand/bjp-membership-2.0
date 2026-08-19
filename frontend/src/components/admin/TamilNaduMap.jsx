@@ -360,30 +360,142 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
         </div>
       )}
 
-      {/* 2. Real Application KPI Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 24 }}>
-        <div style={{ padding: '16px 20px', borderRadius: 16, background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: 11, fontWeight: 800, color: '#64748B', textTransform: 'uppercase' }}>Total Applications</div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit, sans-serif', marginTop: 4 }}>
+      {/* 2. Real Application KPI Summary Cards (3 Columns) */}
+      <div className="tn-kpi-cards-grid" style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: 12,
+        marginBottom: 24,
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          padding: '14px 12px',
+          borderRadius: 16,
+          background: '#F8FAFC',
+          border: '1px solid #E2E8F0',
+          boxSizing: 'border-box',
+          minWidth: 0,
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            fontSize: 10.5,
+            fontWeight: 800,
+            color: '#64748B',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            Total Applications
+          </div>
+          <div style={{
+            fontSize: 24,
+            fontWeight: 900,
+            color: '#0F172A',
+            fontFamily: 'Outfit, sans-serif',
+            marginTop: 4,
+            lineHeight: 1.1
+          }}>
             {totalApps}
           </div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#059669', marginTop: 2 }}>✓ Verified Local Database</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: '#059669',
+            marginTop: 4,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            ✓ Verified DB
+          </div>
         </div>
 
-        <div style={{ padding: '16px 20px', borderRadius: 16, background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: 11, fontWeight: 800, color: '#64748B', textTransform: 'uppercase' }}>Active Districts</div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: '#2563EB', fontFamily: 'Outfit, sans-serif', marginTop: 4 }}>
+        <div style={{
+          padding: '14px 12px',
+          borderRadius: 16,
+          background: '#F8FAFC',
+          border: '1px solid #E2E8F0',
+          boxSizing: 'border-box',
+          minWidth: 0,
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            fontSize: 10.5,
+            fontWeight: 800,
+            color: '#64748B',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            Active Districts
+          </div>
+          <div style={{
+            fontSize: 24,
+            fontWeight: 900,
+            color: '#2563EB',
+            fontFamily: 'Outfit, sans-serif',
+            marginTop: 4,
+            lineHeight: 1.1
+          }}>
             {`${activeDistrictsCount} / 38`}
           </div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#64748B', marginTop: 2 }}>Districts with Submissions</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 600,
+            color: '#64748B',
+            marginTop: 4,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            With Submissions
+          </div>
         </div>
 
-        <div style={{ padding: '16px 20px', borderRadius: 16, background: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: 11, fontWeight: 800, color: '#64748B', textTransform: 'uppercase' }}>Peak Density</div>
-          <div style={{ fontSize: 28, fontWeight: 900, color: '#DC2626', fontFamily: 'Outfit, sans-serif', marginTop: 4 }}>
+        <div style={{
+          padding: '14px 12px',
+          borderRadius: 16,
+          background: '#F8FAFC',
+          border: '1px solid #E2E8F0',
+          boxSizing: 'border-box',
+          minWidth: 0,
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            fontSize: 10.5,
+            fontWeight: 800,
+            color: '#64748B',
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            Peak Density
+          </div>
+          <div style={{
+            fontSize: 24,
+            fontWeight: 900,
+            color: '#DC2626',
+            fontFamily: 'Outfit, sans-serif',
+            marginTop: 4,
+            lineHeight: 1.1
+          }}>
             {maxCount}
           </div>
-          <div style={{ fontSize: 11, fontWeight: 600, color: '#64748B', marginTop: 2 }}>Single District Max Count</div>
+          <div style={{
+            fontSize: 10,
+            fontWeight: 600,
+            color: '#64748B',
+            marginTop: 4,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            Max Count
+          </div>
         </div>
       </div>
 
@@ -459,7 +571,6 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                     const pointsStr = coordsToPoints(projected)
                     const centroid = getCentroid(projected)
                     const count = Number(normalizedCounts[normName]) || 0
-                    const distNum = getDistrictNumber(normName)
                     const isSelected = selectedDistrict && selectedDistrict.toLowerCase() === normName.toLowerCase()
                     const isHovered = hoveredDistrict === normName
                     const isAnimatedActive = currentAnimDistrict === normName
@@ -563,13 +674,13 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
               }}>
                 <div style={{ fontWeight: 800, color: '#60A5FA', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}>
                   <LocationPinIcon size={14} color="#60A5FA" fill="#2563EB" />
-                  <span>#{getDistrictNumber(hoveredDistrict)} {hoveredDistrict}</span>
+                  <span>{hoveredDistrict}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 10, marginTop: 3, fontSize: 11, color: '#E2E8F0' }}>
-                  <span>Real Applications: <strong>{normalizedCounts[hoveredDistrict] || 0}</strong></span>
-                  <span style={{ color: '#94A3B8' }}>
-                    ({Math.round(((Number(normalizedCounts[hoveredDistrict]) || 0) / totalApps) * 100)}%)
+                <div style={{ marginTop: 4, display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                  <span style={{ fontSize: 18, fontWeight: 900, color: '#F59E0B', fontFamily: 'JetBrains Mono, monospace' }}>
+                    {normalizedCounts[hoveredDistrict] || 0}
                   </span>
+                  <span style={{ fontSize: 11, opacity: 0.8 }}>Applications Submitted</span>
                 </div>
               </div>
             )}
@@ -581,7 +692,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
           </div>
         )}
 
-        {/* Right Side: Interactive District Directory Cards */}
+        {/* Right Side: Interactive District Directory Cards (2 Columns) */}
         <div>
           <div style={{ fontSize: 13, fontWeight: 900, color: '#0F172A', marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span>DISTRICT APPLICATION DIRECTORY</span>
@@ -589,7 +700,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
           </div>
 
           <div style={{ maxHeight: 540, overflowY: 'auto', paddingRight: 6 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(172px, 1fr))', gap: 10 }}>
+            <div className="tn-district-directory-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
               {TN_38_DISTRICTS.map((name, idx) => {
                 const count = Number(normalizedCounts[name]) || 0
                 const distNum = idx + 1
@@ -606,25 +717,27 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                       onSelectDistrict && onSelectDistrict(isSelected ? '' : name)
                     }}
                     style={{
-                      padding: '10px 12px', borderRadius: 14, cursor: 'pointer',
+                      padding: '9px 10px', borderRadius: 14, cursor: 'pointer',
                       background: isAnimatedActive ? '#FEF3C7' : isSelected ? '#2563EB' : count > 0 ? '#EFF6FF' : '#F8FAFC',
                       color: isSelected ? '#FFFFFF' : '#0F172A',
                       border: isAnimatedActive ? '2px solid #F59E0B' : isSelected ? '2px solid #1D4ED8' : count > 0 ? '1.5px solid #BFDBFE' : '1px solid #E2E8F0',
                       transition: 'all 0.15s ease',
-                      boxShadow: isAnimatedActive ? '0 4px 12px rgba(245,158,11,0.3)' : isSelected ? '0 4px 12px rgba(37,99,235,0.25)' : 'none'
+                      boxShadow: isAnimatedActive ? '0 4px 12px rgba(245,158,11,0.3)' : isSelected ? '0 4px 12px rgba(37,99,235,0.25)' : 'none',
+                      minWidth: 0,
+                      overflow: 'hidden'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 5, minWidth: 0 }}>
                       <span style={{
-                        fontSize: 10, fontWeight: 900,
+                        fontSize: 9.5, fontWeight: 900,
                         background: isSelected ? 'rgba(255,255,255,0.25)' : '#E2E8F0',
                         color: isSelected ? '#FFFFFF' : '#475569',
-                        padding: '1px 5px', borderRadius: 6,
+                        padding: '1px 4px', borderRadius: 5,
                         fontFamily: 'JetBrains Mono, monospace', flexShrink: 0
                       }}>
                         #{distNum}
                       </span>
-                      <LocationPinIcon size={12} color={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} fill={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} />
+                      <LocationPinIcon size={11} color={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} fill={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} style={{ flexShrink: 0 }} />
                       <span
                         title={name}
                         style={{
@@ -632,22 +745,26 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                           fontWeight: 800,
                           fontFamily: 'Outfit, sans-serif',
                           flex: 1,
-                          letterSpacing: name.length > 13 ? '-0.2px' : 'normal',
+                          letterSpacing: name.length > 13 ? '-0.3px' : 'normal',
                           whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          minWidth: 0
                         }}
                       >
                         {name}
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: isSelected ? 'rgba(255,255,255,0.9)' : '#64748B' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 4 }}>
+                      <span style={{ fontSize: 10.5, fontWeight: 600, color: isSelected ? 'rgba(255,255,255,0.9)' : '#64748B', whiteSpace: 'nowrap' }}>
                         {pct}% share
                       </span>
                       <span style={{
-                        fontSize: 11, fontWeight: 900, padding: '2px 8px', borderRadius: 8,
+                        fontSize: 10.5, fontWeight: 900, padding: '2px 7px', borderRadius: 7,
                         background: isSelected ? '#FFFFFF' : count > 0 ? '#2563EB' : '#E2E8F0',
-                        color: isSelected ? '#2563EB' : count > 0 ? '#FFFFFF' : '#475569'
+                        color: isSelected ? '#2563EB' : count > 0 ? '#FFFFFF' : '#475569',
+                        flexShrink: 0
                       }}>
                         {count}
                       </span>

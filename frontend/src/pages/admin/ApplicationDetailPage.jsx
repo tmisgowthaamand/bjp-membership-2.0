@@ -107,6 +107,8 @@ export default function ApplicationDetailPage() {
     }
   }
 
+  const role = userSession.role || 'super_admin'
+
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}>
@@ -195,7 +197,7 @@ export default function ApplicationDetailPage() {
           {/* Right Column: Candidate Profile Summary Badges */}
           <div className="candidate-hero-details">
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
-              <span className="bjp-badge-pill role-badge-super_admin candidate-hero-pill" style={{ fontSize: 10.5, padding: '3px 8px' }}>
+              <span className={`bjp-badge-pill role-badge-${role} candidate-hero-pill`} style={{ fontSize: 10.5, padding: '3px 8px' }}>
                 ID: {app.application_id}
               </span>
               <span className="candidate-hero-pill" style={{
@@ -213,8 +215,8 @@ export default function ApplicationDetailPage() {
 
             <div className="candidate-hero-pills" style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
               {(v.district || app.district) && (
-                <span className="candidate-hero-pill" style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)', padding: '4px 8px', borderRadius: 8, fontSize: 11, fontWeight: 800, color: 'var(--text-primary)' }}>
-                  📍 {v.district || app.district}
+                <span className="candidate-hero-pill" style={{ background: 'var(--bg-surface-2)', border: '1px solid var(--border-dim)', padding: '4px 8px', borderRadius: 8, fontSize: 11, fontWeight: 800, color: 'var(--text-primary)', display: 'inline-flex', alignItems: 'center' }}>
+                  <i className="bi bi-geo-alt-fill" style={{ color: 'var(--color-saffron)', marginRight: 4 }} /> {v.district || app.district}
                 </span>
               )}
 

@@ -307,10 +307,15 @@ export default function ApplicationsPage() {
   const location = useLocation()
   const context = useOutletContext() || {}
   const userSession = context.userSession || { role: 'super_admin' }
-  const canManage = userSession.role === 'super_admin' || userSession.role === 'state_admin'
+  const role = userSession.role || 'super_admin'
+  const isSuperAdmin = role === 'super_admin'
+  const isStateAdmin = role === 'state_admin'
+  const isDistrictAdmin = role === 'district_admin'
+  const assignedDistrict = userSession.assigned_district || ''
+  const canManage = isSuperAdmin || isStateAdmin
 
   const queryParams = new URLSearchParams(location.search)
-  const initialDistrict = queryParams.get('district') || ''
+  const initialDistrict = queryParams.get('district') || (isDistrictAdmin ? assignedDistrict : '')
 
   const [rows, setRows] = useState([])
   const [total, setTotal] = useState(0)
@@ -459,7 +464,11 @@ export default function ApplicationsPage() {
           <p className="admin-page-desc">
             {activeDistrict
               ? `Displaying candidate applications for ${activeDistrict} District.`
-              : 'State-wide candidate registry management dashboard across all 38 districts.'}
+              : isSuperAdmin
+              ? 'Super Admin Master Registry — State-wide candidate applications management across all 38 districts.'
+              : isStateAdmin
+              ? 'State Operations Registry — State-wide candidate applications dashboard across all 38 districts.'
+              : `District Inspection View — Read-only candidate applications scope for ${assignedDistrict || 'assigned'} district.`}
           </p>
         </div>
         <div>
@@ -470,28 +479,86 @@ export default function ApplicationsPage() {
       </div>
 
       {/* Executive District Selector Suite Bar */}
-      <div className="admin-card mb-3" style={{ padding: '18px 22px', background: 'var(--bg-surface)' }}>
+      <div
+        className="admin-card mb-3"
+        style={{
+          padding: '16px 20px',
+          background: activeDistrict
+            ? 'linear-gradient(135deg, #FEF3C7 0%, #FFFBEB 100%)'
+            : isStateAdmin
+            ? 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%)'
+            : 'linear-gradient(135deg, #F0F9FF 0%, #EFF6FF 100%)',
+          border: activeDistrict ? '1.5px solid #F59E0B' : isStateAdmin ? '1.5px solid #C7D2FE' : '1.5px solid #BFDBFE',
+          borderRadius: 20,
+          boxShadow: '0 4px 20px rgba(37, 99, 235, 0.06)'
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 22, color: 'var(--color-saffron)' }}>📍</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: '1 1 240px' }}>
+            <div style={{
+              width: 42,
+              height: 42,
+              borderRadius: 14,
+              background: activeDistrict
+                ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
+                : isStateAdmin
+                ? 'linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)'
+                : 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+              color: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: activeDistrict ? '0 4px 14px rgba(245,158,11,0.35)' : isStateAdmin ? '0 4px 14px rgba(79,70,229,0.3)' : '0 4px 14px rgba(37,99,235,0.3)',
+              flexShrink: 0
+            }}>
+              <i className="bi bi-geo-alt-fill" style={{ fontSize: 20, color: '#FFFFFF' }} />
+            </div>
             <div>
-              <div style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--text-primary)' }}>
-                {activeDistrict ? `District Filter: ${activeDistrict.toUpperCase()}` : 'District Filter: State-Wide (All 38 Districts)'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{
+                  fontSize: 10.5,
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: activeDistrict ? '#D97706' : isStateAdmin ? '#3730A3' : '#1D4ED8',
+                  background: activeDistrict ? 'rgba(217, 119, 6, 0.12)' : isStateAdmin ? 'rgba(55, 48, 163, 0.12)' : 'rgba(29, 78, 216, 0.12)',
+                  padding: '2px 8px',
+                  borderRadius: 6
+                }}>
+                  {activeDistrict
+                    ? `${activeDistrict.toUpperCase()} DISTRICT FILTER`
+                    : isStateAdmin
+                    ? 'STATE-WIDE SCOPE'
+                    : 'SUPER ADMIN MASTER SCOPE'}
+                </span>
+                <span style={{ fontSize: 13.5, fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit, sans-serif' }}>
+                  {activeDistrict ? `${activeDistrict.toUpperCase()} DISTRICT` : 'All 38 Districts'}
+                </span>
               </div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)' }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginTop: 3 }}>
                 {activeDistrict
-                  ? `${total} Candidate Applications found in ${activeDistrict}`
+                  ? `${total} Candidate Applications in ${activeDistrict}`
                   : `Showing candidate applications across all 38 Tamil Nadu districts (${total} Total)`}
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', width: '100%', maxWidth: 'max-content' }}>
             {activeDistrict && (
               <button
                 type="button"
                 onClick={() => handleDistrictSelect('')}
-                style={{ background: 'var(--color-red-bg)', color: 'var(--color-red)', border: '1px solid rgba(220,38,38,0.3)', borderRadius: 12, padding: '8px 14px', fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}
+                style={{
+                  background: '#FEF2F2',
+                  color: '#DC2626',
+                  border: '1.5px solid #FCA5A5',
+                  borderRadius: 12,
+                  padding: '8px 14px',
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
               >
                 Clear Filter ✕
               </button>
@@ -500,29 +567,79 @@ export default function ApplicationsPage() {
             <button
               type="button"
               onClick={() => setSuiteOpen(true)}
-              className="btn-admin-primary"
-              style={{ padding: '10px 18px', fontSize: 13 }}
+              style={{
+                background: 'linear-gradient(135deg, #F76201 0%, #EA580C 100%)',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: 12,
+                padding: '10px 18px',
+                fontSize: 12.5,
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(247, 98, 1, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                transition: 'all 0.15s ease'
+              }}
             >
-              <i className="bi bi-grid-3x3-gap-fill" />
-              Open District Selector Suite (38 Districts) ▾
+              <i className="bi bi-grid-3x3-gap-fill" style={{ fontSize: 14 }} />
+              <span>Select District (38 Suites)</span>
+              <i className="bi bi-chevron-down" style={{ fontSize: 11 }} />
             </button>
           </div>
         </div>
       </div>
 
       {/* 100% Full-Width Responsive Search & Filter Bar */}
-      <div className="admin-card mb-4" style={{ padding: '20px 22px' }}>
-        <form onSubmit={submitSearch} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, alignItems: 'center' }}>
+      <div
+        className="admin-card mb-4"
+        style={{
+          padding: '18px 20px',
+          borderRadius: 20,
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
+        }}
+      >
+        <form
+          onSubmit={submitSearch}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 12,
+            alignItems: 'center'
+          }}
+        >
           {/* Search Input Box */}
           <div style={{ position: 'relative' }}>
-            <i className="bi bi-search" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <i
+              className="bi bi-search"
+              style={{
+                position: 'absolute',
+                left: 14,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#64748B',
+                fontSize: 14
+              }}
+            />
             <input
               type="text"
-              placeholder="Search Candidate Name, App ID, Mobile..."
+              placeholder="Search Name, App ID, Mobile..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="admin-form-control"
-              style={{ paddingLeft: 38, width: '100%' }}
+              style={{
+                paddingLeft: 40,
+                width: '100%',
+                borderRadius: 12,
+                height: 44,
+                fontSize: 13,
+                fontWeight: 600,
+                background: '#F8FAFC',
+                border: '1.5px solid #E2E8F0'
+              }}
             />
           </div>
 
@@ -532,7 +649,15 @@ export default function ApplicationsPage() {
               value={activeDistrict}
               onChange={(e) => handleDistrictSelect(e.target.value)}
               className="admin-form-control"
-              style={{ width: '100%', fontWeight: 700 }}
+              style={{
+                width: '100%',
+                fontWeight: 700,
+                borderRadius: 12,
+                height: 44,
+                fontSize: 13,
+                background: '#F8FAFC',
+                border: '1.5px solid #E2E8F0'
+              }}
             >
               <option value="">All 38 Districts</option>
               {TN_DISTRICTS.map((d) => (
@@ -547,7 +672,15 @@ export default function ApplicationsPage() {
               value={bodyTypeFilter}
               onChange={(e) => { setBodyTypeFilter(e.target.value); setPage(1) }}
               className="admin-form-control"
-              style={{ width: '100%', fontWeight: 700 }}
+              style={{
+                width: '100%',
+                fontWeight: 700,
+                borderRadius: 12,
+                height: 44,
+                fontSize: 13,
+                background: '#F8FAFC',
+                border: '1.5px solid #E2E8F0'
+              }}
             >
               <option value="all">All Body Types</option>
               <option value="urban">Urban Local Bodies</option>
@@ -557,8 +690,24 @@ export default function ApplicationsPage() {
 
           {/* Search Button */}
           <div>
-            <button type="submit" className="btn-admin-primary" style={{ width: '100%', justifyContent: 'center', padding: '10px 18px' }}>
-              <i className="bi bi-search" /> Search
+            <button
+              type="submit"
+              className="btn-admin-primary"
+              style={{
+                width: '100%',
+                justify: 'center',
+                height: 44,
+                borderRadius: 12,
+                fontSize: 13.5,
+                fontWeight: 800,
+                background: 'linear-gradient(135deg, #F76201 0%, #EA580C 100%)',
+                boxShadow: '0 4px 14px rgba(247, 98, 1, 0.25)',
+                border: 'none',
+                color: '#FFFFFF'
+              }}
+            >
+              <i className="bi bi-search" style={{ marginRight: 6 }} />
+              Search Candidates
             </button>
           </div>
         </form>

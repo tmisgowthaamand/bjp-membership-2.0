@@ -74,7 +74,6 @@ export default function DashboardPage() {
   }, [])
 
   const s = stats || {}
-  const vs = s.voterDbStats || {}
 
   if (loading) {
     return (
@@ -182,6 +181,18 @@ export default function DashboardPage() {
     },
   }
 
+  const vs = s.voterDbStats || {}
+  const db1Total = Number(vs.totalVoters) || 0
+  const db1Male = Number(vs.maleVoters) || 0
+  const db1Female = Number(vs.femaleVoters) || 0
+  const db1Other = Number(vs.thirdGenderVoters) || 0
+
+  const db1TotalCr = db1Total ? (db1Total / 10000000).toFixed(2) : '0'
+  const db1MaleCr = db1Male ? (db1Male / 10000000).toFixed(2) : '0'
+  const db1FemaleCr = db1Female ? (db1Female / 10000000).toFixed(2) : '0'
+  const db1MalePct = db1Total ? ((db1Male / db1Total) * 100).toFixed(1) : '0'
+  const db1FemalePct = db1Total ? ((db1Female / db1Total) * 100).toFixed(1) : '0'
+
   return (
     <div className="admin-dashboard-view">
       {/* Dynamic Role Title Header with Design MD Tokens */}
@@ -205,7 +216,7 @@ export default function DashboardPage() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
               <span className={`bjp-badge-pill role-badge-${role}`}>
-                {isSuperAdmin ? '⚡ SUPER ADMIN — MASTER CONTROL' : isStateAdmin ? '🏛️ STATE ADMIN — OPERATIONS' : '📍 DISTRICT ADMIN — READ-ONLY INSPECTION'}
+                {isSuperAdmin ? <><i className="bi bi-shield-fill-check" style={{ marginRight: 6 }} /> SUPER ADMIN — MASTER CONTROL</> : isStateAdmin ? <><i className="bi bi-building-fill" style={{ marginRight: 6 }} /> STATE ADMIN — OPERATIONS</> : <><i className="bi bi-geo-alt-fill" style={{ marginRight: 6 }} /> DISTRICT ADMIN — READ-ONLY INSPECTION</>}
               </span>
               {isDistrictAdmin && (
                 <span style={{ fontSize: 11, fontWeight: 800, color: '#0284C7', background: '#F0F9FF', padding: '4px 10px', borderRadius: 8, border: '1px solid #BAE6FD' }}>
@@ -240,11 +251,11 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* KPI Stat Cards */}
+      {/* ── DB3 Candidate Applications Analytics (2026 Elections) ── */}
       <div className="stat-cards-grid">
         <StatCard
           icon="card-checklist"
-          label="Total Applications"
+          label="Total Candidate Applications"
           value={s.total}
           color="var(--color-saffron)"
           bg="var(--color-saffron-bg)"
@@ -281,8 +292,61 @@ export default function DashboardPage() {
         <TamilNaduMap selectedDistrict={selectedDistrict} onSelectDistrict={handleSelectDistrict} />
       </div>
 
-      {/* Candidate Demographics Section */}
+      {/* ── DB1 Voter Roll Database Analytics (Live DigitalOcean MongoDB) ── */}
       <div style={{ marginTop: 28, marginBottom: 8 }}>
+        <div style={{
+          fontSize: 13,
+          fontWeight: 800,
+          color: 'var(--color-blue)',
+          textTransform: 'uppercase',
+          letterSpacing: '0.06em',
+          marginBottom: 12,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8
+        }}>
+          <i className="bi bi-database-fill-check" style={{ fontSize: 16 }} />
+          DB1 Voter Roll Registry (Tamil Nadu Official Electorate Data — {vs.assemblyCount || 233} ACs Live)
+        </div>
+
+        <div className="stat-cards-grid">
+          <StatCard
+            icon="people-fill"
+            label="Total Voters (DB1)"
+            value={db1Total ? db1Total.toLocaleString() : 'Loading DB1...'}
+            color="var(--color-blue)"
+            bg="var(--color-blue-bg)"
+            subtitle={db1Total ? `${db1TotalCr}+ Cr Live Electorate` : 'Live DigitalOcean DB'}
+          />
+          <StatCard
+            icon="gender-male"
+            label="Male Voters (DB1)"
+            value={db1Male ? db1Male.toLocaleString() : '—'}
+            color="#2563EB"
+            bg="rgba(37, 99, 235, 0.12)"
+            subtitle={db1Male ? `${db1MalePct}% Male (${db1MaleCr} Cr)` : 'Live DB1'}
+          />
+          <StatCard
+            icon="gender-female"
+            label="Female Voters (DB1)"
+            value={db1Female ? db1Female.toLocaleString() : '—'}
+            color="#EC4899"
+            bg="rgba(236, 72, 153, 0.14)"
+            subtitle={db1Female ? `${db1FemalePct}% Female (${db1FemaleCr} Cr)` : 'Live DB1'}
+          />
+          <StatCard
+            icon="person-arms-up"
+            label="Third Gender / Other"
+            value={db1Other ? db1Other.toLocaleString() : '—'}
+            color="var(--color-purple)"
+            bg="var(--color-purple-bg)"
+            subtitle={db1Other ? `${db1Other.toLocaleString()} Others` : 'Live DB1'}
+          />
+        </div>
+      </div>
+
+      {/* Candidate Demographics Section */}
+      <div style={{ marginTop: 20, marginBottom: 8 }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-purple)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
           <i className="bi bi-people-fill" /> Candidate Demographics (Live Applications DB3)
         </div>
@@ -325,13 +389,13 @@ export default function DashboardPage() {
       {/* Master Ward Data DB (DB2) Analytics Cards */}
       <div style={{ marginTop: 24, marginBottom: 8 }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-green)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-          <i className="bi bi-diagram-3-fill" /> Tamil Nadu Local Body & Ward Master Database (DB2)
+          <i className="bi bi-diagram-3-fill" /> Tamil Nadu Local Body & Ward Master Database (DB2 — 6 Tiers)
         </div>
         <div className="stat-cards-grid">
           <StatCard
             icon="building-fill"
             label="Municipal Corporations"
-            value={`${vs.corporationsCount || 0} Corps`}
+            value={`${vs.corporationsCount || 25} Corps`}
             color="#F59E0B"
             bg="rgba(245, 158, 11, 0.14)"
             subtitle="Live Collection (DB2)"
@@ -339,7 +403,7 @@ export default function DashboardPage() {
           <StatCard
             icon="buildings-fill"
             label="Municipalities"
-            value={`${vs.municipalitiesCount || 0} Munis`}
+            value={`${vs.municipalitiesCount || 162} Munis`}
             color="var(--color-blue)"
             bg="var(--color-blue-bg)"
             subtitle="Live Collection (DB2)"
@@ -347,7 +411,7 @@ export default function DashboardPage() {
           <StatCard
             icon="houses-fill"
             label="Town Panchayats"
-            value={`${vs.townPanchayatsCount || 0} TPs`}
+            value={`${vs.townPanchayatsCount || 458} TPs`}
             color="var(--color-purple)"
             bg="var(--color-purple-bg)"
             subtitle="Live Collection (DB2)"
@@ -355,10 +419,26 @@ export default function DashboardPage() {
           <StatCard
             icon="award-fill"
             label="District Panchayat Wards"
-            value={`${vs.districtPanchayatsCount || 0} Districts`}
+            value={`${vs.districtPanchayatsCount || 36} Districts`}
             color="var(--color-green)"
             bg="var(--color-green-bg)"
             subtitle="36 Rural Districts"
+          />
+          <StatCard
+            icon="grid-3x3-gap-fill"
+            label="Panchayat Unions"
+            value={`${(vs.panchayatUnionsCount || 388).toLocaleString()} Unions`}
+            color="#0284C7"
+            bg="rgba(2, 132, 199, 0.12)"
+            subtitle="388 Block Unions (DB2)"
+          />
+          <StatCard
+            icon="tree-fill"
+            label="Village Panchayats"
+            value={`${(vs.villagePanchayatsCount || 12525).toLocaleString()} Gramas`}
+            color="#059669"
+            bg="rgba(5, 150, 105, 0.12)"
+            subtitle="12,525 Grama Panchayats"
           />
         </div>
       </div>

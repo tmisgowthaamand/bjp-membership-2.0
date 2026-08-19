@@ -299,17 +299,17 @@ export default function AssignAdminPage() {
                     </td>
                     <td>
                       <span className={`bjp-badge-pill ${u.role === 'state_admin' ? 'role-badge-state_admin' : 'role-badge-district_admin'}`}>
-                        {u.role === 'state_admin' ? '⚡ State Admin' : '📍 District Admin'}
+                        {u.role === 'state_admin' ? <><i className="bi bi-shield-fill-check" style={{ marginRight: 4 }} /> State Admin</> : <><i className="bi bi-geo-alt-fill" style={{ marginRight: 4 }} /> District Admin</>}
                       </span>
                     </td>
                     <td>
                       {u.assigned_district ? (
-                        <span style={{ background: '#F1F5F9', border: '1px solid var(--border-dim)', padding: '3px 8px', borderRadius: 8, fontSize: 11, fontWeight: 800, color: 'var(--text-primary)' }}>
-                          📍 {u.assigned_district}
+                        <span style={{ background: '#F1F5F9', border: '1px solid var(--border-dim)', padding: '3px 8px', borderRadius: 8, fontSize: 11, fontWeight: 800, color: 'var(--text-primary)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <i className="bi bi-geo-alt-fill" style={{ color: 'var(--color-saffron)' }} /> {u.assigned_district}
                         </span>
                       ) : (
-                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}>
-                          🌐 State-Wide
+                        <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <i className="bi bi-globe" style={{ color: '#2563EB' }} /> State-Wide
                         </span>
                       )}
                     </td>
