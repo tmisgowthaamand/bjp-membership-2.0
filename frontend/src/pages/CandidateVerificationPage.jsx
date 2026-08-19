@@ -206,7 +206,7 @@ export default function CandidateVerificationPage() {
         border: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img src="/bjp_logo.png" alt="BJP Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
+          <img src="/bjp_logo.png" alt="BJP Logo" width="36" height="36" style={{ width: 36, height: 36, objectFit: 'contain' }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 900, color: '#2563EB', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               BHARATIYA JANATA PARTY
@@ -367,7 +367,7 @@ export default function CandidateVerificationPage() {
 
               {/* Watermark Lotus Background */}
               <div style={{ position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.08, pointerEvents: 'none' }}>
-                <img src="/bjp_logo.png" alt="" style={{ width: 280 }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
+                <img src="/bjp_logo.png" alt="BJP Logo Watermark" width="280" height="280" style={{ width: 280, height: 280, objectFit: 'contain' }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
               </div>
 
               {/* Poster Top Banner Header (Pure White Panel) */}

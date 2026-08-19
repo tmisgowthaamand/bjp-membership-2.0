@@ -8,7 +8,6 @@ import {
   wardsForCorporation, districtPanchayatWards, unionsForDistrict, blocksForDistrict,
   panchayatsForBlock, positionsFor
 } from '../data/localBodies.js'
-import html2canvas from 'html2canvas'
 import QRCode from 'qrcode'
 
 
@@ -188,13 +187,23 @@ function WelcomeBannerMsg({ onStart }) {
   const { t } = useLang()
   return (
     <div className="welcome-banner">
-      <img src="/banner.png" alt="BJP Tamil Nadu" className="banner-img" loading="lazy"
-        onError={(e) => { e.target.style.display = 'none' }} />
+      <picture>
+        <source srcSet="/banner.webp" type="image/webp" />
+        <img
+          src="/banner.png"
+          alt="BJP Tamil Nadu Local Body Candidate Application 2026"
+          className="banner-img"
+          width="1200"
+          height="500"
+          decoding="async"
+          onError={(e) => { e.target.style.display = 'none' }}
+        />
+      </picture>
       <div className="banner-content">
         <h2>{t('BJP Tamil Nadu — Local Body Candidate Application 2026')}</h2>
         <p>{t('Apply to contest the upcoming Local Body Elections. Verify your mobile and voter details, then tell us where you want to serve.')}</p>
-        <button className="btn-start" onClick={onStart}>
-          <i className="bi bi-play-circle-fill" /> {t('Start Application')}
+        <button className="btn-start" onClick={onStart} aria-label={t('Start Application')}>
+          <i className="bi bi-play-circle-fill" aria-hidden="true" /> {t('Start Application')}
         </button>
       </div>
     </div>
@@ -208,13 +217,23 @@ function WelcomeBackBannerMsg({ name, subtitle }) {
 
   return (
     <div className="welcome-banner welcome-back-banner">
-      <img src="/banner.png" alt="BJP Tamil Nadu" className="banner-img" loading="lazy"
-        onError={(e) => { e.target.style.display = 'none' }} />
+      <picture>
+        <source srcSet="/banner.webp" type="image/webp" />
+        <img
+          src="/banner.png"
+          alt="BJP Tamil Nadu Local Body Candidate Application 2026"
+          className="banner-img"
+          width="1200"
+          height="500"
+          decoding="async"
+          onError={(e) => { e.target.style.display = 'none' }}
+        />
+      </picture>
       <div className="banner-content">
         <h2>{formattedName ? t('👋 Welcome back, {name}!', { name: formattedName }) : t('👋 Welcome back!')}</h2>
         <p>{t(subtitle || 'Here is your submitted application for the BJP Tamil Nadu Local Body Elections 2026.')}</p>
         <div className="welcome-back-status-badge">
-          <i className="bi bi-shield-fill-check" /> {t('Application Submitted & Verified')}
+          <i className="bi bi-shield-fill-check" aria-hidden="true" /> {t('Application Submitted & Verified')}
         </div>
       </div>
     </div>
@@ -2111,7 +2130,7 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
 
               {/* Watermark Lotus Background */}
               <div style={{ position: 'absolute', top: '45%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.08, pointerEvents: 'none' }}>
-                <img src="/bjp_logo.png" alt="" style={{ width: 260 }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
+                <img src="/bjp_logo.png" alt="BJP Logo Watermark" width="260" height="260" style={{ width: 260, height: 260, objectFit: 'contain' }} onError={(e) => { e.target.src = '/bjp_logo.svg' }} />
               </div>
 
               {/* Poster Top Banner Header (Pure White Panel) */}
@@ -3189,8 +3208,8 @@ export default function ChatbotPage() {
                   <div className="social-dropdown-menu">
                     <div className="social-dropdown-header">
                       <span>{t('Official Channels')}</span>
-                      <button type="button" className="social-dropdown-close" onClick={() => setShowSocialMenu(false)}>
-                        <i className="bi bi-x-lg" />
+                      <button type="button" className="social-dropdown-close" onClick={() => setShowSocialMenu(false)} aria-label={t('Close')}>
+                        <i className="bi bi-x-lg" aria-hidden="true" />
                       </button>
                     </div>
 
