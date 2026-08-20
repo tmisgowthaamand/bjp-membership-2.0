@@ -139,9 +139,9 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-footer">
-          <button className="admin-logout-btn" onClick={handleLogout} title={!sidebarOpen ? 'Logout' : undefined}>
+          <button className="admin-logout-btn" onClick={handleLogout} title="Logout">
             <i className="bi bi-box-arrow-right" />
-            {sidebarOpen && <span>Logout Panel</span>}
+            <span>Logout Panel</span>
           </button>
         </div>
       </aside>
