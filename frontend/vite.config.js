@@ -28,6 +28,7 @@ export default defineConfig({
             !dep.includes('vendor-three') &&
             !dep.includes('vendor-chart') &&
             !dep.includes('vendor-html2canvas') &&
+            !dep.includes('vendor-qrcode') &&
             !dep.includes('data-localbodies')
         )
       },
@@ -47,6 +48,9 @@ export default defineConfig({
             }
             if (id.includes('html2canvas')) {
               return 'vendor-html2canvas'
+            }
+            if (id.includes('qrcode')) {
+              return 'vendor-qrcode'
             }
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
               return 'vendor-react'
