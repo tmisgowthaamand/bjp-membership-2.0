@@ -20,6 +20,18 @@ export default defineConfig({
     cssCodeSplit: true,
     minify: 'esbuild',
     target: 'es2020',
+    modulePreload: {
+      polyfill: false,
+      resolveDependencies(filename, deps) {
+        return deps.filter(
+          (dep) =>
+            !dep.includes('vendor-three') &&
+            !dep.includes('vendor-chart') &&
+            !dep.includes('vendor-html2canvas') &&
+            !dep.includes('data-localbodies')
+        )
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
