@@ -53,10 +53,7 @@ export default defineConfig({
             if (id.includes('qrcode')) {
               return 'vendor-qrcode'
             }
-            if (id.includes('react-router-dom') || id.includes('@remix-run')) {
-              return 'vendor-router'
-            }
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') || id.includes('@remix-run') || id.includes('scheduler')) {
               return 'vendor-react'
             }
           }
