@@ -2,12 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { chat } from '../api'
 import '../styles/chatbot.css'
 import { useLang } from '../i18n/LanguageContext'
-import {
-  ALL_DISTRICTS, RURAL_POSITIONS, URBAN_POSITIONS, URBAN_BODY_TYPES,
-  corporationsForDistrict, municipalitiesForDistrict, townPanchayatsForDistrict,
-  wardsForCorporation, districtPanchayatWards, unionsForDistrict, blocksForDistrict,
-  panchayatsForBlock, positionsFor
-} from '../data/localBodies.js'
 
 
 
@@ -202,11 +196,11 @@ function WelcomeBannerMsg({ onStart }) {
         <source media="(max-width: 640px)" srcSet="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_640/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" width="640" height="267" />
         <source media="(min-width: 641px)" srcSet="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_1200/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" width="1200" height="500" />
         <img
-          src="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_1200/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png"
+          src="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_640/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png"
           alt="BJP Tamil Nadu Local Body Candidate Application 2026"
           className="banner-img"
-          width="1200"
-          height="500"
+          width="640"
+          height="267"
           decoding="async"
           fetchPriority="high"
           onError={(e) => { e.target.style.display = 'none' }}
