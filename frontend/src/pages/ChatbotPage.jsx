@@ -196,7 +196,7 @@ function WelcomeBannerMsg({ onStart }) {
         <source media="(max-width: 640px)" srcSet="/banner-mobile.webp" type="image/webp" width="640" height="267" />
         <source media="(min-width: 641px)" srcSet="/banner.webp" type="image/webp" width="1200" height="500" />
         <img
-          src="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_640/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png"
+          src="/banner-mobile.webp"
           alt="BJP Tamil Nadu Local Body Candidate Application 2026"
           className="banner-img"
           width="640"
@@ -204,8 +204,8 @@ function WelcomeBannerMsg({ onStart }) {
           decoding="async"
           loading="eager"
           fetchpriority="high"
-          onError={(e) => { e.target.src = '/banner.png' }}
-          style={{ width: '100%', height: 'auto', display: 'block' }}
+          onError={(e) => { e.target.src = 'https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_640/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png' }}
+          style={{ width: '100%', height: 'auto', display: 'block', aspectRatio: '640 / 267' }}
         />
       </picture>
       <div className="banner-content" style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>

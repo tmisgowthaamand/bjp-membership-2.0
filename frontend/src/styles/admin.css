@@ -431,8 +431,13 @@
 
 @media (max-width: 768px) {
   .admin-topbar {
-    padding: 8px 10px;
-    gap: 6px;
+    padding: 12px 16px;
+    min-height: 60px;
+    gap: 10px;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
   }
 
   .admin-topbar-clock {
@@ -447,18 +452,38 @@
     display: none !important;
   }
 
-  .admin-topbar-right {
+  .admin-topbar-brand {
     gap: 6px;
   }
 
+  .bjp-badge-pill {
+    font-size: 10.5px;
+    padding: 5px 10px;
+  }
+
+  .admin-topbar-right {
+    gap: 8px;
+    align-items: center;
+  }
+
   .admin-topbar-logout-btn {
-    padding: 5px 9px;
-    font-size: 11px;
-    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 9px;
   }
 
   .admin-topbar-logout-btn span {
-    font-size: 11px;
+    font-size: 12px;
+  }
+
+  .admin-content {
+    padding: 16px 14px 28px 14px !important;
+  }
+
+  .hero-role-card {
+    padding: 18px 16px !important;
+    border-radius: 18px !important;
+    margin-bottom: 16px !important;
   }
 }
 
