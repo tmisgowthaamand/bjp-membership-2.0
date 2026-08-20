@@ -22,10 +22,24 @@ export default defineConfig({
     target: 'es2020',
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
-          'vendor-chart': ['chart.js', 'react-chartjs-2'],
+        manualChunks(id) {
+          if (id.includes('localBodies')) {
+            return 'data-localbodies'
+          }
+          if (id.includes('node_modules')) {
+            if (id.includes('three') || id.includes('@react-three')) {
+              return 'vendor-three'
+            }
+            if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
+              return 'vendor-chart'
+            }
+            if (id.includes('html2canvas')) {
+              return 'vendor-html2canvas'
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor-react'
+            }
+          }
         }
       }
     }
