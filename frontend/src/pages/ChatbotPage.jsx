@@ -202,7 +202,7 @@ function WelcomeBannerMsg({ onStart }) {
           width="640"
           height="267"
           decoding="async"
-          fetchPriority="high"
+          fetchpriority="high"
           onError={(e) => { e.target.style.display = 'none' }}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
