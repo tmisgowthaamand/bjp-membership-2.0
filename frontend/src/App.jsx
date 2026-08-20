@@ -2,9 +2,8 @@ import React, { Suspense, lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { LanguageProvider } from './i18n/LanguageContext'
 
-import ChatbotPage from './pages/ChatbotPage'
-
-// Lazy-load secondary and admin routes for fast mobile initial paint
+// Lazy-load ALL route components with Suspense
+const ChatbotPage = lazy(() => import('./pages/ChatbotPage'))
 const CandidateVerificationPage = lazy(() => import('./pages/CandidateVerificationPage'))
 const ReferralPage = lazy(() => import('./pages/ReferralPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
