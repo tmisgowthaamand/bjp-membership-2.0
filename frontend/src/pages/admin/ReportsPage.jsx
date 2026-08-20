@@ -61,12 +61,14 @@ function socialText(a) {
   return ['facebook', 'instagram', 'twitter', 'youtube'].map((k) => (s[k] ? `${k}: ${s[k]}` : '')).filter(Boolean).join(' | ')
 }
 
+let reportsDefaultCache = null
+
 export default function ReportsPage() {
   const navigate = useNavigate()
-  const [rows, setRows] = useState([])
-  const [total, setTotal] = useState(0)
+  const [rows, setRows] = useState(() => reportsDefaultCache?.rows || [])
+  const [total, setTotal] = useState(() => reportsDefaultCache?.total || 0)
   const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => !reportsDefaultCache)
   const [exporting, setExporting] = useState(false)
 
   // Filter States
@@ -101,11 +103,19 @@ export default function ReportsPage() {
   })
 
   const load = useCallback(async () => {
-    setLoading(true)
+    const isDefault = page === 1 && applied.bodyType === 'all' && !applied.position && !applied.district && !applied.from && !applied.to && !applied.search
+    if (!reportsDefaultCache || !isDefault) {
+      setLoading(true)
+    }
     try {
       const res = await admin.getReports(buildParams({ page, page_size: PER_PAGE }))
-      setRows(res.applications || [])
-      setTotal(res.total || 0)
+      const fetchedRows = res.applications || []
+      const fetchedTotal = res.total || 0
+      setRows(fetchedRows)
+      setTotal(fetchedTotal)
+      if (isDefault) {
+        reportsDefaultCache = { rows: fetchedRows, total: fetchedTotal }
+      }
     } catch {
       setRows([]); setTotal(0)
     } finally {

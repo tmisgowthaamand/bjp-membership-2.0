@@ -100,17 +100,17 @@
   color: var(--text-primary);
 }
 
-/* Mobile Sidebar Backdrop (Only active on screens <= 768px) */
+/* Mobile Sidebar Backdrop (Active on screens <= 1024px) */
 .admin-sidebar-backdrop {
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-sidebar-backdrop {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(4px);
     z-index: 1040;
     opacity: 0;
@@ -127,7 +127,11 @@
 /* ── Sidebar Component ─────────────────────────────────────── */
 .admin-sidebar {
   width: 250px;
-  min-height: 100vh;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   background: var(--bg-surface);
   display: flex;
   flex-direction: column;
@@ -135,9 +139,6 @@
   transition: width 0.25s ease, transform 0.25s ease;
   overflow: hidden;
   flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  height: 100vh;
   z-index: 1050;
 }
 
@@ -185,6 +186,8 @@
   padding: 12px 8px;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-nav-item {
@@ -257,6 +260,18 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin-left: 250px;
+  transition: margin-left 0.25s ease;
+}
+
+.admin-sidebar.collapsed ~ .admin-main {
+  margin-left: 68px;
+}
+
+@media (max-width: 1024px) {
+  .admin-main {
+    margin-left: 0 !important;
+  }
 }
 
 /* ── Top Navigation Header ─────────────────────────────────── */

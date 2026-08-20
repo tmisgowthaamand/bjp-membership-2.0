@@ -49,6 +49,20 @@ export default function AdminLayout() {
       .catch(() => navigate('/admin/login', { replace: true }))
   }, [navigate])
 
+  // Lock body scroll when mobile sidebar drawer is open
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+      if (sidebarOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [sidebarOpen])
+
   const handleLogout = () => {
     admin.logout()
     navigate('/admin/login', { replace: true })
@@ -69,12 +83,12 @@ export default function AdminLayout() {
       ? 'State Admin — Operations'
       : 'Super Admin — Master Control'
 
-  const isMobile = window.innerWidth <= 1024
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 1024
   const showBackdrop = isMobile && sidebarOpen
 
   return (
     <div className={`admin-layout role-layout-${userSession.role}`} data-admin-role={userSession.role}>
-      {/* Mobile Sidebar Backdrop (Only on Mobile screens <= 768px) */}
+      {/* Mobile Sidebar Backdrop (Active on screens <= 1024px) */}
       <div
         className={`admin-sidebar-backdrop ${showBackdrop ? 'visible' : ''}`}
         onClick={() => setSidebarOpen(false)}
@@ -99,7 +113,7 @@ export default function AdminLayout() {
             <NavLink
               key={item.path}
               to={item.path}
-              onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}
+              onClick={() => isMobile && setSidebarOpen(false)}
               className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
               title={!sidebarOpen ? item.label : undefined}
               style={({ isActive }) => isActive ? { background: 'var(--role-accent)', color: '#FFF' } : undefined}
@@ -113,7 +127,7 @@ export default function AdminLayout() {
           {userSession.role === 'super_admin' && (
             <NavLink
               to="/admin/assign"
-              onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}
+              onClick={() => isMobile && setSidebarOpen(false)}
               className={({ isActive }) => `admin-nav-item${isActive ? ' active' : ''}`}
               title={!sidebarOpen ? 'Assign Admin' : undefined}
               style={({ isActive }) => isActive ? { background: 'var(--role-accent)', color: '#FFF' } : undefined}

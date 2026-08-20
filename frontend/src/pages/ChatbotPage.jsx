@@ -199,15 +199,16 @@ function WelcomeBannerMsg({ onStart }) {
       flexDirection: 'column'
     }}>
       <picture>
-        <source media="(max-width: 640px)" srcSet="/banner-mobile.webp" type="image/webp" width="640" height="267" />
-        <source srcSet="/banner.webp" type="image/webp" width="1200" height="500" />
+        <source media="(max-width: 640px)" srcSet="https://res.cloudinary.com/n9fgemea/image/upload/w_640,f_auto,q_auto/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" width="640" height="267" />
+        <source srcSet="https://res.cloudinary.com/n9fgemea/image/upload/w_1200,f_auto,q_auto/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" width="1200" height="500" />
         <img
-          src="/banner.png"
+          src="https://res.cloudinary.com/n9fgemea/image/upload/w_1200,f_auto,q_auto/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png"
           alt="BJP Tamil Nadu Local Body Candidate Application 2026"
           className="banner-img"
           width="1200"
           height="500"
           decoding="async"
+          fetchPriority="high"
           onError={(e) => { e.target.style.display = 'none' }}
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />

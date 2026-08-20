@@ -63,15 +63,18 @@ function DashboardSkeleton() {
   )
 }
 
+let dashboardStatsCache = null
+let dashboardRecentCache = null
+
 export default function DashboardPage() {
   const navigate = useNavigate()
   const context = useOutletContext() || {}
   const userSession = context.userSession || { role: 'super_admin', assigned_district: '' }
   const isDark = context.theme === 'dark'
 
-  const [stats, setStats] = useState(null)
-  const [recent, setRecent] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState(() => dashboardStatsCache)
+  const [recent, setRecent] = useState(() => dashboardRecentCache || [])
+  const [loading, setLoading] = useState(() => !dashboardStatsCache)
   const [selectedDistrict, setSelectedDistrict] = useState('')
 
   const handleSelectDistrict = (distName) => {
@@ -84,8 +87,14 @@ export default function DashboardPage() {
   useEffect(() => {
     Promise.allSettled([admin.getStats(), admin.getApplications({ page: 1, page_size: 6 })])
       .then(([s, r]) => {
-        if (s.status === 'fulfilled') setStats(s.value)
-        if (r.status === 'fulfilled') setRecent(r.value.applications || [])
+        if (s.status === 'fulfilled') {
+          dashboardStatsCache = s.value
+          setStats(s.value)
+        }
+        if (r.status === 'fulfilled') {
+          dashboardRecentCache = r.value.applications || []
+          setRecent(r.value.applications || [])
+        }
       })
       .finally(() => setLoading(false))
   }, [])

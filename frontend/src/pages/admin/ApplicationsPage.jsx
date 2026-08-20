@@ -3,6 +3,8 @@ import { useNavigate, useLocation, useOutletContext } from 'react-router-dom'
 import { admin } from '../../api'
 import '../../styles/admin.css'
 
+let defaultAppsCache = null
+
 const TN_DISTRICTS = [
   'Ariyalur', 'Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri',
   'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram', 'Kanniyakumari', 'Karur',
@@ -319,10 +321,10 @@ export default function ApplicationsPage() {
   const queryParams = new URLSearchParams(location.search)
   const initialDistrict = queryParams.get('district') || (isDistrictAdmin ? assignedDistrict : '')
 
-  const [rows, setRows] = useState([])
-  const [total, setTotal] = useState(0)
+  const [rows, setRows] = useState(() => defaultAppsCache?.rows || [])
+  const [total, setTotal] = useState(() => defaultAppsCache?.total || 0)
   const [page, setPage] = useState(1)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => !defaultAppsCache)
   const [search, setSearch] = useState('')
   const [query, setQuery] = useState('')
   const [bodyTypeFilter, setBodyTypeFilter] = useState('all')
@@ -355,7 +357,9 @@ export default function ApplicationsPage() {
   const activeDistrict = districtFilter || initialDistrict
 
   const load = useCallback(async () => {
-    setLoading(true)
+    if (!defaultAppsCache || page !== 1 || query || bodyTypeFilter !== 'all' || activeDistrict) {
+      setLoading(true)
+    }
     try {
       const data = await admin.getApplications({
         page,
@@ -365,8 +369,13 @@ export default function ApplicationsPage() {
         district: activeDistrict,
       })
       if (data && data.success) {
-        setRows(data.applications || [])
-        setTotal(data.total || 0)
+        const fetchedRows = data.applications || []
+        const fetchedTotal = data.total || 0
+        setRows(fetchedRows)
+        setTotal(fetchedTotal)
+        if (page === 1 && !query && bodyTypeFilter === 'all' && !activeDistrict) {
+          defaultAppsCache = { rows: fetchedRows, total: fetchedTotal }
+        }
       }
     } catch {
       setRows([])

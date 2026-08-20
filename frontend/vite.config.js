@@ -20,5 +20,14 @@ export default defineConfig({
     cssCodeSplit: true,
     minify: 'esbuild',
     target: 'es2020',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+          'vendor-chart': ['chart.js', 'react-chartjs-2'],
+        }
+      }
+    }
   }
 })

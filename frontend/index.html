@@ -93,27 +93,23 @@
   }
   </script>
 
-  <!-- ── Performance Optimization: Preconnect & Preload ─────────── -->
+  <!-- ── Performance Optimization: DNS Prefetch, Preconnect & Preload ── -->
+  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preload" as="image" href="/banner-mobile.webp" type="image/webp" media="(max-width: 640px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="/banner.webp" type="image/webp" media="(min-width: 641px)" fetchpriority="high" />
 
-  <!-- ── Non-blocking Bootstrap Icons & Google Fonts Loader ────────── -->
-  <script>
-    window.addEventListener('DOMContentLoaded', function() {
-      var fontLink = document.createElement('link');
-      fontLink.rel = 'stylesheet';
-      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
-      document.head.appendChild(fontLink);
+  <link rel="preload" as="image" href="https://res.cloudinary.com/n9fgemea/image/upload/w_640,f_auto,q_auto/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" media="(max-width: 640px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="https://res.cloudinary.com/n9fgemea/image/upload/w_1200,f_auto,q_auto/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" media="(min-width: 641px)" fetchpriority="high" />
 
-      var iconLink = document.createElement('link');
-      iconLink.rel = 'stylesheet';
-      iconLink.href = 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css';
-      document.head.appendChild(iconLink);
-    });
-  </script>
+  <!-- ── Non-blocking High-Performance Fonts & Icons Loader ── -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" /></noscript>
 </head>
 <body>
   <!-- Crawlable fallback content for search engines (SPA hydrates over this) -->
