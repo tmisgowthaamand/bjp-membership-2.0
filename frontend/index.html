@@ -93,18 +93,12 @@
   }
   </script>
 
-  <!-- ── Performance Optimization: DNS Prefetch, Preconnect & Preload ── -->
-  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+  <!-- ── Performance Optimization: DNS Prefetch & Preload ── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
-  <link rel="preload" as="image" href="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_640/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" media="(max-width: 640px)" fetchpriority="high" />
-  <link rel="preload" as="image" href="https://res.cloudinary.com/n9fgemea/image/upload/f_auto,q_auto,w_1200/v1786619554/BJP_Local_Body_Banners/chatbot_header_banner_1786619550207.png" media="(min-width: 641px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="/banner-mobile.webp" type="image/webp" media="(max-width: 640px)" fetchpriority="high" />
+  <link rel="preload" as="image" href="/banner.webp" type="image/webp" media="(min-width: 641px)" fetchpriority="high" />
 
   <!-- ── Non-blocking Asynchronous Fonts & Icons Loader (FCP/LCP < 0.8s) ── -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@600;700;800&display=swap" media="print" onload="this.media='all'" />
