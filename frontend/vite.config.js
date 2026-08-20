@@ -20,6 +20,7 @@ export default defineConfig({
     cssCodeSplit: true,
     minify: 'esbuild',
     target: 'es2020',
+    chunkSizeWarningLimit: 500,
     modulePreload: {
       polyfill: false,
       resolveDependencies(filename, deps) {
@@ -52,7 +53,10 @@ export default defineConfig({
             if (id.includes('qrcode')) {
               return 'vendor-qrcode'
             }
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+            if (id.includes('react-router-dom') || id.includes('@remix-run')) {
+              return 'vendor-router'
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
               return 'vendor-react'
             }
           }

@@ -3595,7 +3595,7 @@ export default function ChatbotPage() {
               <div key={msg.id} className={`msg-row ${msg.from}`}>
                 <div className="msg-avatar" aria-hidden="true">
                   {msg.from === 'bot'
-                    ? <img src="/bjp_logo.svg" alt="BJP" onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }} />
+                    ? <img src="/bjp_logo.svg" alt="BJP" width="32" height="32" loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }} />
                     : <i className="bi bi-person-fill" />}
                 </div>
                 <div className={`msg-bubble ${wideTypes.includes(msg.type) ? 'wide' : ''}`}>
@@ -3608,7 +3608,7 @@ export default function ChatbotPage() {
             {isTyping && (
               <div className="msg-row bot">
                 <div className="msg-avatar" aria-hidden="true">
-                  <img src="/bjp_logo.svg" alt="BJP" onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }} />
+                  <img src="/bjp_logo.svg" alt="BJP" width="32" height="32" loading="lazy" decoding="async" onError={(e) => { e.target.onerror = null; e.target.src = '/bjp_logo.png' }} />
                 </div>
                 <div className="typing-bubble" role="status" aria-label={t('Bot is typing')}>
                   <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
