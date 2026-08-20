@@ -140,7 +140,7 @@ export default function AdminLayout() {
 
         <div className="admin-sidebar-footer">
           <button className="admin-logout-btn" onClick={handleLogout} title={!sidebarOpen ? 'Logout' : undefined}>
-            <i className="bi bi-box-arrow-left" />
+            <i className="bi bi-box-arrow-right" />
             {sidebarOpen && <span>Logout Panel</span>}
           </button>
         </div>
@@ -175,6 +175,11 @@ export default function AdminLayout() {
                 <span className="admin-role">{roleLabel}</span>
               </div>
             </div>
+
+            <button className="admin-topbar-logout-btn" onClick={handleLogout} title="Logout of Admin Panel">
+              <i className="bi bi-box-arrow-right" />
+              <span>Logout</span>
+            </button>
           </div>
         </header>
 
