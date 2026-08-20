@@ -9,11 +9,26 @@ const NAV_ITEMS = [
   { path: '/admin/reports',      icon: 'file-earmark-bar-graph-fill', label: 'Reports' },
 ]
 
+function LiveClock() {
+  const [timeStr, setTimeStr] = useState('')
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date()
+      setTimeStr(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }))
+    }
+    updateClock()
+    const timer = setInterval(updateClock, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  return <span>{timeStr}</span>
+}
+
 export default function AdminLayout() {
   const navigate = useNavigate()
   const [checking, setChecking]       = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 1024)
-  const [timeStr, setTimeStr]         = useState('')
   const [userSession, setUserSession] = useState({ user: 'Admin', role: 'super_admin', assigned_district: '' })
 
   useEffect(() => {
@@ -34,18 +49,8 @@ export default function AdminLayout() {
       .catch(() => navigate('/admin/login', { replace: true }))
   }, [navigate])
 
-  useEffect(() => {
-    const updateClock = () => {
-      const now = new Date()
-      setTimeStr(now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }))
-    }
-    updateClock()
-    const timer = setInterval(updateClock, 1000)
-    return () => clearInterval(timer)
-  }, [])
-
-  const handleLogout = async () => {
-    try { await admin.logout() } catch {}
+  const handleLogout = () => {
+    admin.logout()
     navigate('/admin/login', { replace: true })
   }
 
@@ -144,7 +149,7 @@ export default function AdminLayout() {
           <div className="admin-topbar-right">
             <div className="admin-topbar-clock">
               <i className="bi bi-clock-history" style={{ color: 'var(--role-accent)' }} />
-              <span>{timeStr}</span>
+              <LiveClock />
             </div>
 
             <div className="admin-user-badge">

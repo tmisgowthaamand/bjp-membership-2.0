@@ -328,8 +328,30 @@ export default function ReportsPage() {
         </div>
 
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}>
-            <div className="spinner-border text-danger" role="status" style={{ width: '2.5rem', height: '2.5rem' }} />
+          <div className="admin-table-wrap" style={{ opacity: 0.7 }}>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Application ID</th>
+                  <th>Candidate Name</th>
+                  <th>Mobile</th>
+                  <th>District</th>
+                  <th>Body Type</th>
+                  <th>Position</th>
+                  <th>EPIC No</th>
+                  <th>Submitted At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5].map((idx) => (
+                  <tr key={idx}>
+                    <td colSpan={8} style={{ padding: '16px' }}>
+                      <div style={{ height: 20, background: 'var(--bg-surface-2)', borderRadius: 6, animation: 'pulse 1.5s infinite ease-in-out' }} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : rows.length === 0 ? (
           <div style={{ padding: 60, textAlign: 'center' }}>

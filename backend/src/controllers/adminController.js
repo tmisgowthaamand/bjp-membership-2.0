@@ -89,8 +89,9 @@ export async function getDashboardStats(req, res) {
   try {
     const [stats, topAssemblies] = await Promise.all([getStats(), getTopAssemblies(10)])
     return res.json({ success: true, ...stats, topAssemblies })
-  } catch {
-    return res.status(500).json({ success: false, message: 'Could not load stats.' })
+  } catch (err) {
+    console.error('[Dashboard Stats Error]', err)
+    return res.status(500).json({ success: false, message: 'Could not load stats.', error: err?.message })
   }
 }
 
@@ -102,7 +103,7 @@ export async function getDistrictAnalytics(req, res) {
     return res.json({ success: true, district_counts: counts, user_role: userRole })
   } catch (err) {
     console.error('[District Analytics Error]', err)
-    return res.status(500).json({ success: false, message: 'Could not fetch district analytics.' })
+    return res.status(500).json({ success: false, message: 'Could not fetch district analytics.', error: err?.message })
   }
 }
 
@@ -112,8 +113,9 @@ export async function getApplications(req, res) {
     const { search = '', page = 1, page_size = 20, district = '' } = req.query
     const result = await listApplications({ search, page, pageSize: page_size, district })
     return res.json({ success: true, ...result })
-  } catch {
-    return res.status(500).json({ success: false, message: 'Could not load applications.' })
+  } catch (err) {
+    console.error('[Get Applications Error]', err)
+    return res.status(500).json({ success: false, message: 'Could not load applications.', error: err?.message })
   }
 }
 
@@ -126,8 +128,9 @@ export async function getReports(req, res) {
       page, pageSize: page_size,
     })
     return res.json({ success: true, ...result })
-  } catch {
-    return res.status(500).json({ success: false, message: 'Could not load report.' })
+  } catch (err) {
+    console.error('[Get Reports Error]', err)
+    return res.status(500).json({ success: false, message: 'Could not load report.', error: err?.message })
   }
 }
 

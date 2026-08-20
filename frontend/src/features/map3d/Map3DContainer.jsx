@@ -71,8 +71,9 @@ export default function Map3DContainer({
 
   const getInitialCameraZ = () => {
     if (typeof window !== 'undefined') {
-      if (window.innerWidth < 480) return 46
-      if (window.innerWidth < 768) return 40
+      if (window.innerWidth < 390) return 48 // Small screens (iPhone SE, Galaxy Fold cover)
+      if (window.innerWidth < 540) return 43 // Standard mobile (iPhone 12/14/15/16 Pro, Pixel 7/8/9)
+      if (window.innerWidth < 768) return 39 // Plus/Max mobile & small tablets
     }
     return 35
   }
@@ -117,7 +118,7 @@ export default function Map3DContainer({
   }
 
   return (
-    <div ref={containerRef} className="tn-map-wrapper" style={{ height: 'min(620px, 75vh)', minHeight: 520, background: '#f8fafc', borderRadius: 20 }}>
+    <div ref={containerRef} className="tn-map-wrapper" style={{ height: 'min(620px, 70vh)', minHeight: typeof window !== 'undefined' && window.innerWidth <= 640 ? 420 : 520, background: '#f8fafc', borderRadius: 20 }}>
 
       {loading && (
         <div className="tn-map-loading">
@@ -158,13 +159,13 @@ export default function Map3DContainer({
               className="btn btn-sm"
               style={{
                 borderRadius: 12,
-                fontSize: 12,
+                fontSize: 11.5,
                 fontWeight: 800,
                 color: '#ffffff',
                 background: '#f76201',
                 border: 'none',
                 boxShadow: '0 4px 12px rgba(247,98,1,0.3)',
-                padding: '6px 14px',
+                padding: '6px 12px',
                 cursor: 'pointer'
               }}
               title="Auto-Fit Entire Tamil Nadu Map"
@@ -204,24 +205,26 @@ export default function Map3DContainer({
           <div
             style={{
               position: 'absolute',
-              bottom: 12,
-              left: 12,
+              bottom: 10,
+              left: 10,
+              right: 10,
+              maxWidth: 'fit-content',
               zIndex: 900,
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(6px)',
               border: '1px solid rgba(247, 98, 1, 0.2)',
               borderRadius: 12,
-              padding: '7px 14px',
-              fontSize: 11,
+              padding: '5px 10px',
+              fontSize: 10,
               fontWeight: 700,
               color: '#334155',
               boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
               display: 'flex',
               alignItems: 'center',
-              gap: 8
+              gap: 6
             }}
           >
-            <span>✨ Full 38 Districts Visible • Drag to rotate • Click district to filter</span>
+            <span>✨ 38 Districts • Drag to rotate • Click to filter</span>
           </div>
 
           {/* Selected District Badge */}

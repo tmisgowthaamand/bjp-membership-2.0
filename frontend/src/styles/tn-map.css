@@ -411,13 +411,34 @@
 
 /* ── KPI & District Directory Grid Column Locks ───────────────── */
 .tn-kpi-cards-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 10px !important;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .tn-district-directory-grid {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 10px !important;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .tn-kpi-cards-grid {
+    gap: 6px;
+  }
+  .tn-kpi-cards-grid > div {
+    padding: 10px 6px !important;
+  }
+  .tn-kpi-cards-grid > div > div:first-child {
+    font-size: 8.5px !important;
+    letter-spacing: -0.2px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word !important;
+    line-height: 1.15 !important;
+    height: 22px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react'
 import { admin } from '../../api'
 import { normalizeDistrictName, getDistrictColorIntensity, getDistrictNumber, TN_38_DISTRICTS } from '../../data/districtNormalizer'
 import Map3DContainer from '../../features/map3d/Map3DContainer'
+import { getDistrictDisplayName } from '../../features/map3d/DistrictMesh'
 import '../../styles/tn-map.css'
 
 export function LocationPinIcon({ size = 16, color = '#2563EB', fill = '#2563EB', style = {} }) {
@@ -229,7 +230,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
           }}>
             {isDistrictAdmin ? 'District Admin (Read Only — All 38 Districts)' : 'All 38 Districts Active'}
           </span>
-          <h2 style={{ margin: '6px 0 0 0', fontSize: 24, fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit, sans-serif' }}>
+          <h2 style={{ margin: '6px 0 0 0', fontSize: 'clamp(17px, 4.5vw, 24px)', fontWeight: 900, color: '#0F172A', fontFamily: 'Outfit, sans-serif' }}>
             TAMIL NADU 38-DISTRICT INTERACTIVE MAP
           </h2>
         </div>
@@ -613,21 +614,30 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                         />
 
                         {/* Clean Centered Text Label inside Polygon */}
-                        <text
-                          x={lx}
-                          y={count > 0 ? ly - 5 : ly}
-                          textAnchor="middle"
-                          fill="#FFFFFF"
-                          fontSize={normName.length > 12 ? '8.5' : normName.length > 9 ? '9.5' : '11.5'}
-                          fontWeight="800"
-                          fontFamily="Outfit, sans-serif"
-                          style={{
-                            pointerEvents: 'none',
-                            textShadow: '0 1px 4px rgba(15,23,42,0.85)'
-                          }}
-                        >
-                          {normName}
-                        </text>
+                        {(() => {
+                          const isMobileView = typeof window !== 'undefined' && window.innerWidth <= 640
+                          const svgLabel = getDistrictDisplayName(normName)
+                          const fSize = isMobileView
+                            ? (svgLabel.length > 12 ? '6.5' : svgLabel.length > 9 ? '7.5' : '8.5')
+                            : (svgLabel.length > 12 ? '8.5' : svgLabel.length > 9 ? '9.5' : '11.5')
+                          return (
+                            <text
+                              x={lx}
+                              y={count > 0 ? ly - 5 : ly}
+                              textAnchor="middle"
+                              fill="#FFFFFF"
+                              fontSize={fSize}
+                              fontWeight="800"
+                              fontFamily="Outfit, sans-serif"
+                              style={{
+                                pointerEvents: 'none',
+                                textShadow: '0 1px 4px rgba(15,23,42,0.9)'
+                              }}
+                            >
+                              {svgLabel}
+                            </text>
+                          )
+                        })()}
 
                         {/* Clean Non-Overlapping Application Count Badge */}
                         {count > 0 && (

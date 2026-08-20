@@ -52,14 +52,16 @@ export function Map3D({
   controlsRef,
   cameraZ = 35,
 }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640
+
   return (
     <Canvas
-      dpr={[1, 2]}
+      dpr={isMobile ? [1, 1.5] : [1, 2]}
       gl={{
         antialias: true,
         alpha: true,
         powerPreference: 'high-performance',
-        precision: 'highp',
+        precision: isMobile ? 'mediump' : 'highp',
       }}
       style={{ width: '100%', height: '100%', background: '#f8fafc' }}
     >
@@ -69,11 +71,13 @@ export function Map3D({
         enablePan={true}
         enableZoom={true}
         enableRotate={true}
+        rotateSpeed={isMobile ? 0.7 : 0.9}
+        zoomSpeed={isMobile ? 0.7 : 0.9}
         minPolarAngle={Math.PI / 4}
         maxPolarAngle={Math.PI / 1.7}
         minDistance={10}
-        maxDistance={50}
-        dampingFactor={0.08}
+        maxDistance={55}
+        dampingFactor={0.12}
       />
       <Suspense fallback={null}>
         <SceneContent

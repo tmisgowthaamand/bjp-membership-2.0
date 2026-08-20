@@ -92,8 +92,8 @@ export const admin = {
   },
 
   logout: async () => {
-    try { await api.post('/admin/api/logout') } catch { /* ignore */ }
     setAdminToken(null)
+    api.post('/admin/api/logout').catch(() => {})
     return { success: true }
   },
 

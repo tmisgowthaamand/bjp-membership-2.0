@@ -22,13 +22,17 @@ export async function connectDbs() {
   }
   const appDbName = process.env.MONGO_APP_DB_NAME || 'election_app'
 
-  try {
-    voterClient = new MongoClient(voterUrl, { serverSelectionTimeoutMS: 8000 })
-    await voterClient.connect()
-    voterDb = voterClient.db(voterDbName)
-    console.log(`[db] voter_db connected (${voterDbName}) — read only`)
-  } catch (e) {
-    console.warn(`[db] voter_db connection failed: ${e.message} (voter lookup will report offline)`)
+  if (voterUrl) {
+    try {
+      voterClient = new MongoClient(voterUrl, { serverSelectionTimeoutMS: 8000 })
+      await voterClient.connect()
+      voterDb = voterClient.db(voterDbName)
+      console.log(`[db] voter_db connected (${voterDbName}) — read only`)
+    } catch (e) {
+      console.warn(`[db] voter_db connection failed: ${e.message} (voter lookup will report offline)`)
+      voterDb = null
+    }
+  } else {
     voterDb = null
   }
 
@@ -48,10 +52,15 @@ export async function connectDbs() {
     appClient = new MongoClient(appUrl, { serverSelectionTimeoutMS: 8000 })
     await appClient.connect()
     appDb = appClient.db(appDbName)
-    try {
-      await appDb.collection('applications').createIndex({ application_id: 1 }, { unique: true })
-      await appDb.collection('applications').createIndex({ mobile: 1 })
-    } catch (_) { /* index best-effort */ }
+    const coll = appDb.collection('applications')
+    await coll.createIndex({ application_id: 1 }, { sparse: true }).catch(() => {})
+    await coll.createIndex({ mobile: 1 }).catch(() => {})
+    await coll.createIndex({ submitted_at: -1 }).catch(() => {})
+    await coll.createIndex({ body_type: 1, submitted_at: -1 }).catch(() => {})
+    await coll.createIndex({ membership_id: 1 }).catch(() => {})
+    await coll.createIndex({ epic_no: 1 }).catch(() => {})
+    await coll.createIndex({ 'local_body.district': 1 }).catch(() => {})
+    await coll.createIndex({ 'voter.district': 1 }).catch(() => {})
     console.log(`[db] app db connected (${appDbName})`)
   } catch (e) {
     console.warn(`[db] app db connection failed: ${e.message}`)

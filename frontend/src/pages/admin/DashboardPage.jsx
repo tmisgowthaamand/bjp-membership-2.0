@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import {
   Chart as ChartJS,
@@ -46,6 +46,23 @@ function StatCard({ icon, label, value, color, bg, subtitle }) {
   )
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="admin-dashboard-view" style={{ opacity: 0.7 }}>
+      <div className="admin-card" style={{ height: 120, background: 'var(--bg-surface-2)', borderRadius: 24, marginBottom: 24, animation: 'pulse 1.5s infinite ease-in-out' }} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 24 }}>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="stat-card" style={{ height: 110, background: 'var(--bg-surface-2)', animation: 'pulse 1.5s infinite ease-in-out' }} />
+        ))}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+        <div className="admin-card" style={{ height: 320, background: 'var(--bg-surface-2)', animation: 'pulse 1.5s infinite ease-in-out' }} />
+        <div className="admin-card" style={{ height: 320, background: 'var(--bg-surface-2)', animation: 'pulse 1.5s infinite ease-in-out' }} />
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
   const navigate = useNavigate()
   const context = useOutletContext() || {}
@@ -75,25 +92,17 @@ export default function DashboardPage() {
 
   const s = stats || {}
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 350 }}>
-        <div className="spinner-border text-warning" role="status" style={{ width: '3rem', height: '3rem' }} />
-      </div>
-    )
-  }
-
   const role = userSession.role || 'super_admin'
   const isSuperAdmin = role === 'super_admin'
   const isStateAdmin = role === 'state_admin'
   const isDistrictAdmin = role === 'district_admin'
 
-  // Doughnut Chart Data (Rural vs Urban)
+  // Doughnut Chart Data (Rural vs Urban) - Memoized
   const ruralCount = s.rural || 0
   const urbanCount = s.urban || 0
   const totalCount = s.total || (ruralCount + urbanCount)
 
-  const doughnutData = {
+  const doughnutData = useMemo(() => ({
     labels: ['Rural Candidates', 'Urban Candidates'],
     datasets: [
       {
@@ -104,9 +113,9 @@ export default function DashboardPage() {
         borderColor: isDark ? '#18181B' : '#FFFFFF',
       },
     ],
-  }
+  }), [ruralCount, urbanCount, isDark])
 
-  const doughnutOptions = {
+  const doughnutOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     cutout: '72%',
@@ -122,26 +131,31 @@ export default function DashboardPage() {
       },
       tooltip: {
         callbacks: {
-          label: (context) => {
-            const val = context.raw || 0
+          label: (ctx) => {
+            const val = ctx.raw || 0
             const pct = totalCount ? Math.round((val / totalCount) * 100) : 0
-            return ` ${context.label}: ${val} (${pct}%)`
+            return ` ${ctx.label}: ${val} (${pct}%)`
           },
         },
       },
     },
-  }
+  }), [isDark, totalCount])
 
-  // Bar Chart Data (Top Assemblies)
+  // Bar Chart Data (Top Assemblies) - Memoized
   const topAssemblies = s.topAssemblies || []
-  const barLabels = topAssemblies.length
-    ? topAssemblies.map((d) => d.assembly_name || `AC ${d.assembly_no}`)
-    : ['Chennai', 'Coimbatore', 'Madurai', 'Trichy', 'Salem', 'Tirunelveli']
-  const barValues = topAssemblies.length
-    ? topAssemblies.map((d) => d.count)
-    : [0, 0, 0, 0, 0, 0]
+  const barLabels = useMemo(() => (
+    topAssemblies.length
+      ? topAssemblies.map((d) => d.assembly_name || `AC ${d.assembly_no}`)
+      : ['Chennai', 'Coimbatore', 'Madurai', 'Trichy', 'Salem', 'Tirunelveli']
+  ), [topAssemblies])
 
-  const barData = {
+  const barValues = useMemo(() => (
+    topAssemblies.length
+      ? topAssemblies.map((d) => d.count)
+      : [0, 0, 0, 0, 0, 0]
+  ), [topAssemblies])
+
+  const barData = useMemo(() => ({
     labels: barLabels,
     datasets: [
       {
@@ -153,9 +167,9 @@ export default function DashboardPage() {
         barThickness: 24,
       },
     ],
-  }
+  }), [barLabels, barValues])
 
-  const barOptions = {
+  const barOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -179,6 +193,10 @@ export default function DashboardPage() {
         beginAtZero: true,
       },
     },
+  }), [isDark])
+
+  if (loading) {
+    return <DashboardSkeleton />
   }
 
   const vs = s.voterDbStats || {}

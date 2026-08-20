@@ -252,8 +252,29 @@ export default function AssignAdminPage() {
         </div>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 40 }}>
-            <div className="spinner-border text-primary" role="status" />
+          <div className="admin-table-wrap" style={{ opacity: 0.7 }}>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>User Profile</th>
+                  <th>Username</th>
+                  <th>Role Scope</th>
+                  <th>Assigned District</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3].map((idx) => (
+                  <tr key={idx}>
+                    <td colSpan={7} style={{ padding: '16px' }}>
+                      <div style={{ height: 20, background: 'var(--bg-surface-2)', borderRadius: 6, animation: 'pulse 1.5s infinite ease-in-out' }} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : users.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 40, background: 'var(--bg-surface-2)', borderRadius: 16 }}>

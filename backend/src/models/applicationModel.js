@@ -25,6 +25,7 @@ export async function createApplication(doc) {
     }
     try {
       await coll.insertOne(record)
+      clearStatsCache()
       return { application_id, submitted_at: now }
     } catch (e) {
       // Duplicate key on application_id — try a fresh id
@@ -168,36 +169,61 @@ export async function getReport({ bodyType, position, from, to, search, district
   return { applications: rows, total, page: pageNum, pageSize: size }
 }
 
+let statsCache = null
+let statsCacheTime = 0
+let districtAnalyticsCache = null
+let districtAnalyticsCacheTime = 0
+const CACHE_TTL_MS = 30000 // 30 seconds TTL cache for heavy DB operations
+
+export function clearStatsCache() {
+  statsCache = null
+  statsCacheTime = 0
+  districtAnalyticsCache = null
+  districtAnalyticsCacheTime = 0
+}
+
 // Aggregate counts for the admin dashboard from real databases (DB1, DB2, DB3).
 export async function getStats() {
+  const nowMs = Date.now()
+  if (statsCache && (nowMs - statsCacheTime < CACHE_TTL_MS)) {
+    return statsCache
+  }
+
   const db = getAppDb()
   const coll = db.collection(COLLECTION)
   // Start of today in IST (UTC+5:30) for accurate server timezone calculation
-  const now = new Date()
+  const nowDate = new Date()
   const istOffsetMs = 5.5 * 60 * 60 * 1000
-  const istDate = new Date(now.getTime() + istOffsetMs)
+  const istDate = new Date(nowDate.getTime() + istOffsetMs)
   const startOfToday = new Date(Date.UTC(istDate.getUTCFullYear(), istDate.getUTCMonth(), istDate.getUTCDate()) - istOffsetMs)
 
-  const [total, rural, urban, today, allApps] = await Promise.all([
+  const [total, rural, urban, today, genderGroups] = await Promise.all([
     coll.countDocuments({}),
     coll.countDocuments({ body_type: 'rural' }),
     coll.countDocuments({ body_type: 'urban' }),
     coll.countDocuments({ submitted_at: { $gte: startOfToday } }),
-    coll.find({}, { projection: { 'voter.gender': 1 } }).toArray(),
+    coll.aggregate([
+      {
+        $group: {
+          _id: { $toUpper: { $ifNull: [{ $toString: '$voter.gender' }, ''] } },
+          count: { $sum: 1 }
+        }
+      }
+    ]).toArray(),
   ])
 
   let maleCount = 0
   let femaleCount = 0
   let thirdGenderCount = 0
 
-  for (const doc of allApps) {
-    const g = String(doc.voter?.gender || '').trim().toUpperCase()
-    if (g.includes('FEMALE') || g === 'F') {
-      femaleCount += 1
-    } else if (g.includes('MALE') || g === 'M') {
-      maleCount += 1
-    } else if (g) {
-      thirdGenderCount += 1
+  for (const g of genderGroups) {
+    const val = String(g._id || '').trim()
+    if (val.includes('FEMALE') || val === 'F') {
+      femaleCount += g.count
+    } else if (val.includes('MALE') || val === 'M') {
+      maleCount += g.count
+    } else if (val) {
+      thirdGenderCount += g.count
     }
   }
 
@@ -266,7 +292,10 @@ export async function getStats() {
     } catch (_) {}
   }
 
-  return { total, rural, urban, today, voterDbStats }
+  const result = { total, rural, urban, today, voterDbStats }
+  statsCache = result
+  statsCacheTime = Date.now()
+  return result
 }
 
 // Top-N assemblies by number of submitted applications.
@@ -303,14 +332,19 @@ export async function findLatestApplicationByMobile(mobile) {
 
 // District Analytics Breakdown from real database records (DB1, DB2, DB3)
 export async function getDistrictAnalyticsCounts() {
+  const nowMs = Date.now()
+  if (districtAnalyticsCache && (nowMs - districtAnalyticsCacheTime < CACHE_TTL_MS)) {
+    return districtAnalyticsCache
+  }
+
   const district_counts = {}
 
-  // 1. Fetch district names dynamically from DB2 (ward_db)
+  // 1. Fetch district names dynamically from DB2 (ward_db) concurrently
   if (isWardDbOnline()) {
     try {
       const wardDb = getWardDb()
       const collections = ['corporations', 'municipalities', 'town_panchayats', 'panchayats_unions', 'grama_panchayats']
-      for (const colName of collections) {
+      await Promise.all(collections.map(async (colName) => {
         try {
           const dists = await wardDb.collection(colName).distinct('district_name')
           dists.forEach((d) => {
@@ -322,7 +356,7 @@ export async function getDistrictAnalyticsCounts() {
             }
           })
         } catch (_) {}
-      }
+      }))
     } catch (_) {}
   }
 
@@ -379,6 +413,8 @@ export async function getDistrictAnalyticsCounts() {
     console.error('[District Analytics Error]', err)
   }
 
+  districtAnalyticsCache = district_counts
+  districtAnalyticsCacheTime = Date.now()
   return district_counts
 }
 
@@ -400,6 +436,7 @@ export async function updateApplicationRecord(applicationId, patchData) {
       }
     }
   )
+  clearStatsCache()
   return result
 }
 
@@ -415,5 +452,6 @@ export async function deleteApplicationRecord(applicationId) {
       ]
     }
   )
+  clearStatsCache()
   return result
 }

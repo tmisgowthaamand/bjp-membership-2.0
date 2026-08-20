@@ -302,6 +302,8 @@ function Pagination({ page, total, onChange }) {
   )
 }
 
+let cachedDistrictCounts = null
+
 export default function ApplicationsPage() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -325,7 +327,7 @@ export default function ApplicationsPage() {
   const [query, setQuery] = useState('')
   const [bodyTypeFilter, setBodyTypeFilter] = useState('all')
   const [districtFilter, setDistrictFilter] = useState(initialDistrict)
-  const [districtCounts, setDistrictCounts] = useState({})
+  const [districtCounts, setDistrictCounts] = useState(() => cachedDistrictCounts || {})
   const [suiteOpen, setSuiteOpen] = useState(false)
   const [editApp, setEditApp] = useState(null)
   const [deleteApp, setDeleteApp] = useState(null)
@@ -339,9 +341,11 @@ export default function ApplicationsPage() {
 
   // Fetch live district counts for the District Suite Modal
   useEffect(() => {
+    if (cachedDistrictCounts) return
     admin.getDistrictAnalytics()
       .then((res) => {
         if (res && res.success && res.district_counts) {
+          cachedDistrictCounts = res.district_counts
           setDistrictCounts(res.district_counts)
         }
       })
@@ -716,8 +720,31 @@ export default function ApplicationsPage() {
       {/* Main Candidate Applications Table */}
       <div className="admin-card">
         {loading ? (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 60 }}>
-            <div className="spinner-border text-danger" role="status" style={{ width: '2.5rem', height: '2.5rem' }} />
+          <div className="admin-table-wrap" style={{ opacity: 0.7 }}>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Application ID</th>
+                  <th>Candidate Name</th>
+                  <th>Mobile</th>
+                  <th>Membership ID</th>
+                  <th>District</th>
+                  <th>Body Type</th>
+                  <th>Position Preferences</th>
+                  <th>Submitted Date</th>
+                  <th style={{ textAlign: 'right' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1, 2, 3, 4, 5].map((idx) => (
+                  <tr key={idx}>
+                    <td colSpan={9} style={{ padding: '16px' }}>
+                      <div style={{ height: 20, background: 'var(--bg-surface-2)', borderRadius: 6, animation: 'pulse 1.5s infinite ease-in-out' }} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         ) : rows.length === 0 ? (
           <div style={{ padding: 60, textAlign: 'center' }}>

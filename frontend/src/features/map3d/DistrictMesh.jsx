@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Text } from '@react-three/drei'
 import { getDistrictColor } from './districtColorScale'
 
-// Canonical Full District Name (Official 38 Tamil Nadu District Full Names)
+// Canonical Full District Name (Official 38 Tamil Nadu District Full Names across Web & Mobile)
 export function getDistrictDisplayName(rawName = '') {
   const norm = (rawName || '').trim()
 
@@ -48,57 +48,57 @@ export function getDistrictDisplayName(rawName = '') {
 }
 
 // District-specific optimal font sizing for bold, high-visibility clarity across all 38 districts
-export function getDistrictFontSize(displayName = '') {
+export function getDistrictFontSize(displayName = '', isMobile = false) {
   const norm = displayName.toLowerCase().replace(/[^a-z]/g, '')
 
   // Specific high-visibility sizing tailored to each district's polygon area
   const customSizes = {
-    tiruchirappalli: 0.31, // Large central district — bold and clearly readable
-    tiruvannamalai: 0.31,  // Large northern district
-    ramanathapuram: 0.29,  // Wide coastal district
-    chengalpattu: 0.29,
-    kancheepuram: 0.28,
-    dharmapuri: 0.32,
-    krishnagiri: 0.32,
-    villupuram: 0.31,
-    kallakurichi: 0.30,
-    cuddalore: 0.31,
-    salem: 0.35,
-    erode: 0.35,
-    coimbatore: 0.34,
-    tiruppur: 0.32,
-    namakkal: 0.33,
-    karur: 0.34,
-    dindigul: 0.34,
-    theni: 0.35,
-    madurai: 0.34,
-    sivagangai: 0.30,
-    virudhunagar: 0.30,
-    thoothukudi: 0.31,
-    tirunelveli: 0.33,
-    tenkasi: 0.31,
-    kanniyakumari: 0.28,
-    pudukkottai: 0.31,
-    thanjavur: 0.31,
-    vellore: 0.32,
-    tirupathur: 0.30,
-    thiruvallur: 0.31,
-    nilgiris: 0.33,
-    chennai: 0.29,
-    ranipet: 0.28,
-    ariyalur: 0.28,
-    perambalur: 0.27,
-    tiruvarur: 0.27,
-    nagapattinam: 0.26,
-    mayiladuthurai: 0.27,
+    tiruchirappalli: isMobile ? 0.22 : 0.28,
+    tiruvannamalai: isMobile ? 0.22 : 0.28,
+    ramanathapuram: isMobile ? 0.21 : 0.27,
+    chengalpattu: isMobile ? 0.23 : 0.28,
+    kancheepuram: isMobile ? 0.22 : 0.27,
+    dharmapuri: isMobile ? 0.25 : 0.31,
+    krishnagiri: isMobile ? 0.25 : 0.31,
+    villupuram: isMobile ? 0.24 : 0.30,
+    kallakurichi: isMobile ? 0.24 : 0.29,
+    cuddalore: isMobile ? 0.24 : 0.30,
+    salem: isMobile ? 0.26 : 0.34,
+    erode: isMobile ? 0.26 : 0.34,
+    coimbatore: isMobile ? 0.25 : 0.33,
+    tiruppur: isMobile ? 0.25 : 0.31,
+    namakkal: isMobile ? 0.25 : 0.32,
+    karur: isMobile ? 0.25 : 0.33,
+    dindigul: isMobile ? 0.26 : 0.33,
+    theni: isMobile ? 0.26 : 0.34,
+    madurai: isMobile ? 0.26 : 0.33,
+    sivagangai: isMobile ? 0.24 : 0.29,
+    virudhunagar: isMobile ? 0.24 : 0.29,
+    thoothukudi: isMobile ? 0.24 : 0.30,
+    tirunelveli: isMobile ? 0.25 : 0.32,
+    tenkasi: isMobile ? 0.24 : 0.30,
+    kanniyakumari: isMobile ? 0.22 : 0.27,
+    pudukkottai: isMobile ? 0.24 : 0.30,
+    thanjavur: isMobile ? 0.24 : 0.30,
+    vellore: isMobile ? 0.25 : 0.31,
+    tirupathur: isMobile ? 0.24 : 0.29,
+    thiruvallur: isMobile ? 0.24 : 0.30,
+    nilgiris: isMobile ? 0.25 : 0.32,
+    chennai: isMobile ? 0.23 : 0.28,
+    ranipet: isMobile ? 0.22 : 0.27,
+    ariyalur: isMobile ? 0.22 : 0.27,
+    perambalur: isMobile ? 0.21 : 0.26,
+    tiruvarur: isMobile ? 0.21 : 0.26,
+    nagapattinam: isMobile ? 0.20 : 0.25,
+    mayiladuthurai: isMobile ? 0.21 : 0.26,
   }
 
   if (customSizes[norm]) return customSizes[norm]
 
   const len = displayName.length
-  if (len <= 6) return 0.35
-  if (len <= 10) return 0.32
-  return 0.30
+  if (len <= 6) return isMobile ? 0.27 : 0.34
+  if (len <= 10) return isMobile ? 0.24 : 0.31
+  return isMobile ? 0.22 : 0.28
 }
 
 // Precision centroid micro-offsets to center full text neatly in each polygon
@@ -149,8 +149,10 @@ export function DistrictMesh({
   const textZ = district.depth + 0.07
   const posZ = isHovered ? 0.45 : isSelected ? 0.3 : 0
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640
   const displayName = useMemo(() => getDistrictDisplayName(district.name), [district.name])
-  const fontSize = useMemo(() => getDistrictFontSize(displayName), [displayName])
+  const fontSize = useMemo(() => getDistrictFontSize(displayName, isMobile), [displayName, isMobile])
+
   const [ox, oy] = useMemo(() => getDistrictCentroidOffset(district.name), [district.name])
 
   const cx = baseCx + ox
@@ -189,12 +191,12 @@ export function DistrictMesh({
         color={isSelected ? '#ffffff' : '#0f172a'}
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.042}
+        outlineWidth={isMobile ? 0.028 : 0.04}
         outlineColor={isSelected ? '#0f172a' : '#ffffff'}
         outlineOpacity={1}
         fontWeight="bold"
         letterSpacing={0.01}
-        sdfGlyphSize={512}
+        sdfGlyphSize={256}
         renderOrder={10}
         depthOffset={-1}
       >
