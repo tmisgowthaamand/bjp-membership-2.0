@@ -26,10 +26,7 @@ export async function postVerifyOtp(req, res) {
     if (!/^\d{4,8}$/.test(otp)) {
       return res.status(400).json({ success: false, message: 'Please enter the OTP sent to your mobile.' })
     }
-    // Local dev bypass (no SMS credits): accept 123456 or any OTP in dev mode
-    const verified = (devBypassEnabled() || otp === '123456')
-      ? { success: true, message: 'Mobile number verified (dev).' }
-      : await verifyOtp(mobile, otp)
+    const verified = await verifyOtp(mobile, otp)
 
     if (!verified.success) {
       return res.status(400).json(verified)
