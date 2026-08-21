@@ -16,11 +16,12 @@ export async function connectDbs() {
   const wardUrl = process.env.MONGO_WARD_URL || process.env.WARD_DB_URI
   const wardDbName = process.env.MONGO_WARD_DB_NAME || 'ward_db'
 
-  let appUrl = process.env.MONGO_APP_URL || process.env.APP_DB_URI || 'mongodb+srv://tmisgowthaamand_db_user:UQZ0VVD9waDPex2l@cluster0.5q8xfoa.mongodb.net/election_app?retryWrites=true&w=majority&appName=Cluster0'
-  if (appUrl.includes('cluster0.j9z0eyx')) {
-    appUrl = 'mongodb+srv://tmisgowthaamand_db_user:UQZ0VVD9waDPex2l@cluster0.5q8xfoa.mongodb.net/election_app?retryWrites=true&w=majority&appName=Cluster0'
-  }
+  const appUrl = process.env.MONGO_APP_URL || process.env.APP_DB_URI
   const appDbName = process.env.MONGO_APP_DB_NAME || 'election_app'
+
+  if (!appUrl) {
+    console.error('[db] FATAL: MONGO_APP_URL / APP_DB_URI environment variable is missing.')
+  }
 
   if (voterUrl) {
     try {

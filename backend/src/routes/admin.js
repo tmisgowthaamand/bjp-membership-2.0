@@ -10,7 +10,18 @@ import {
 } from '../controllers/adminController.js'
 
 const router = Router()
-const upload = multer({ limits: { fileSize: 15 * 1024 * 1024 } })
+
+const ALLOWED_ADMIN_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+const upload = multer({
+  limits: { fileSize: 15 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (ALLOWED_ADMIN_MIMES.includes(file.mimetype)) {
+      cb(null, true)
+    } else {
+      cb(new Error('Invalid image format. Only JPG, PNG, and WEBP files are allowed.'))
+    }
+  }
+})
 
 const loginLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,

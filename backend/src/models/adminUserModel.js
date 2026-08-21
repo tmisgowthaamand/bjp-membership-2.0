@@ -1,6 +1,27 @@
+import crypto from 'crypto'
 import { getAppDb } from '../config/db.js'
 
 const COLLECTION = 'admin_users'
+
+export function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex')
+  const derivedKey = crypto.scryptSync(String(password), salt, 64)
+  return `${salt}:${derivedKey.toString('hex')}`
+}
+
+export function verifyPassword(password, storedPassword) {
+  if (!storedPassword || !password) return false
+  // If stored password has no salt prefix, handle legacy comparison
+  if (!storedPassword.includes(':')) {
+    const a = Buffer.from(String(password))
+    const b = Buffer.from(String(storedPassword))
+    return a.length === b.length && crypto.timingSafeEqual(a, b)
+  }
+  const [salt, key] = storedPassword.split(':')
+  const keyBuffer = Buffer.from(key, 'hex')
+  const derivedKey = crypto.scryptSync(String(password), salt, 64)
+  return keyBuffer.length === derivedKey.length && crypto.timingSafeEqual(keyBuffer, derivedKey)
+}
 
 export async function listAdminUsers() {
   const db = getAppDb()
@@ -22,7 +43,7 @@ export async function createAdminUserRecord(userData) {
   }
   const record = {
     username: cleanUser,
-    password: userData.password,
+    password: hashPassword(userData.password),
     role: userData.role || 'district_admin', // 'state_admin' | 'district_admin'
     assigned_district: userData.assigned_district || '',
     avatar_url: userData.avatar_url || '',
@@ -41,6 +62,9 @@ export async function updateAdminUserRecord(username, patchData) {
   const updateDoc = {
     ...patchData,
     updated_at: new Date(),
+  }
+  if (updateDoc.password) {
+    updateDoc.password = hashPassword(updateDoc.password)
   }
   delete updateDoc.username
   delete updateDoc._id

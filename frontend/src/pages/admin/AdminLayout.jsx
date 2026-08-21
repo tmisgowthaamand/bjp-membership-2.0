@@ -154,9 +154,17 @@ export default function AdminLayout() {
               <i className={`bi bi-${sidebarOpen ? 'layout-sidebar-reverse' : 'layout-sidebar'}`} />
             </button>
 
-            <div className="admin-topbar-brand">
-              <span className={`bjp-badge-pill role-badge-${userSession.role}`}>{roleLabel}</span>
-              <span style={{ fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>BJP TN 2026</span>
+            <div className="admin-topbar-brand" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <img
+                src="/bjp_logo.svg"
+                alt="BJP Logo"
+                style={{ width: 30, height: 30, objectFit: 'contain' }}
+                onError={(e) => { e.target.src = '/bjp_logo.png' }}
+              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className={`bjp-badge-pill role-badge-${userSession.role}`}>{roleLabel}</span>
+                <span style={{ fontWeight: 800, fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>BJP TN 2026</span>
+              </div>
             </div>
           </div>
 

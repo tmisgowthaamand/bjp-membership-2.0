@@ -4,7 +4,11 @@ export const COOKIE_NAME = 'admin_session'
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 hours
 
 function secret() {
-  return process.env.ADMIN_SESSION_SECRET || 'dev-admin-secret-change-me'
+  const s = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_JWT_SECRET
+  if (!s && process.env.NODE_ENV === 'production') {
+    console.error('[FATAL] ADMIN_SESSION_SECRET / ADMIN_JWT_SECRET is required in production.')
+  }
+  return s || 'dev-admin-secret-change-me'
 }
 
 // Signed, tamper-proof token: base64url(payload).base64url(hmac)

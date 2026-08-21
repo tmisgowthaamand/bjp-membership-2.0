@@ -3,6 +3,7 @@ import { admin } from '../../api'
 import { normalizeDistrictName, getDistrictColorIntensity, getDistrictNumber, TN_38_DISTRICTS } from '../../data/districtNormalizer'
 import Map3DContainer from '../../features/map3d/Map3DContainer'
 import { getDistrictDisplayName } from '../../features/map3d/DistrictMesh'
+import { getDistrictBaseColor } from '../../features/map3d/districtColorScale'
 import '../../styles/tn-map.css'
 
 export function LocationPinIcon({ size = 16, color = '#2563EB', fill = '#2563EB', style = {} }) {
@@ -27,46 +28,53 @@ export function LocationPinIcon({ size = 16, color = '#2563EB', fill = '#2563EB'
   )
 }
 
-// Distinct Vibrant District Color Palette for all 38 Districts
-const DISTRICT_PALETTE = {
-  Chennai: '#9333EA',       // Purple
-  Thiruvallur: '#DC2626',   // Crimson Red
-  Kancheepuram: '#D97706',  // Amber Gold
-  Chengalpattu: '#EA580C',  // Saffron Orange
-  Vellore: '#0284C7',       // Sky Blue
-  Ranipet: '#0891B2',       // Cyan
-  Tirupathur: '#0369A1',    // Deep Blue
-  Tiruvannamalai: '#65A30D',// Apple Green
-  Villupuram: '#7E22CE',    // Royal Purple
-  Kallakurichi: '#A21CAF',  // Deep Magenta
-  Cuddalore: '#D97706',     // Amber
-  Krishnagiri: '#EA580C',   // Bright Orange
-  Dharmapuri: '#B91C1C',    // Ruby Red
-  Salem: '#0284C7',         // Teal Blue
-  Erode: '#7E22CE',         // Violet
-  Nilgiris: '#D97706',      // Amber
-  Coimbatore: '#15803D',    // Forest Green
-  Tiruppur: '#DC2626',      // Bright Red
-  Namakkal: '#991B1B',      // Dark Red
-  Karur: '#0284C7',         // Cyan
-  Tiruchirappalli: '#EA580C',// Saffron
-  Perambalur: '#4D7C0F',    // Green
-  Ariyalur: '#B45309',      // Rust Gold
-  Mayiladuthurai: '#E11D48',// Rose Red
-  Nagapattinam: '#D97706',  // Amber Gold
-  Tiruvarur: '#0284C7',     // Sky Blue
-  Thanjavur: '#9333EA',     // Purple
-  Pudukkottai: '#65A30D',   // Lime Green
-  Dindigul: '#B45309',      // Brown Gold
-  Theni: '#DC2626',         // Red
-  Madurai: '#C026D3',       // Magenta
-  Sivagangai: '#0891B2',    // Cyan
-  Virudhunagar: '#65A30D',  // Lime
-  Ramanathapuram: '#D97706',// Gold
-  Tenkasi: '#C026D3',       // Orchid
-  Tirunelveli: '#991B1B',   // Dark Red
-  Thoothukudi: '#EA580C',   // Orange
-  Kanniyakumari: '#7E22CE', // Purple
+// Precision SVG centroid micro-offsets for perfect centered district label placement
+const SVG_DISTRICT_OFFSETS = {
+  chennai: { x: 8, y: -4 },
+  ranipet: { x: 2, y: -4 },
+  vellore: { x: -6, y: 0 },
+  tirupathur: { x: -8, y: -4 },
+  tirupattur: { x: -8, y: -4 },
+  kancheepuram: { x: -2, y: -6 },
+  kanchipuram: { x: -2, y: -6 },
+  chengalpattu: { x: 8, y: 4 },
+  chengalpet: { x: 8, y: 4 },
+  perambalur: { x: -4, y: -3 },
+  ariyalur: { x: 8, y: 0 },
+  tiruchirappalli: { x: 0, y: 0 },
+  trichy: { x: 0, y: 0 },
+  thanjavur: { x: -4, y: 0 },
+  tiruvarur: { x: 0, y: -6 },
+  thiruvarur: { x: 0, y: -6 },
+  nagapattinam: { x: 12, y: 16 },
+  mayiladuthurai: { x: 6, y: -2 },
+  kanniyakumari: { x: 0, y: -6 },
+  kanyakumari: { x: 0, y: -6 },
+  dharmapuri: { x: 0, y: -2 },
+  krishnagiri: { x: 0, y: -4 },
+  cuddalore: { x: 6, y: 0 },
+  pudukkottai: { x: 0, y: 0 },
+  ramanathapuram: { x: 8, y: 0 },
+  ramnad: { x: 8, y: 0 },
+  tiruvannamalai: { x: 2, y: -14 },
+  tvmalai: { x: 2, y: -14 },
+  nilgiris: { x: -4, y: 0 },
+  coimbatore: { x: 0, y: 0 },
+  tiruppur: { x: -3, y: 3 },
+  erode: { x: 0, y: 0 },
+  salem: { x: 0, y: 0 },
+  namakkal: { x: 0, y: 0 },
+  karur: { x: -2, y: 3 },
+  dindigul: { x: 0, y: 0 },
+  theni: { x: 0, y: 0 },
+  madurai: { x: 0, y: 0 },
+  sivagangai: { x: 0, y: 0 },
+  virudhunagar: { x: 0, y: 0 },
+  thoothukudi: { x: 0, y: 0 },
+  tirunelveli: { x: 0, y: 0 },
+  tenkasi: { x: 0, y: 0 },
+  kallakurichi: { x: 0, y: 2 },
+  villupuram: { x: 0, y: 0 },
 }
 
 // Dynamic Mercator Projection Engine based on actual GeoJSON Bounding Box
@@ -552,107 +560,156 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
               </div>
             )}
 
-            {/* SVG Map Stage */}
-            <div style={{ width: '100%', height: 'auto' }}>
-              <svg viewBox="0 0 540 660" style={{ width: '100%', height: 'auto', display: 'block', overflow: 'visible' }}>
-                <defs>
-                  <filter id="stateSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#0F172A" floodOpacity="0.22" />
-                  </filter>
-
-                  <filter id="districtHighlightGlow" x="-10%" y="-10%" width="120%" height="120%">
-                    <feDropShadow dx="0" dy="3" stdDeviation="6" floodColor="#000000" floodOpacity="0.4" />
-                  </filter>
-                </defs>
-
-                <g filter="url(#stateSoftShadow)">
+            {/* SVG Map Stage with Zero-Lag Hardware Acceleration */}
+            <div style={{ width: '100%', height: 'auto', transform: 'translateZ(0)' }}>
+              <svg
+                viewBox="0 0 540 660"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0 10px 20px rgba(15, 23, 42, 0.15))'
+                }}
+              >
+                {/* 1. LAYER 1: Base Map Polygons */}
+                <g id="map-polygons">
                   {featurePointsList.map(({ normName, projected }) => {
                     if (!projected.length) return null
 
                     const pointsStr = coordsToPoints(projected)
+                    const count = Number(normalizedCounts[normName]) || 0
+                    const isSelected = selectedDistrict && selectedDistrict.toLowerCase() === normName.toLowerCase()
+                    const isHovered = hoveredDistrict === normName
+                    const isAnimatedActive = currentAnimDistrict === normName
+
+                    // Clean Executive Vector Theme (Screenshot 2 Style)
+                    const isActive = count > 0
+                    const fillColor = isSelected
+                      ? '#2563EB'
+                      : isHovered || isAnimatedActive
+                      ? '#EA580C'
+                      : isActive
+                      ? '#C2410C'
+                      : '#F1F5F9'
+
+                    const strokeColor = isSelected
+                      ? '#1D4ED8'
+                      : isHovered || isAnimatedActive
+                      ? '#9A3412'
+                      : isActive
+                      ? '#7C2D12'
+                      : '#475569'
+
+                    const strokeWidth = isSelected || isHovered || isAnimatedActive ? '2' : '1'
+
+                    return (
+                      <polygon
+                        key={`poly-${normName}`}
+                        points={pointsStr}
+                        fill={fillColor}
+                        stroke={strokeColor}
+                        strokeWidth={strokeWidth}
+                        strokeLinejoin="round"
+                        vectorEffect="non-scaling-stroke"
+                        style={{
+                          cursor: 'pointer',
+                          transition: 'fill 0.12s ease, stroke 0.12s ease',
+                        }}
+                        onMouseMove={(e) => handleMouseMove(e, normName)}
+                        onMouseLeave={() => setHoveredDistrict(null)}
+                        onClick={() => onSelectDistrict && onSelectDistrict(isSelected ? '' : normName)}
+                      />
+                    )
+                  })}
+                </g>
+
+                {/* 2. LAYER 2: Crisp Text Labels & Application Badges Rendered on Top */}
+                <g id="map-labels" style={{ pointerEvents: 'none' }}>
+                  {featurePointsList.map(({ normName, projected }) => {
+                    if (!projected.length) return null
+
                     const centroid = getCentroid(projected)
                     const count = Number(normalizedCounts[normName]) || 0
                     const isSelected = selectedDistrict && selectedDistrict.toLowerCase() === normName.toLowerCase()
                     const isHovered = hoveredDistrict === normName
                     const isAnimatedActive = currentAnimDistrict === normName
 
-                    const lx = centroid.x
-                    const ly = centroid.y
+                    const normKey = normName.toLowerCase().replace(/[^a-z]/g, '')
+                    const offset = SVG_DISTRICT_OFFSETS[normKey] || { x: 0, y: 0 }
+                    const lx = centroid.x + offset.x
+                    const ly = centroid.y + offset.y
 
-                    // Color palette selection
-                    const baseColor = DISTRICT_PALETTE[normName] || '#0284C7'
-                    const fillColor = isAnimatedActive
-                      ? '#F59E0B'
-                      : isSelected
-                      ? '#2563EB'
-                      : isHovered
-                      ? '#1D4ED8'
-                      : count > 0
-                      ? getDistrictColorIntensity(count, maxCount)
-                      : baseColor
+                    const isActive = count > 0
+                    const textColor = isSelected || isHovered || isAnimatedActive || isActive
+                      ? '#FFFFFF'
+                      : '#0F172A'
+
+                    const textShadow = isSelected || isHovered || isAnimatedActive || isActive
+                      ? '0 1px 3px rgba(0,0,0,0.9)'
+                      : 'none'
+
+                    // Custom tailored font sizing per polygon area for zero overlap
+                    const customSizes = {
+                      tiruchirappalli: 8.2,
+                      ramanathapuram: 8.2,
+                      tiruvannamalai: 8.5,
+                      mayiladuthurai: 7.8,
+                      nagapattinam: 7.8,
+                      kanniyakumari: 8,
+                      chengalpattu: 8.2,
+                      kancheepuram: 8.2,
+                      kallakurichi: 8.2,
+                      thiruvallur: 8.5,
+                      perambalur: 7.8,
+                      ariyalur: 7.8,
+                      tiruvarur: 7.8,
+                      ranipet: 7.8,
+                      tirupathur: 7.8,
+                      chennai: 8.5,
+                    }
+
+                    const svgLabel = getDistrictDisplayName(normName)
+                    const fSize = customSizes[normKey] || (svgLabel.length > 10 ? 8.5 : svgLabel.length > 7 ? 9.5 : 11)
 
                     return (
-                      <g
-                        key={normName}
-                        style={{ cursor: 'pointer' }}
-                        onMouseMove={(e) => handleMouseMove(e, normName)}
-                        onMouseLeave={() => setHoveredDistrict(null)}
-                        onClick={() => onSelectDistrict && onSelectDistrict(isSelected ? '' : normName)}
-                      >
-                        {/* Polygon Surface with Clean White Borders */}
-                        <polygon
-                          points={pointsStr}
-                          fill={fillColor}
-                          stroke="#FFFFFF"
-                          strokeWidth={isAnimatedActive || isSelected ? '2.5' : '1.5'}
+                      <g key={`label-${normName}`}>
+                        {/* Clean Centered Text Label with Crisp SVG Text Halo */}
+                        <text
+                          x={lx}
+                          y={isActive ? ly - 4 : ly + 3}
+                          textAnchor="middle"
+                          fill={textColor}
+                          stroke={isActive || isSelected || isHovered || isAnimatedActive ? 'none' : '#FFFFFF'}
+                          strokeWidth={isActive || isSelected || isHovered || isAnimatedActive ? '0' : '2.8'}
                           strokeLinejoin="round"
-                          filter={isAnimatedActive || isHovered || isSelected ? 'url(#districtHighlightGlow)' : undefined}
+                          paintOrder="stroke fill"
+                          fontSize={fSize}
+                          fontWeight="800"
+                          fontFamily="Outfit, -apple-system, sans-serif"
                           style={{
-                            transition: 'fill 0.25s ease, stroke 0.25s ease',
-                            opacity: 1
+                            pointerEvents: 'none',
+                            textShadow,
+                            letterSpacing: svgLabel.length > 12 ? '-0.2px' : 'normal'
                           }}
-                        />
+                        >
+                          {svgLabel}
+                        </text>
 
-                        {/* Clean Centered Text Label inside Polygon */}
-                        {(() => {
-                          const isMobileView = typeof window !== 'undefined' && window.innerWidth <= 640
-                          const svgLabel = getDistrictDisplayName(normName)
-                          const fSize = isMobileView
-                            ? (svgLabel.length > 12 ? '6.5' : svgLabel.length > 9 ? '7.5' : '8.5')
-                            : (svgLabel.length > 12 ? '8.5' : svgLabel.length > 9 ? '9.5' : '11.5')
-                          return (
-                            <text
-                              x={lx}
-                              y={count > 0 ? ly - 5 : ly}
-                              textAnchor="middle"
-                              fill="#FFFFFF"
-                              fontSize={fSize}
-                              fontWeight="800"
-                              fontFamily="Outfit, sans-serif"
-                              style={{
-                                pointerEvents: 'none',
-                                textShadow: '0 1px 4px rgba(15,23,42,0.9)'
-                              }}
-                            >
-                              {svgLabel}
-                            </text>
-                          )
-                        })()}
-
-                        {/* Clean Non-Overlapping Application Count Badge */}
-                        {count > 0 && (
-                          <g transform={`translate(${lx - 10}, ${ly + 2})`}>
+                        {/* Pill Badge for Active Applications (Screenshot 2 Match) */}
+                        {isActive && (
+                          <g transform={`translate(${lx - 11}, ${ly + 2})`}>
                             <rect
-                              width="20"
-                              height="11"
-                              rx="5"
+                              width="22"
+                              height="12"
+                              rx="6"
                               fill="#0F172A"
                               stroke="#FFFFFF"
                               strokeWidth="1"
                             />
                             <text
-                              x="10"
-                              y="8.5"
+                              x="11"
+                              y="9"
                               textAnchor="middle"
                               fill="#FFFFFF"
                               fontSize="7.5"
@@ -747,7 +804,7 @@ export default function TamilNaduMap({ onSelectDistrict, selectedDistrict = '' }
                       }}>
                         #{distNum}
                       </span>
-                      <LocationPinIcon size={11} color={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} fill={isSelected ? '#FFFFFF' : DISTRICT_PALETTE[name] || '#2563EB'} style={{ flexShrink: 0 }} />
+                      <LocationPinIcon size={11} color={isSelected ? '#FFFFFF' : getDistrictBaseColor(name)} fill={isSelected ? '#FFFFFF' : getDistrictBaseColor(name)} style={{ flexShrink: 0 }} />
                       <span
                         title={name}
                         style={{

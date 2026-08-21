@@ -1,6 +1,6 @@
 import { sendOtp, verifyOtp, normalizeMobile, isValidMobile, devBypassEnabled } from '../services/otpService.js'
 import { findVoterByEpic, toVoterProfile, isValidEpic, normalizeEpic } from '../models/voterModel.js'
-import { createApplication, findApplicationById, findLatestApplicationByMobile } from '../models/applicationModel.js'
+import { createApplication, findApplicationById, findLatestApplicationByMobile, updateApplicationRecord } from '../models/applicationModel.js'
 import { isVoterDbOnline, isAppDbOnline, getAppDb } from '../config/db.js'
 import { positionsFor, URBAN_BODY_TYPES } from '../constants/localBodies.js'
 import { uploadMedia, b2Configured, getMedia } from '../services/b2Service.js'
@@ -244,7 +244,29 @@ export async function getApplication(req, res) {
   }
   const app = await findApplicationById(req.params.id)
   if (!app) return res.status(404).json({ success: false, message: 'Application not found.' })
-  return res.json({ success: true, application: app })
+
+  // Redact private PII to prevent scraping / data harvesting
+  const maskedMobile = app.mobile ? `******${String(app.mobile).slice(-4)}` : ''
+  const publicApp = {
+    application_id: app.application_id,
+    membership_id: app.membership_id,
+    epic_no: app.epic_no,
+    photo_url: app.photo_url || '',
+    body_type: app.body_type,
+    local_body: app.local_body,
+    position_preferences: app.position_preferences,
+    submitted_at: app.submitted_at,
+    mobile: maskedMobile,
+    voter: {
+      name: app.voter?.name || '',
+      district: app.voter?.district || app.voter?.district_name || '',
+      assembly_name: app.voter?.assembly_name || '',
+      photo: app.voter?.photo || '',
+    },
+    organiser_message: app.organiser_message || null,
+  }
+
+  return res.json({ success: true, application: publicApp })
 }
 
 // ── Media upload (Cloudinary + B2 Fallback) ─────────────────────────
@@ -287,6 +309,61 @@ export async function postUploadMedia(req, res) {
   }
 
   return res.status(503).json({ success: false, message: 'Media upload service is temporarily unavailable.' })
+}
+
+// ── Update Candidate Photo (Cloudinary + B2) ─────────────────────────
+export async function postUpdateApplicationPhoto(req, res) {
+  if (!isAppDbOnline()) {
+    return res.status(503).json({ success: false, message: 'Application service is temporarily unavailable.' })
+  }
+  const { id } = req.params
+  const file = req.file
+  if (!file || !file.buffer || !file.buffer.length) {
+    return res.status(400).json({ success: false, message: 'No photo file received.' })
+  }
+
+  const app = await findApplicationById(id)
+  if (!app) {
+    return res.status(404).json({ success: false, message: 'Application not found.' })
+  }
+
+  const mobile = app.mobile || 'general'
+  let photoUrl = ''
+
+  if (isCloudinaryConfigured()) {
+    try {
+      const result = await uploadToCloudinary({
+        buffer: file.buffer,
+        originalName: file.originalname || 'photo.jpg',
+        mimeType: file.mimetype || 'image/jpeg',
+        folder: `bjp_localbody/${mobile}/photos`,
+      })
+      photoUrl = result.url
+    } catch (err) {
+      console.error('[Cloudinary candidate photo upload error, attempting B2 fallback]', err)
+    }
+  }
+
+  if (!photoUrl && b2Configured()) {
+    try {
+      const result = await uploadMedia({
+        buffer: file.buffer,
+        originalName: file.originalname || 'photo.jpg',
+        mimeType: file.mimetype || 'image/jpeg',
+        folder: `bjp-localbody/${mobile}/photos`,
+      })
+      photoUrl = `/api/media/${result.key}`
+    } catch (err) {
+      console.error('[B2 candidate photo upload error]', err)
+    }
+  }
+
+  if (!photoUrl) {
+    return res.status(500).json({ success: false, message: 'Could not upload photo. Please try again.' })
+  }
+
+  await updateApplicationRecord(id, { photo_url: photoUrl })
+  return res.json({ success: true, photo_url: photoUrl, message: 'Candidate photo updated successfully.' })
 }
 
 // ── Organiser message ──────────────────────────────────────────────

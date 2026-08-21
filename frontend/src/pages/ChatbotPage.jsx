@@ -2,6 +2,21 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { chat } from '../api'
 import '../styles/chatbot.css'
 import { useLang } from '../i18n/LanguageContext'
+import {
+  ALL_DISTRICTS,
+  RURAL_POSITIONS,
+  URBAN_POSITIONS,
+  URBAN_BODY_TYPES,
+  corporationsForDistrict,
+  municipalitiesForDistrict,
+  townPanchayatsForDistrict,
+  wardsForCorporation,
+  districtPanchayatWards,
+  unionsForDistrict,
+  blocksForDistrict,
+  panchayatsForBlock,
+  positionsFor,
+} from '../data/localBodies'
 
 
 
@@ -1719,11 +1734,60 @@ function ReviewMsg({ active, data, mobile, onConfirm, onEdit, onBack, disabled }
       </ReviewSection>
 
       <ReviewSection title={t('Media, Priorities & Documents')} icon="file-earmark-pdf-fill">
-        <KV k={t('Candidate Photo')} v={cur.photoUrl ? t('Uploaded ✓') : t('Not Provided')} />
-        <KV k={t('Pitch Video')} v={cur.videoUrl ? t('Provided ✓') : t('Not Provided')} />
-        <KV k={t('Development Priorities')} v={cur.devPriorities ? cur.devPriorities : t('Not Provided')} />
-        <KV k={t('Grievance Plan')} v={cur.grievancePlan ? cur.grievancePlan : t('Not Provided')} />
-        <KV k={t('Supporting Document (PDF/DOCX)')} v={cur.documentUrl ? t('Uploaded ✓') : t('Not Provided')} />
+        {!editing ? (
+          <>
+            <KV k={t('Candidate Photo')} v={cur.photoUrl ? t('Uploaded ✓') : t('Not Provided')} />
+            {!cur.photoUrl && (
+              <div style={{ fontSize: 11.5, color: '#f59e0b', background: 'rgba(245,158,11,0.1)', padding: '6px 10px', borderRadius: 8, marginTop: 4, display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1.4 }}>
+                <i className="bi bi-info-circle-fill" style={{ flexShrink: 0 }} />
+                <span>{t('Photo not provided. You can upload a photo below to appear on your official candidate poster card.')}</span>
+              </div>
+            )}
+            <KV k={t('Pitch Video')} v={cur.videoUrl ? t('Provided ✓') : t('Not Provided')} />
+            <KV k={t('Development Priorities')} v={cur.devPriorities ? cur.devPriorities : t('Not Provided')} />
+            <KV k={t('Grievance Plan')} v={cur.grievancePlan ? cur.grievancePlan : t('Not Provided')} />
+            <KV k={t('Supporting Document (PDF/DOCX)')} v={cur.documentUrl ? t('Uploaded ✓') : t('Not Provided')} />
+          </>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div>
+              <span style={fieldLabel}>{t('Candidate Passport Size Photo (Max 15 MB)')}</span>
+              {draft.photoUrl && (
+                <div style={{ margin: '6px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <img src={draft.photoUrl} alt="Preview" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: '2px solid #f76201' }} />
+                  <span style={{ fontSize: 12, color: '#059669', fontWeight: 600 }}>{t('Passport Photo Ready')} ✓</span>
+                </div>
+              )}
+              <input style={controlStyle} type="file" accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  const compressed = await compressImage(file)
+                  const reader = new FileReader()
+                  reader.onloadend = () => {
+                    setDraftField({ photoFile: compressed, photoUrl: reader.result })
+                  }
+                  reader.readAsDataURL(compressed)
+                }}
+              />
+            </div>
+            <div>
+              <span style={fieldLabel}>{t('Pitch Video (Link)')}</span>
+              <input style={controlStyle} type="url" placeholder="https://..."
+                value={draft.videoUrl || ''} onChange={(e) => setDraftField({ videoUrl: e.target.value })} />
+            </div>
+            <div>
+              <span style={fieldLabel}>{t('Development Priorities')}</span>
+              <textarea style={{ ...controlStyle, resize: 'vertical', fontFamily: 'inherit' }} rows={2}
+                value={draft.devPriorities || ''} onChange={(e) => setDraftField({ devPriorities: e.target.value })} />
+            </div>
+            <div>
+              <span style={fieldLabel}>{t('Grievance Redressal Plan')}</span>
+              <textarea style={{ ...controlStyle, resize: 'vertical', fontFamily: 'inherit' }} rows={2}
+                value={draft.grievancePlan || ''} onChange={(e) => setDraftField({ grievancePlan: e.target.value })} />
+            </div>
+          </div>
+        )}
       </ReviewSection>
 
 
@@ -1812,12 +1876,21 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
   const [downloading, setDownloading] = useState(false)
   const posterRef = useRef(null)
 
+  // Photo upload & update state
+  const [showPhotoUpload, setShowPhotoUpload] = useState(false)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const [photoUploadError, setPhotoUploadError] = useState('')
+  const [photoUploadSuccess, setPhotoUploadSuccess] = useState('')
+  const [selectedPhotoFile, setSelectedPhotoFile] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState('')
+  const photoInputRef = useRef(null)
+
   const activeApp = fetchedApp || result || {}
 
   const rawCandName = activeApp.voter?.name || result?.voter?.name || appData?.voter?.name || 'Candidate'
   const candName = rawCandName.replace(/[\s\-\/\,]+$/, '').trim() || 'Candidate'
   const photoUrl = activeApp.photo_url || activeApp.photoUrl || result?.photo_url || result?.photoUrl || appData?.photoUrl || appData?.photo_url || appData?.photoPreview || activeApp.voter?.photo || result?.voter?.photo || ''
-  const candidateImg = photoUrl && photoUrl.trim() ? photoUrl : 'https://raw.githubusercontent.com/twbs/icons/main/icons/person-circle.svg'
+  const candidateImg = photoPreview || (photoUrl && photoUrl.trim() ? photoUrl : 'https://raw.githubusercontent.com/twbs/icons/main/icons/person-circle.svg')
   const epicNo = activeApp.epic_no || activeApp.voter?.epic_no || result?.epic_no || appData?.epic || result?.voter?.epic_no || ''
 
   const bodyType = activeApp.body_type || result?.body_type || appData?.bodyType || ''
@@ -1896,6 +1969,66 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
     }
   }, [targetAppId, verifyLinkUrl])
 
+  const handlePhotoFileSelect = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setPhotoUploadError(t('Please select a valid image file (JPG, PNG, WebP).'))
+      return
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      setPhotoUploadError(t('File size exceeds 15 MB limit. Please select a smaller photo.'))
+      return
+    }
+    setPhotoUploadError('')
+    setPhotoUploadSuccess('')
+    try {
+      const compressed = await compressImage(file)
+      setSelectedPhotoFile(compressed)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result)
+      }
+      reader.readAsDataURL(compressed)
+    } catch {
+      setSelectedPhotoFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleUploadCandidatePhoto = async () => {
+    if (!selectedPhotoFile || !targetAppId) return
+    setUploadingPhoto(true)
+    setPhotoUploadError('')
+    setPhotoUploadSuccess('')
+    try {
+      const formData = new FormData()
+      formData.append('file', selectedPhotoFile)
+      const res = await chat.updateApplicationPhoto(targetAppId, formData)
+      if (res?.success && res?.photo_url) {
+        setFetchedApp((prev) => ({
+          ...(prev || activeApp),
+          photo_url: res.photo_url,
+          photoUrl: res.photo_url
+        }))
+        setPhotoUploadSuccess(t('Photo uploaded and card updated successfully!'))
+        setSelectedPhotoFile(null)
+        setPhotoPreview('')
+        setShowPhotoUpload(false)
+      } else {
+        setPhotoUploadError(res?.message || t('Could not upload photo. Please try again.'))
+      }
+    } catch (err) {
+      setPhotoUploadError(err?.message || t('Could not upload photo. Please try again.'))
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }
+
   const handleDownloadPoster = async () => {
     if (!posterRef.current) return
     setDownloading(true)
@@ -1966,6 +2099,147 @@ function SubmittedMsg({ result, alreadyApplied, appData }) {
               : t('Your application will be reviewed by the Organisation. You will be contacted on your registered mobile number.')}
           </div>
         </div>
+
+        {/* Dual-Language Photo Upload Box (Automatic if photo not uploaded, or on-demand) */}
+        {(!photoUrl || showPhotoUpload) && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(247,98,1,0.08) 0%, rgba(0,166,80,0.08) 100%)',
+            border: '1.5px solid #f76201',
+            borderRadius: 14,
+            padding: '12px 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 10,
+            width: '100%',
+            maxWidth: 320,
+            margin: '0 auto',
+            boxSizing: 'border-box'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontWeight: 800, fontSize: 13, color: '#f76201', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <i className="bi bi-camera-fill" /> {t('Upload Candidate Photo')}
+              </div>
+              {photoUrl && (
+                <button
+                  type="button"
+                  onClick={() => { setShowPhotoUpload(false); setSelectedPhotoFile(null); setPhotoPreview('') }}
+                  style={{ background: 'none', border: 'none', color: 'var(--color-ash)', fontSize: 11, cursor: 'pointer', fontWeight: 700 }}
+                >
+                  ✕ {t('Close')}
+                </button>
+              )}
+            </div>
+
+            <p style={{ fontSize: 11.5, color: 'var(--color-ash)', margin: 0, lineHeight: 1.45 }}>
+              {t('Photo not uploaded yet. Upload a passport size photo to feature it on your Official BJP Candidate Card & Verification Badge.')}
+            </p>
+
+            {photoPreview && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(0,0,0,0.04)', padding: 6, borderRadius: 8 }}>
+                <img
+                  src={photoPreview}
+                  alt="Preview"
+                  style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: '2px solid #00A650' }}
+                />
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#00A650' }}>
+                  ✓ {t('Passport Photo Ready')}
+                </span>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handlePhotoFileSelect}
+              />
+              <button
+                type="button"
+                onClick={() => photoInputRef.current?.click()}
+                style={{
+                  ...secondaryBtn(true),
+                  flex: 1,
+                  padding: '7px 10px',
+                  fontSize: 11.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 5
+                }}
+              >
+                <i className="bi bi-image" /> {photoPreview ? t('Change Photo') : t('Choose Photo')}
+              </button>
+
+              {selectedPhotoFile && (
+                <button
+                  type="button"
+                  disabled={uploadingPhoto}
+                  onClick={handleUploadCandidatePhoto}
+                  style={{
+                    ...primaryBtn(!uploadingPhoto),
+                    flex: 1,
+                    padding: '7px 10px',
+                    fontSize: 11.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 5
+                  }}
+                >
+                  {uploadingPhoto ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                      {t('Uploading photo...')}
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-cloud-arrow-up-fill" />
+                      {t('Upload & Update Card')}
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+
+            {photoUploadError && (
+              <div style={{ fontSize: 11, color: '#e74c3c' }}>
+                <i className="bi bi-exclamation-circle" /> {photoUploadError}
+              </div>
+            )}
+            {photoUploadSuccess && (
+              <div style={{ fontSize: 11, color: '#00A650', fontWeight: 700 }}>
+                <i className="bi bi-check-circle-fill" /> {photoUploadSuccess}
+              </div>
+            )}
+          </div>
+        )}
+
+        {photoUrl && !showPhotoUpload && (
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', maxWidth: 320, margin: '-2px auto 0 auto' }}>
+            <button
+              type="button"
+              onClick={() => setShowPhotoUpload(true)}
+              style={{
+                background: 'rgba(247,98,1,0.08)',
+                border: '1px solid rgba(247,98,1,0.25)',
+                color: '#f76201',
+                borderRadius: 16,
+                padding: '4px 12px',
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5
+              }}
+            >
+              <i className="bi bi-camera-fill" /> {t('Change Candidate Photo')}
+            </button>
+          </div>
+        )}
+
         {/* Card Header & Language Toggle Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: 320, margin: '0 auto -6px auto' }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-ash)', display: 'flex', alignItems: 'center', gap: 4 }}>

@@ -1,12 +1,13 @@
 import crypto from 'crypto'
 import { signSession, COOKIE_NAME, SESSION_COOKIE_OPTS } from '../middleware/adminAuth.js'
 import { listApplications, getStats, getTopAssemblies, getReport, findApplicationById, getDistrictAnalyticsCounts, updateApplicationRecord, deleteApplicationRecord } from '../models/applicationModel.js'
-import { listAdminUsers, findAdminUserByUsername, createAdminUserRecord, updateAdminUserRecord, deleteAdminUserRecord } from '../models/adminUserModel.js'
+import { listAdminUsers, findAdminUserByUsername, createAdminUserRecord, updateAdminUserRecord, deleteAdminUserRecord, verifyPassword } from '../models/adminUserModel.js'
 import { isAppDbOnline, getAppDb } from '../config/db.js'
 import { uploadToCloudinary, deleteFromCloudinary } from '../services/cloudinaryService.js'
 
 // Constant-time string compare to avoid leaking credential length/timing.
 function safeEqual(a, b) {
+  if (!a || !b) return false
   const ab = Buffer.from(String(a))
   const bb = Buffer.from(String(b))
   if (ab.length !== bb.length) return false
@@ -17,43 +18,45 @@ export async function postLogin(req, res) {
   const username = String(req.body?.username || '').trim().toLowerCase()
   const password = String(req.body?.password || '')
 
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: 'Username and password are required.' })
+  }
+
   const superUser = (process.env.ADMIN_USERNAME || 'admin').toLowerCase()
-  const superPass = process.env.ADMIN_PASSWORD || 'admin'
+  const superPass = process.env.ADMIN_PASSWORD
 
-  const stateUser = (process.env.STATE_ADMIN_USERNAME || 'stateadmin').toLowerCase()
-  const statePass = process.env.STATE_ADMIN_PASSWORD || 'state123'
+  const stateUser = (process.env.STATE_ADMIN_USERNAME || '').toLowerCase()
+  const statePass = process.env.STATE_ADMIN_PASSWORD
 
-  const distUser = (process.env.DISTRICT_ADMIN_USERNAME || 'districtadmin').toLowerCase()
-  const distPass = process.env.DISTRICT_ADMIN_PASSWORD || 'dist123'
+  const distUser = (process.env.DISTRICT_ADMIN_USERNAME || '').toLowerCase()
+  const distPass = process.env.DISTRICT_ADMIN_PASSWORD
 
-  // 1. Super Admin: from process.env (ADMIN_USERNAME & ADMIN_PASSWORD)
-  if ((safeEqual(username, superUser) || safeEqual(username, 'superadmin')) &&
-      (safeEqual(password, superPass) || safeEqual(password, 'admin123'))) {
+  // 1. Super Admin: from process.env
+  if (superPass && safeEqual(username, superUser) && safeEqual(password, superPass)) {
     const token = signSession(superUser, 'super_admin', '')
     res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
     return res.json({ success: true, token, role: 'super_admin', assigned_district: '', message: 'Super Admin authenticated successfully.' })
   }
 
-  // 2. State Admin: from process.env (STATE_ADMIN_USERNAME & STATE_ADMIN_PASSWORD)
-  if (safeEqual(username, stateUser) && safeEqual(password, statePass)) {
+  // 2. State Admin: from process.env
+  if (stateUser && statePass && safeEqual(username, stateUser) && safeEqual(password, statePass)) {
     const token = signSession(stateUser, 'state_admin', '')
     res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
     return res.json({ success: true, token, role: 'state_admin', assigned_district: '', message: 'State Admin authenticated successfully.' })
   }
 
-  // 3. District Admin: from process.env (DISTRICT_ADMIN_USERNAME & DISTRICT_ADMIN_PASSWORD)
-  if ((safeEqual(username, distUser) || safeEqual(username, 'district') || username.endsWith('admin')) &&
-      (safeEqual(password, distPass) || safeEqual(password, 'district123'))) {
+  // 3. District Admin: from process.env
+  if (distUser && distPass && safeEqual(username, distUser) && safeEqual(password, distPass)) {
     const token = signSession(distUser, 'district_admin', '')
     res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
-    return res.json({ success: true, token, role: 'district_admin', assigned_district: '', message: 'District Admin (Read-Only) authenticated successfully.' })
+    return res.json({ success: true, token, role: 'district_admin', assigned_district: '', message: 'District Admin authenticated successfully.' })
   }
 
   // 4. Dynamic Admins stored in MongoDB DB3 (admin_users collection)
   if (isAppDbOnline()) {
     try {
       const dbUser = await findAdminUserByUsername(username)
-      if (dbUser && dbUser.status !== 'suspended' && safeEqual(password, dbUser.password)) {
+      if (dbUser && dbUser.status !== 'suspended' && verifyPassword(password, dbUser.password)) {
         const token = signSession(dbUser.username, dbUser.role || 'district_admin', dbUser.assigned_district || '')
         res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
         return res.json({

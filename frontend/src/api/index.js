@@ -76,6 +76,12 @@ export const chat = {
       // the default 30s so uploads aren't silently cut off mid-transfer.
       timeout: 300000, // 5 minutes
     }),
+
+  updateApplicationPhoto: (applicationId, formData) =>
+    api.post(`/api/application/${encodeURIComponent(applicationId)}/photo`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000,
+    }),
 }
 
 export const getApplication = (applicationId) =>

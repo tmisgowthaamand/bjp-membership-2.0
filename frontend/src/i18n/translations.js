@@ -284,6 +284,15 @@ export const translations = {
     'Close': 'மூடு',
     'Card Language / மொழி:': 'அட்டை மொழி / Language:',
     'View / Download 9:16 Digital Application Poster Card': '9:16 டிஜிட்டல் போஸ்டர் அட்டையைக் காண்க / பதிவிறக்குக',
+    'Upload Candidate Photo': 'வேட்பாளர் புகைப்படத்தைப் பதிவேற்றவும்',
+    'Photo not uploaded yet. Upload a passport size photo to feature it on your Official BJP Candidate Card & Verification Badge.': 'புகைப்படம் இன்னும் பதிவேற்றப்படவில்லை. அதிகாரப்பூர்வ பாஜக வேட்பாளர் அட்டை மற்றும் சரிபார்ப்பு பேட்ஜில் தோன்ற பாஸ்போர்ட் அளவு புகைப்படத்தைப் பதிவேற்றவும்.',
+    'Upload & Update Card': 'புகைப்படத்தைப் பதிவேற்றி அட்டையைப் புதுப்பி',
+    'Change Candidate Photo': 'வேட்பாளர் புகைப்படத்தை மாற்றவும்',
+    'Photo uploaded and card updated successfully!': 'புகைப்படம் பதிவேற்றப்பட்டு அட்டை வெற்றிகரமாகப் புதுப்பிக்கப்பட்டது!',
+    'Choose Photo': 'புகைப்படத்தைத் தேர்வுசெய்',
+    'Upload Photo': 'புகைப்படத்தைப் பதிவேற்று',
+    'Uploading photo...': 'புகைப்படம் பதிவேற்றப்படுகிறது...',
+    'Photo not provided. You can upload a photo below to appear on your official candidate poster card.': 'புகைப்படம் வழங்கப்படவில்லை. உங்கள் அதிகாரப்பூர்வ வேட்பாளர் போஸ்டர் அட்டையில் தோன்ற கீழே புகைப்படத்தைப் பதிவேற்றலாம்.',
   },
 }
 
