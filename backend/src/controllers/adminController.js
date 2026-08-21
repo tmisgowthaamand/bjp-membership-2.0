@@ -22,17 +22,17 @@ export async function postLogin(req, res) {
     return res.status(400).json({ success: false, message: 'Username and password are required.' })
   }
 
-  const superUser = (process.env.ADMIN_USERNAME || 'admin').toLowerCase()
+  const superUser = (process.env.ADMIN_USERNAME || '').trim().toLowerCase()
   const superPass = process.env.ADMIN_PASSWORD
 
-  const stateUser = (process.env.STATE_ADMIN_USERNAME || '').toLowerCase()
+  const stateUser = (process.env.STATE_ADMIN_USERNAME || '').trim().toLowerCase()
   const statePass = process.env.STATE_ADMIN_PASSWORD
 
-  const distUser = (process.env.DISTRICT_ADMIN_USERNAME || '').toLowerCase()
+  const distUser = (process.env.DISTRICT_ADMIN_USERNAME || '').trim().toLowerCase()
   const distPass = process.env.DISTRICT_ADMIN_PASSWORD
 
-  // 1. Super Admin: from process.env
-  if (superPass && safeEqual(username, superUser) && safeEqual(password, superPass)) {
+  // 1. Super Admin: strictly from .env
+  if (superUser && superPass && safeEqual(username, superUser) && safeEqual(password, superPass)) {
     const token = signSession(superUser, 'super_admin', '')
     res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
     return res.json({ success: true, token, role: 'super_admin', assigned_district: '', message: 'Super Admin authenticated successfully.' })

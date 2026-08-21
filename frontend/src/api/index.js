@@ -40,12 +40,14 @@ api.interceptors.response.use(
     if (error.response) {
       // Session invalid/expired — drop the stored admin token.
       if (error.response.status === 401) setAdminToken(null)
-      return Promise.reject(error.response.data || { message: 'Server error' })
+      const data = error.response.data
+      const msg = (typeof data === 'object' && data?.message) ? data.message : (typeof data === 'string' && data) ? data : 'Invalid credentials or unauthorized access.'
+      return Promise.reject(new Error(msg))
     }
     if (error.code === 'ECONNABORTED') {
-      return Promise.reject({ message: 'Request timed out. Please try again.' })
+      return Promise.reject(new Error('Request timed out. Please try again.'))
     }
-    return Promise.reject({ message: 'Network error. Please check your connection.' })
+    return Promise.reject(new Error('Network error. Please check your connection.'))
   }
 )
 
