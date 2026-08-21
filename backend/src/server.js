@@ -13,12 +13,16 @@ app.set('trust proxy', 1)
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
 
 // CORS — allow one or more client origins (comma-separated in CLIENT_ORIGIN).
-// Trailing slashes are tolerated. Defaults cover the Vercel frontend + local dev.
-const allowedOrigins = (process.env.CLIENT_ORIGIN ||
-  'https://bjp-mebership.vercel.app,http://localhost:3000')
+// In production, strictly filter out any localhost origins to prevent development cross-origin leaks.
+const rawOrigins = (process.env.CLIENT_ORIGIN ||
+  'https://bjp-membership-2-0.vercel.app,https://bjp-mebership.vercel.app,https://tnbjp.com,http://localhost:3000')
   .split(',')
   .map((o) => o.trim().replace(/\/+$/, ''))
   .filter(Boolean)
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? rawOrigins.filter((o) => !o.includes('localhost') && !o.includes('127.0.0.1'))
+  : rawOrigins
 
 app.use(cors({
   origin(origin, cb) {
@@ -66,6 +70,10 @@ function validateEnv() {
   const missingRequired = ['MONGO_VOTER_URL', 'MONGO_APP_URL'].filter((k) => !process.env[k])
   if (missingRequired.length) {
     console.error(`[bjp] FATAL: missing required environment variables: ${missingRequired.join(', ')}`)
+    process.exit(1)
+  }
+  if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_SESSION_SECRET && !process.env.ADMIN_JWT_SECRET) {
+    console.error('[bjp] FATAL: ADMIN_SESSION_SECRET or ADMIN_JWT_SECRET is required in production.')
     process.exit(1)
   }
   if (!process.env.SMS_API_KEY) {

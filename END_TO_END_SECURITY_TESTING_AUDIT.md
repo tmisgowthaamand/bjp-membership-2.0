@@ -148,10 +148,22 @@ A comprehensive, line-by-line security and automated testing audit was performed
 
 ---
 
+### 📄 `backend/src/services/emailOtpService.js`
+- **Purpose:** Passwordless multi-tier admin authentication via Resend email OTP dispatch and cryptographic verification.
+- **Audit Findings:**
+  - **Cryptographic OTP Generation:** Generates 6-digit random integers using `crypto.randomInt(100000, 999999)`.
+  - **Dynamic Environment Resolution:** Resolves per-admin Resend API keys (`SUPER_ADMIN_RESEND_API_KEY`, `STATE_ADMIN_RESEND_API_KEY`, `DISTRICT_ADMIN_RESEND_API_KEY`) and admin emails from `process.env` with `dotenv.config({ override: true })` on each request.
+  - **Session Security & TTL:** 10-minute expiry (`OTP_TTL_MS = 600000`), 60-second cooldown rate limit (`RESEND_COOLDOWN_MS = 60000`), and max 5 failed attempts before permanent session eviction.
+  - **Timing-Attack Defense:** Compares OTP codes using constant-time `crypto.timingSafeEqual`.
+  - **HTML Injection Defense:** Strict parameter normalization and safe HTML templating.
+- **Status:** 🟢 **PASSED**
+
+---
+
 ### 📄 `backend/src/routes/admin.js` & `backend/src/routes/index.js`
 - **Purpose:** HTTP route registration, rate limiting, and upload stream validation.
 - **Audit Findings:**
-  - **Rate Limiting:** `loginLimiter` (max 20 / 10 min) on `/admin/api/login`; `otpLimiter` (max 10 / 10 min) on `/api/send-otp`.
+  - **Rate Limiting:** `loginLimiter` (max 20 / 10 min) on `/admin/api/login` and `/admin/api/verify-otp`; `adminOtpLimiter` (max 10 / 10 min) on `/admin/api/send-otp`; `otpLimiter` (max 10 / 10 min) on `/api/send-otp`.
   - **MIME Validation:** Multer `fileFilter` restricts upload formats to valid images (`jpeg`, `png`, `webp`) and documents (`pdf`, `docx`).
 - **Status:** 🟢 **PASSED**
 

@@ -15,10 +15,22 @@ const api = axios.create({
 // returns a signed token that we store and send as an Authorization header.
 const ADMIN_TOKEN_KEY = 'bjp_admin_token'
 export const getAdminToken = () => {
-  try { return localStorage.getItem(ADMIN_TOKEN_KEY) } catch { return null }
+  try {
+    return sessionStorage.getItem(ADMIN_TOKEN_KEY) || localStorage.getItem(ADMIN_TOKEN_KEY)
+  } catch {
+    return null
+  }
 }
-const setAdminToken = (t) => {
-  try { t ? localStorage.setItem(ADMIN_TOKEN_KEY, t) : localStorage.removeItem(ADMIN_TOKEN_KEY) } catch { /* ignore */ }
+export const setAdminToken = (t) => {
+  try {
+    if (t) {
+      sessionStorage.setItem(ADMIN_TOKEN_KEY, t)
+      localStorage.removeItem(ADMIN_TOKEN_KEY) // Auto-purge persistent storage for security
+    } else {
+      sessionStorage.removeItem(ADMIN_TOKEN_KEY)
+      localStorage.removeItem(ADMIN_TOKEN_KEY)
+    }
+  } catch { /* ignore */ }
 }
 
 api.interceptors.request.use((cfg) => {

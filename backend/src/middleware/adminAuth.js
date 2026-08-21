@@ -3,12 +3,15 @@ import crypto from 'crypto'
 export const COOKIE_NAME = 'admin_session'
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 hours
 
+// In-memory fallback generated per server runtime for development only
+const devRuntimeSecret = crypto.randomBytes(32).toString('hex')
+
 function secret() {
   const s = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_JWT_SECRET
-  if (!s && process.env.NODE_ENV === 'production') {
-    console.error('[FATAL] ADMIN_SESSION_SECRET / ADMIN_JWT_SECRET is required in production.')
+  if (process.env.NODE_ENV === 'production' && (!s || s.length < 32)) {
+    throw new Error('[FATAL SECURITY ERROR] ADMIN_SESSION_SECRET must be configured with at least 32 characters in production.')
   }
-  return s || 'dev-admin-secret-change-me'
+  return s || devRuntimeSecret
 }
 
 // Signed, tamper-proof token: base64url(payload).base64url(hmac)
