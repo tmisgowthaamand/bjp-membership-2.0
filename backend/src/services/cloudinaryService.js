@@ -2,16 +2,16 @@ import { v2 as cloudinary } from 'cloudinary'
 import crypto from 'crypto'
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'n9fgemea',
-  api_key: process.env.CLOUDINARY_API_KEY || '587186263567254',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'p6auY1cSEsSPjVE56Ii19gBzQ_k',
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
+  api_key: process.env.CLOUDINARY_API_KEY || '',
+  api_secret: process.env.CLOUDINARY_API_SECRET || '',
   secure: true,
 })
 
 export function isCloudinaryConfigured() {
-  const name = process.env.CLOUDINARY_CLOUD_NAME || 'n9fgemea'
-  const key = process.env.CLOUDINARY_API_KEY || '587186263567254'
-  const secret = process.env.CLOUDINARY_API_SECRET || 'p6auY1cSEsSPjVE56Ii19gBzQ_k'
+  const name = process.env.CLOUDINARY_CLOUD_NAME
+  const key = process.env.CLOUDINARY_API_KEY
+  const secret = process.env.CLOUDINARY_API_SECRET
   return !!(name && key && secret)
 }
 

@@ -29,6 +29,7 @@ A full end-to-end security audit was conducted on the candidate registration por
 | **Public PII Exposure** | High | 🟢 **PASSED / RESOLVED** | Phone masked (`******1234`), voter personal details redacted on `GET /api/application/:id`. |
 | **HMAC Secret Fallback** | High | 🟢 **PASSED / RESOLVED** | Enforced strict `ADMIN_SESSION_SECRET` in production in `adminAuth.js`. |
 | **OTP Bypass Flaw** | High | 🟢 **PASSED / RESOLVED** | Restricted bypass to explicit dev flag with test OTP verification. |
+| **Cloudinary Media Secrets** | Critical | 🟢 **PASSED / RESOLVED** | Hardcoded API keys removed from `cloudinaryService.js`; access strictly enforced via `.env`. |
 | **File Upload Validation** | Medium | 🟢 **PASSED / RESOLVED** | Strict Multer `fileFilter` MIME validation added on all upload routes. |
 | **External CDN Assets** | Low | 🟢 **PASSED / RESOLVED** | Subresource Integrity (SRI) hashes and `crossorigin` attributes added in `index.html`. |
 | **3D Vector Map Engine** | Low | 🟢 **PASSED / SECURE** | Locally bundled Three.js & Fiber; local GeoJSON spatial boundary data. |
