@@ -1,9 +1,11 @@
 import crypto from 'crypto'
+import dotenv from 'dotenv'
 import { signSession, COOKIE_NAME, SESSION_COOKIE_OPTS } from '../middleware/adminAuth.js'
 import { listApplications, getStats, getTopAssemblies, getReport, findApplicationById, getDistrictAnalyticsCounts, updateApplicationRecord, deleteApplicationRecord } from '../models/applicationModel.js'
 import { listAdminUsers, findAdminUserByUsername, createAdminUserRecord, updateAdminUserRecord, deleteAdminUserRecord, verifyPassword } from '../models/adminUserModel.js'
 import { isAppDbOnline, getAppDb } from '../config/db.js'
 import { uploadToCloudinary, deleteFromCloudinary } from '../services/cloudinaryService.js'
+import { sendAdminEmailOtp, verifyAdminEmailOtp, normalizeEmail, isValidEmail } from '../services/emailOtpService.js'
 
 // Constant-time string compare to avoid leaking credential length/timing.
 function safeEqual(a, b) {
@@ -12,6 +14,69 @@ function safeEqual(a, b) {
   const bb = Buffer.from(String(b))
   if (ab.length !== bb.length) return false
   return crypto.timingSafeEqual(ab, bb)
+}
+
+async function resolveAdminAccountByEmail(rawEmail) {
+  // Dynamically refresh latest .env so manual server restarts are never required
+  dotenv.config({ override: true })
+
+  const email = normalizeEmail(rawEmail)
+  if (!isValidEmail(email)) return null
+
+  const superEmail = normalizeEmail(process.env.SUPER_ADMIN_EMAIL || '')
+  const stateEmail = normalizeEmail(process.env.STATE_ADMIN_EMAIL || '')
+  const distEmail  = normalizeEmail(process.env.DISTRICT_ADMIN_EMAIL || '')
+
+  if (superEmail && email === superEmail) {
+    return {
+      username: process.env.ADMIN_USERNAME || 'super_admin',
+      role: 'super_admin',
+      assigned_district: '',
+      roleTitle: 'Super Admin',
+    }
+  }
+
+  if (stateEmail && email === stateEmail) {
+    return {
+      username: process.env.STATE_ADMIN_USERNAME || 'state_admin',
+      role: 'state_admin',
+      assigned_district: '',
+      roleTitle: 'State Admin',
+    }
+  }
+
+  if (distEmail && email === distEmail) {
+    return {
+      username: process.env.DISTRICT_ADMIN_USERNAME || 'district_admin',
+      role: 'district_admin',
+      assigned_district: process.env.DISTRICT_ADMIN_DISTRICT || '',
+      roleTitle: 'District Admin',
+    }
+  }
+
+  // Check dynamic MongoDB admin users
+  if (isAppDbOnline()) {
+    try {
+      const db = getAppDb()
+      const dbUser = await db.collection('admin_users').findOne({
+        $or: [
+          { email: email },
+          { username: email },
+        ],
+        status: { $ne: 'suspended' }
+      })
+      if (dbUser) {
+        return {
+          username: dbUser.username,
+          role: dbUser.role || 'district_admin',
+          assigned_district: dbUser.assigned_district || '',
+          roleTitle: dbUser.name || 'Admin User',
+        }
+      }
+    } catch (_) {}
+  }
+
+  return null
 }
 
 export async function postLogin(req, res) {
@@ -71,6 +136,52 @@ export async function postLogin(req, res) {
   }
 
   return res.status(401).json({ success: false, message: 'Invalid username or password.' })
+}
+
+// ── Passwordless Email OTP Authentication (Resend) ────────────────
+export async function postAdminSendOtp(req, res) {
+  const email = normalizeEmail(req.body?.email)
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ success: false, message: 'Please enter a valid administrator email address.' })
+  }
+
+  const account = await resolveAdminAccountByEmail(email)
+  if (!account) {
+    return res.status(404).json({ success: false, message: 'This email is not registered as an authorized administrator.' })
+  }
+
+  const result = await sendAdminEmailOtp(email, account.roleTitle)
+  return res.status(result.success ? 200 : 400).json(result)
+}
+
+export async function postAdminVerifyOtp(req, res) {
+  const email = normalizeEmail(req.body?.email)
+  const otp = String(req.body?.otp || '').trim()
+
+  if (!isValidEmail(email) || !otp) {
+    return res.status(400).json({ success: false, message: 'Email and 6-digit OTP are required.' })
+  }
+
+  const account = await resolveAdminAccountByEmail(email)
+  if (!account) {
+    return res.status(404).json({ success: false, message: 'Administrator account not found.' })
+  }
+
+  const verification = verifyAdminEmailOtp(email, otp)
+  if (!verification.success) {
+    return res.status(400).json(verification)
+  }
+
+  const token = signSession(account.username, account.role, account.assigned_district)
+  res.cookie(COOKIE_NAME, token, SESSION_COOKIE_OPTS)
+
+  return res.json({
+    success: true,
+    token,
+    role: account.role,
+    assigned_district: account.assigned_district,
+    message: `${account.roleTitle} authenticated successfully.`
+  })
 }
 
 export function getSession(req, res) {

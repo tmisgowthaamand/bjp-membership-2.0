@@ -45,3 +45,13 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        value: BJP Admin Portal <onboarding@resend.dev>
+      - key: SUPER_ADMIN_EMAIL
+        sync: false
+      - key: STATE_ADMIN_EMAIL
+        sync: false
+      - key: DISTRICT_ADMIN_EMAIL
+        sync: false

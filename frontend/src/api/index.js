@@ -91,8 +91,17 @@ export const getApplication = (applicationId) =>
 
 
 
-// ── Admin console API (username/password + bearer token) ──────────
+// ── Admin console API (Email OTP & Credentials + Bearer Token) ──
 export const admin = {
+  sendOtp: (email) =>
+    api.post('/admin/api/send-otp', { email }),
+
+  verifyOtp: async (email, otp) => {
+    const data = await api.post('/admin/api/verify-otp', { email, otp })
+    if (data && data.token) setAdminToken(data.token)
+    return data
+  },
+
   login: async (username, password) => {
     const data = await api.post('/admin/api/login', { username, password })
     if (data && data.token) setAdminToken(data.token)

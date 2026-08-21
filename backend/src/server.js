@@ -76,7 +76,10 @@ function validateEnv() {
 ;(async () => {
   validateEnv()
   await connectDbs()
-  const server = app.listen(PORT, () => console.log(`[bjp] API listening on http://localhost:${PORT}`))
+  const server = app.listen(PORT, () => {
+    console.log(`[bjp] API listening on http://localhost:${PORT}`)
+    console.log(`[Admin Auth] Loaded from .env -> Super: ${process.env.SUPER_ADMIN_EMAIL || 'none'} | State: ${process.env.STATE_ADMIN_EMAIL || 'none'} | District: ${process.env.DISTRICT_ADMIN_EMAIL || 'none'}`)
+  })
   const shutdown = async () => { await closeDbs(); server.close(() => process.exit(0)) }
   process.on('SIGINT', shutdown)
   process.on('SIGTERM', shutdown)
